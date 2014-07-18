@@ -1,0 +1,219 @@
+\begin{appendices}
+
+\section{LITMUS\textsuperscript{RT}}
+\label{sec:litmus}
+
+\noindent Di seguito viene fornita una panoramica maggiormente approfondita del plug-in LITMUS\textsuperscript{RT} e del suo funzionamento.\\
+
+\noindent LITMUS\textsuperscript{RT} è una patch per aggiungere ad un kernel Linux un'estensione real-time, in particolare per creare uno scheduler multiprocessore real-time con supporto per la sincronizzazione. Il kernel viene modificato per supportare un modello di task periodici e plug-in modulari per creare scheduler. Esso fornisce supporto, nonché diverse implementazioni, per scheduler globali, partizionati e cluster.\\
+
+\noindent Il suo obiettivo principale è quello di fornire una piattaforma di sviluppo e sperimentazione nell'ambito dei sistemi real-time. Esso mette a disposione una serie di funzioni che rispondono a determianti eventi per creare un prototipo di scheduler. Tali funzioni sono elencate e descritte nella tabella \ref{tab:functions}. Per coerenza con la piattaforma in questione in alcuni casi al posto del termine job o processo viene utilizzato task.\\
+
+\noindent Tutte le funzioni sono opzionali, salvo \texttt{schedule()} e \texttt{complete\_job()} per le quali è obbligatorio fornire un'implementazione, negli altri casi viene fornita una versione di default in caso di mancato utilizzo.\\
+
+\noindent Le funzioni principali sono \texttt{schedule()}, \texttt{tick()} e \texttt{finish\_switch()}, esse rispondo ad eventi di scheduling:\\
+
+\begin{itemize}
+	\item \texttt{schedule()} viene richiamata quando il sistema necessita di selezionare il task da eseguire, a livello logico consiste in un \textit{context switch} e viene eseguita nel processore in cui è stata richiesta
+	\item \texttt{tick()} viene richiamata ogni quanto di tempo e se necessario richiama la funzione di \texttt{schedule()}, è utile per quei scheduler basati su quanti di tempo, per esempio PFair
+	\item \texttt{finish\_switch()} viene richiamata dopo ogni \textit{context switch}, utile se lo scheduler prevede un particolare comportamento da parte del task che interrompe la propria esecuzione.\\
+\end{itemize}
+
+\noindent Un secondo insieme di funzioni mira a gestire gli eventi che caratterizzano il ciclo di esecuzione di un processo:\\
+
+\begin{itemize}
+	\item \texttt{release\_at()} notifica che il task sarà soggetto ad una serie di release, utile nel caso lo si debba modificare prima della effettiva esecuzione
+	\item \texttt{task\_block()} notifica quando un task viene sospeso, quindi tolto dalla coda ready
+	\item \texttt{task\_wakeup()} richiamata quando un task riprende ad eseguire, deve essere reinserito nella coda ready
+	\item \texttt{complete\_job()} notifica il completamento del processo, deve essere aggiunto il prossimo processo alla coda release del processore.\\
+\end{itemize}
+
+\noindent Le altre funzioni messe a disposizione dall'interfaccia riguardano la fase di inizializzazione e finalizzazione dello scheduler e dei task.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{|ll|}
+	\hline
+	    Funzione & Evento \\ \hline \hline
+	   
+\texttt{schedule()} 			&	Seleziona il task da eseguire \\
+\texttt{tick()} 				&	Richiama lo scheduler ogni quanto di tempo \\
+\texttt{finish\_switch()}		&	Opera in seguito ad un context switch \\
+\hline
+\texttt{release\_at()}			&	Prepara il task ai successivi rilasci \\
+\texttt{task\_block()}			&	Toglie il task dalla coda ready \\
+\texttt{task\_wakeup()}			&	Aggiunge il task alla coda ready \\
+\texttt{complete\_job()}		&	Prepara il job al successivo release \\
+\hline
+\texttt{admit\_task()}			&	Controlla che il nuovo task sia correttamente configurato \\
+\texttt{task\_new()}			&	Alloca ed inizializza lo stato del nuovo task \\
+\texttt{task\_exit()}			&	Dealloca lo stato del task \\
+\hline
+\texttt{activate\_plugin()}		&	Alloca ed inizializza lo stato del plug-in \\
+\texttt{deactivate\_plugin()}	&	Dealloca lo stato del plug-in \\
+\hline
+\texttt{allocate\_lock()}		&	Alloca un nuovo lock \\
+  	
+  	\hline
+  	\end{tabular}
+  \caption{Funzioni dell'interfaccia di LITMUS\textsuperscript{RT}}
+  \label{tab:functions}
+\end{table}
+
+\noindent Oltre all'interfaccia per la gestione dello scheduler LITMUS\textsuperscript{RT} dispone una serie di funzioni per la gestione delle risorse condivise. Tramite la struttura \texttt{litmus\_lock\_ops} si accede ad un insieme di funzioni che permetteono di implementare le operazioni logiche alla base di una risorsa, tabella \ref{tab:functions_resource}.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{|ll|}
+	\hline
+	    Funzione & Evento \\ \hline \hline
+	   
+\texttt{open()}			& Creazione ed inizializzazione della risorsa \\
+\texttt{close()}		& Chiusura della risorsa, se necessario forza il suo rilascio \\
+\texttt{lock()}			& Gestione della richiesta di accesso alla risorsa \\
+\texttt{unlock()}		& Gestione del rilascio della risorsa \\
+\texttt{deallocate()}	& Dealloca la memoria occupata dalla risorsa \\
+
+  	\hline
+  	\end{tabular}
+  \caption{Funzioni dell'interfaccia per le risorse.}
+  \label{tab:functions_resource}
+\end{table}
+
+\noindent La funzione \texttt{open()} viene richiamata in fase di inizializzazione da ogni task che a run-time ne richieda l'accesso. Alla prima esecuzione della funzione viene creata la risorsa ed inizializzata, questo prevede anche di aggiungere la risorsa, e relativo identificatore, ad un file condiviso ("rtspin-locks")gestito da LITMUS\textsuperscript{RT} sul quale viene tenuto traccia delle risorse utlizzate dall'intero task-set. Alle chiamate successive di \texttt{open()} il sistema riconosce, tramite il file "rtspin-locks", che la risorsa è stata precedentemente creata, quindi ne recupera un riferimento e lo mette a disposionze del nuovo task per eventuali modifiche. Tale funzione è utile nei casi in cui si voglia calcolare un ceiling di risorsa, ad ogni chiamata il valore viene aggiornato con la priorità del task chiamante. La funzione \texttt{close()} viene richiamata anch'essa in fase di terminazione da ogni task che ne ha richiesto l'accesso, se il task chiamante è in esecuzione della sezione critica forza la chiamata alla procedura di \texttt{unlock}.\\
+
+\noindent Le funzioni \texttt{lock()} e \texttt{unlock()} permettono di gestire la richiesta di accesso alla risorsa ed il relativo rilascio. Il loro utilizzo cambia in base all'approccio previsto dal protocollo: in caso di \textit{spin-based protocol} nella funzione \texttt{lock()} viene predisposta l'attesa attiva fino al turno del task che ha effettuato la richiesta, mentre per una gestione basata su sospensione il task viene aggiunto ad una coda e risvegliato al momento opportuno. La funzione di \texttt{unlock()} viene richiamata al momento del rilascio, in tal caso il suo comportamento deve rispecchiare la logica alla base del protocollo che si vuole implementare.\\
+
+\section{Librerie user-space}
+\label{sec:liblitmus}
+
+\noindent In [capitolo di introduzione] è stata discussa l'architettura di LITMUS\textsuperscript{RT}, in questa sezione risulta interessante la parte di interfacciamento che il sistema mette a disposizione per la creazione di strumenti user-space con l'obiettivo di rendere possibile l'utilizzo dello scheduler. In particolare vengono messe a disposizione una serie di \textit{system call} e meccanismi che la libreria \textit{liblitmus} utilizza per rendere più semplice l'esecuzione ed il controllo dei taskset.\\
+
+\noindent Le \textit{system call} possono essere raggruppate secondo le funzioni svolte: \\
+
+\begin{itemize}
+	\item definizione di task: permette di creare processi come task real-time di LITMUS\textsuperscript{RT}, i parametri (per esempio, \textit{WCET}, periodo, etc.) vengono riportati in una struttura interna al task definita \texttt{rt\_task}
+	\item controllo dei job: controllare il numero di sequenza di un job, attendere il suo rilascio e notifica l'evento di completamento
+	\item \textit{system call} per la misurazione degli overhead
+	\item creazione, lock ed unlock di semafori real-time: una risorsa è rappresentata da un oggetto a livello kernel che ne contiene le informazioni. I task che la accedono devono ottenere un riferimento al medesimo oggetto, ma per questioni di controllo e sicurezza il kernel deve attuare meccanismi che mirano a modificare il namespace della risorsa, in modo tale da non permettere un accesso diretto ai processi. Nelle versioni recenti di LITMUS\textsuperscript{RT} questo problema viene risolto tramite l'utilizzo di \textit{i-node}, cioè la rappresentazione a livello kernel di un file presente nel \textit{file system}: due task che condividono la medesima risorsa richiedono tramite \textit{system call} accesso allo stesso file. Gli indirizzi dei file, definiti \textit{file-descriptor-attached shared objects} (FDSOs), sono salvati in una tabella di look up in modo tale da ridurre gli overhead dati dal kernel
+	\item sincronizzazione della release dell'intero taskset: questo permette di rilasciare al medesimo istante il primo job di ogni task. Questo avviene tramite una particolare chiamata di sistema, \texttt{wait\_for\_ts\_release()}, i job vengono accodati su di una barriera fino a che il sistema non riconosce che tutti i task sono accodati e pronti ad eseguire, a quel punto apre la barriera per ottenere un unico release. Tale evento viene rilevato da \texttt{release\_at()}.\\
+\end{itemize}
+
+\noindent Per esportare informazioni riguardo all'esecuzione LITMUS\textsuperscript{RT} aggiunge quattro particolari dispositivi virtuali per permettere di controllare lo stato. Tre di questi hanno come obiettivo il tracciamento: \texttt{TRACE()} per il debug, può essere disabilitato per ridurre gli overhead, \texttt{feather-trace} per il campionamento e \texttt{sched\_trace()} per rilevare gli eventi di scheduling. Le tecniche di tracciamento vengono discusse in \ref{sec:trace}. Il quarto device introduce meccanismi di \textit{control page} per supportare \textit{non-preemptive sections} con bassi overhead.\\
+
+\noindent Entrare ed uscire da una sezione critica disabilitando gli \textit{interrupt} richiede due \textit{system call}, di conseguenza risulta essere un'operazione onerosa. In alcuni casi gli overhead che ne risultano possono essere superiori alla lunghezza della stessa sezione critica. Il meccanismo di \textit{control page} abilita il kernel ed ogni processo real-time alla condivisione di flags ed informazioni senza dover effettuare \textit{system call}. Quando un processo utilizza il dispositivo viene allocato una pagina di memoria del kernel e la mappa nello spazio degli indirizzi del processo. Per maggiori dettagli vedi ~\cite{BBBThesis}.\\
+
+\noindent La libreria \textit{liblitmus} permette di utilizzare parte dell'interfaccia user-space messa a disposizione da LITMUS\textsuperscript{RT}. Nella tabella \ref{tab:liblitmus_functions} sono elencate e brevemente descritte le principali funzionalità.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{|l p{10cm}|}
+	\hline
+	    Funzionalità & Scopo \\
+	\hline \hline
+	   
+\texttt{setsched}			& Seleziona ed attiva un plugin. \\
+\texttt{showsched}			& Stampa il nome dello scheduler attualmente utilizzato. \\
+\texttt{rt\_launch}			& Lancia un semplice processo come un task real-time specificando \textit{WCET} e periodo. \\
+\texttt{rtspin}				& Semplice task utile per simulare l'utilizzo della CPU. Effettua cicli senza effettuare particolari operazioni secondo i paramentri specificati. Se previste, effettua le chiamate per ottenere l'accesso alle risorse condivise, una volta ottenuta entra in loop fino allo scadere del tempo della sezione critica. E' possibile modificarlo per ottenere differenti comportamenti. \\
+\texttt{release\_ts}		& Rilascia i task del sistema, utile per ottenere un'unica relase sincronizzata per l'intero taskset.\\
+\texttt{measure\_syscall}	& Strumento per la misurazione degli overhead della \textit{system call}.\\
+\texttt{cycles}				& Mostra i cicli per un determinato intervallo di tempo. \\
+\texttt{base\_task}			& Esempio di task real-time. Base per lo sviluppo di task \textit{single-thread}. \\
+\texttt{base\_mt\_task}		& Esempio di task \textit{multi-thread} real-time. Base per lo sviluppo di task \textit{multi-thread}. \\
+
+  	\hline
+  	\end{tabular}
+  \caption{Strumenti user-space di \textit{liblitmus}.}
+  \label{tab:liblitmus_functions}
+\end{table}
+
+\section{\texttt{TRACE()} e \textit{Feather-Trace}}
+\label{sec:trace}
+
+\noindent LITMUS\textsuperscript{RT} mette a dispisione due differenti tipi di tracciamento.\\
+
+\subsection{\texttt{TRACE()}}
+
+\noindent \texttt{TRACE()} fa parte dell'architettura del sistema e permette di effettaure debugging. Al pari di \texttt{printk()} esporta informazioni dal kernel. La necessità di introdurre una nuova macro è dettata dal fatto che \texttt{printk()} porta a deadlock, ~\cite{BBBThesis}.\\
+
+\noindent Per evitare questo problema un dispositivo viene continuamente interrogato per esportare i messaggi di tracciamento. Questa soluzione risulta molto onerosa, di conseguenza una volta terminata la fase di debugging viene disabilitato.\\
+
+\subsection{\textit{Feather-Trace}}
+
+\noindent \textit{Feather-Trace} è un toolkit di tracciamento per sistemi che comporta bassi overhead. Esso permette di tracciare il comportamento del sistema raccogliendo informazioni riguardo allo stato ed alle performance durante l'esecuzione per poi analizzare tali dati offline. Questi strumenti sono stati scelti per la loro semplicità ed efficienza.\\
+
+\noindent Mette a disposione due componenti:\\
+
+\begin{itemize}
+	\item \textit{static trigger}, modifica il normale flusso tramite la chiamata di callback fornite dall'utente, permettendo di effettuare le azioni volute. L'overhead di questa operazione è reso minimo dall'utilizzo dell'operazione assembly di \textit{jump}.
+	\item un buffer che permette scritture in ordinamento FIFO \textit{multi-writer} senza attesa, utilizzato per raccogliere i dati degli overhead. Il processo che intende scrivere nel buffer non deve attendere e le operazioni di copia sono ridotte al minimo. Un processo non real-time periodicamente legge il buffer e ne trasferisce i dati in memoria.\\
+\end{itemize}
+
+\noindent Dettagli dell'implementazione possono essere trovati in ~\cite{Brandenburg07feather-trace:a}.\\
+
+\noindent In LITMUS\textsuperscript{RT} \textit{Feather-Trace} viene utilizzato sia per il rilevamento dei eventi di scheduling sia per registrare timestamp per i campionamenti. Registrando due timestamp ad inizio e fine di una determinata operazione si è in grano di calcolare il costo di una primitiva o di un blocco di operazioni. Gli eventi sono elaborati offline per creare grafici per avere una visualizzazione dell'esecuzione del task-set, molto utile in base di debugging per travare gli errori. Gli strumenti per l'elaborazione dei dati sono \texttt{sched\_trace()} per gli eventi e \texttt{feather-trace} per il campionamento degli overhead.\\
+
+\section{\textit{experiment-scripts}}
+\label{sec:exp-script}
+
+\noindent Una breve panoramica su questo insieme di script entra nel dettaglio della fase di generazione ed esecuzione degli esperimenti, in particolare nel formato dei file necessari. \textit{Experiment-scripts} fornisce un insieme di script python per facililtare la creazione ed esecuzione di un taskset ed infine l'analisi dei dati raccolti e la loro rappresentazione grafica.\\
+
+\begin{itemize}
+	\item \texttt{gen\_exps.py} per la creazione degli esperimenti
+	\item \texttt{run\_exps.py} per l'esecuzione dell'esperimento
+	\item \texttt{parse\_exps.py} per eleaborare i dati del tracciamento di LITMUS\textsuperscript{RT}
+	\item \texttt{plot\_exps.py} per la rappresentazione grafica dei dati in formato csv.
+\end{itemize}
+
+\noindent \texttt{gen\_exps.py} permette di creare uno o più esperimenti grazie ad un unico comando. Tramite alcuni parametri è possibile specificare per esempio il plugin scelto, il numero di task ed il numero di CPU.\\
+
+\noindent L'esecuzione dello script genera due file contenuti in un unica folder il cui nome riporta i paramentri principali specificati:
+
+\begin{itemize}
+	\item \texttt{params.py} fornisce informazioni riguardanti l'esperimento, quindi lo scheduler scelto, il numero di CPU, se i periodi sono arominici, la distribuzione di unilizzazione tra i task, la durata dell'esecuzione del taskset, etc. Di seguito un esempio di configurazione del file:\\
+
+ \begin{lstlisting}[frame=single,language=Python]  % Start your code-block
+	'periods': 'harmonic',
+	'release_master': False,
+	'duration': 30,
+ 	'utils': 'uni-medium',
+ 	'scheduler': 'P-FP',
+ 	'cpus': 4
+\end{lstlisting}
+
+	\item \texttt{sched.py} contiene la lista di task che costituiscono l'esperimento secondo un formato ben preciso: \\
+
+ \begin{lstlisting}[frame=single,language=Python]  % Start your code-block
+-p 0 -q 10 1 8.0
+-p 0 -q 40 2 17.5
+-p 1 -q 10 1 8.0
+-p 2 -q 10 3 7.0
+-p 2 -q 20 2 8.0
+-p 2 -q 30 1 32.0
+-p 3 -q 30 1 11.0
+\end{lstlisting}
+
+Nell'esempio riportato sono presenti 7 task allocati su 4 CPU, per ognuno e' specificata la partizione (\texttt{-p}), la priorita' (\texttt{-q}), WCET e periodo. Questi parametri sono necessari per avviare l'esecuzione dei task tramite l'utilizzo di \texttt{rt-spin} (vedi \ref{sec:liblitmus}).
+
+ \end{itemize}
+
+ \noindent Lo script di generazione è stato modificato per poter specificare il rapporto di utilizzazione voluto dell'interno taskset generato, in modo tale da poterlo variare ed ottenere così esperimenti su workload crescenti. Un'ulteriore modifica è stata apportata per creare taskset che prevedano l'utilizzo di risorse. L'assegnazione della risorse ai task viene effettuata in modo casuale, ai task designati viene specificato il protocollo da utilizzare per accedere la risorsa, la lunghezza della sezione critica ed un identificativo della risorsa stessa. Il file \texttt{sched.py} dopo tale modifica risulta il seguente:\\
+
+ \begin{lstlisting}[frame=single,language=Python]  % Start your code-block
+-p 0 -q 10 1 8.0
+-p 0 -q 40 -X MRSP -L 0.5 -Q 1 2 17.5
+-p 1 -q 10 1 8.0
+-p 2 -q 10 3 7.0
+-p 2 -q 20 -X MRSP -L 0.5 -Q 1 2 8.0
+-p 2 -q 30 1 32.0
+-p 3 -q 30 -X MRSP -L 0.5 -Q 1 1 11.0
+\end{lstlisting}
+
+\noindent Il nuovo taskset prevede che 3 task allocati nelle CPU 0, 2 e 3 condividano la risorsa con id 1 (\texttt{-Q 1}) gestita dal protocollo d'accesso MrsP (\texttt{-X MRSP}) ed infine che la sessione critica sia pari a mezzo millisecondo (\texttt{-L 0.5}).
+
+\noindent \texttt{run\_exps.py} richiede in input una cartella contenente i file \texttt{sched.py} e \texttt{params.py} ed utilizza la libreria \textit{liblitmus} per attivare lo scheduler scelto, avviare i meccanismi di tracciamento, rilasciare i task ed infine raccoglie i dati riguardanti l'esecuzione, quindi gli overhead e gli eventi. Questi dati sono utili per l'elaborazione offline di \texttt{sched\_trace} e \texttt{feather-trace}.\\
+
+\noindent \texttt{parse\_exps.py} richiede in input i file di tracciamento generati dallo script precedente e ne genera delle statistiche riguardanti i singoli eventi ed overhead, infine \texttt{plot\_exps.py} si appoggia alla libreria \textit{Matplotlib} per generare grafici con i dati elaborati.
+
+\end{appendices}
