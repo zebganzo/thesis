@@ -9,6 +9,8 @@
 \input{figure/grafico_release.tex}
 \input{figure/grafico_cxs.tex}
 \input{figure/timeline.tex}
+\input{figure/overheads_suffered.tex}
+\input{figure/data_structure.tex}
 
 \section{Esperimenti e valutazioni}
 \label{sec:esperimenti}
@@ -321,12 +323,12 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \subsection{Calcolo degli overhead}
 \label{sec:overhead}
 
-\noindent MrsP combina approcci differenti ispirandosi in parte a protocolli esistenti, i quali nonostante alcuni aspetti positivi hanno un funzionamento impensabile per un sistema real-time oppure hanno una complessità che a livello teorico sembra ragionevole ma che in un ambiente reale non è sostenibile. Uno degli obiettivi di questo lavoro di tesi è quello di dimostrare che è possibile implementare il protocollo di Burns et al.~\cite{Burns:2013:SCM:2547348.2547350} a partire da uno scheduler P-FP con un sovraccarico ragionevole del sistema.
+\noindent MrsP combina approcci differenti in parte tratti da protocolli esistenti, i quali, nonostante alcuni aspetti positivi, hanno un funzionamento inapplicabile ad un sistema real-time oppure hanno una complessità che a livello teorico sembra ragionevole ma che in un ambiente reale non è sostenibile. Uno degli obiettivi di questo lavoro di tesi è quello di dimostrare che è possibile implementare il protocollo di Burns et al.~\cite{Burns:2013:SCM:2547348.2547350} a partire da uno scheduler P-FP con un sovraccarico ragionevole del sistema.
 
 \subsubsection{Esperimento}
 \label{sec:overhead_exp}
 
-\noindent Gli esperimenti esposti in questa sezione mirano a valutare l'implementazione e le scelte algoritmiche, i relativi overhead verranno studiati per capire chi ne risente ed in quali circostanze.\\
+\noindent Gli esperimenti esposti in questa sezione mirano a valutare l'implementazione e le scelte algoritmiche, i relativi overhead vengono studiati per capire quali task ne risentono ed in quali circostanze.\\
 
 \noindent Lo sviluppo del protocollo a partire dall'implementazione fornita da LITMUS\textsuperscript{RT} di \textit{partitioned fixed priority} ha reso necessario andare a modificare alcune primitive per integrare il protocollo di accesso. Quelle prese in considerazioni sono le seguenti:
 
@@ -342,30 +344,34 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \subsubsection{Configurazione}
 \label{sec:overhead_conf}
 
-
-\noindent Il sistema non permette di avere un release time unico per tutti i job, a meno di creare un taskset caratterizzato da periodi armonici, ma in questo caso risulterebbe difficile riuscire a testare alcuni meccanismi che solamente in casi particolari entrano in gioco. I task sono quindi soggetti a release latency che non è possibile controllare, di conseguenza per ottenere dei campionamenti per ogni meccanismo che caratterizza \textit{MrsP} è stato necessario creare un taskset sufficientemente grande nella speranza che si vengano a creare le circostanze per poterne usufruire.\\
-\noindent Il taskset è stato creato randomicamente generando 25 job suddivisi su 4 cpu in modo il più possibile bilanciato. Per ogni cpu sono stati selezionati randomicamente dei job aggiungendo la richiesta la risorsa condivisa. Un taskset prima di essere eseguito è stato analizzato con degli script per accertarsi che fosse \textit{feasible} andando ad applicare la \textit{response time analysis} aumentata con il protocollo \textit{MrsP}.\\
+\noindent Il sistema non permette di avere un release time unico per tutti i job, a meno di creare un taskset caratterizzato da periodi armonici, ma in questo caso risulterebbe difficile riuscire a testare alcuni meccanismi che solamente in casi particolari entrano in gioco. In un sistema privo di periodi arominici i task sono soggetti a release latency, di conseguenza non è possibile forzare determinate dinamiche. Per ottenere dei campionamenti per ogni meccanismo che caratterizza MrsP è necessario creare un taskset sufficientemente grande in modo che si vengano a creare le circostanze per poterne usufruire.\\
+\noindent Il taskset è generato randomicamente con 25 job suddivisi su 4 cpu in modo il più possibile bilanciato. Per ogni cpu sono selezionati alcuni job ai quali è aggiunta la richiesta alla risorsa condivisa. Ogni taskset prima di essere eseguito è analizzato con lo script creato per verificare che sia \textit{feasible} andando ad applicare la \textit{response time analysis} aumentata con il protocollo MrsP.\\
 
 \subsubsection{Obiettivo}
 \label{sec:overhead_ob}
 
-\noindent Lo scopo di questo esperimento è valutare l'impatto del protocollo in termini di overhead, da mettere in relazione con i tempi di esecuzione ed i costi aggiunti dal sistema.\\
+\noindent Lo scopo di questo esperimento è valutare l'impatto del protocollo in termini di overhead, i campionamenti sono messi in relazione con i tempi di esecuzione ed i costi aggiunti dal sistema.\\
 
-\noindent Non tutte le primitive risultano interessanti per lo studio dei costi che il protocollo aggiunge a \textit{run-time}: la creazione e la chiusura non vengono considerate in quanto eseguite in fase di inizializzazione e finalizzazione della risorsa.\\
+\noindent Non tutte le primitive sono interessanti per lo studio dei costi che il protocollo aggiunge a \textit{run-time}: la creazione e la chiusura non sono presi in considerazione in quanto eseguite in fase di inizializzazione e finalizzazione della risorsa.\\
 
-\noindent L'operazione di \textit{scheduling} subisce poche modifiche, esse rendono possibile bloccare la coda dei job ready quando la richiesta in testa a tale coda ha priorità inferiore rispetto al ceiling locale. Ne consegue che il costo della primitiva risulta uguale o minore rispetto alla versione originale, di conseguenza è poco interessante per i campionamenti.\\
+\noindent L'operazione di scheduling subisce poche modifiche, in particolare il blocco la coda dei job ready quando la richiesta in testa a tale coda ha priorità inferiore rispetto al ceiling locale. Ne consegue che il costo della primitiva risulta uguale o minore rispetto alla versione originale, di conseguenza è poco interessante per i campionamenti.\\
 
-\noindent Più complesse sono le primitive inerenti a \textbf{lock}, \textbf{release} e \textbf{finish-switch}, quello che ci si aspetta è che l'overhead aggiunto in caso di esecuzioni nella norma non sia elevato, e vada ad aumentare a seconda dei meccanismi attivati. Per esecuzione "normale" si intende quei casi in cui non vi sono interferenze da parte di job a priorità superiore al \textit{ceiling}, pertanto i job che contendono per il possesso della risorsa effettuano la richiesta, se occupata effettuano attesa attiva fino ad ottenerla, eseguono la sezione critica e la rilasciano.\\
+\noindent Più complesse sono le primitive inerenti a \textbf{lock} e \textbf{release} della risorsa e l'operazione di \textbf{finish-switch}; quello che ci si aspetta è che l'overhead aggiunto in caso di esecuzioni nella norma non sia elevato e che vada ad aumentare a seconda dei meccanismi attivati. Per esecuzione "normale" si intende quei casi in cui non vi sono interferenze al lock holder da parte di job a priorità superiore al ceiling locale, pertanto i job che contendono per il possesso della risorsa effettuano la richiesta, se occupata effettuano attesa attiva fino ad ottenerla, eseguono la sezione critica e la rilasciano.\\
 
-\noindent I costi rilevati nei campionamenti possono influenzare:\\
+\noindent I costi rilevati durante i campionamenti possono influenzare (\ref{fig:overheads_suffered}):\\
 
 \begin{itemize}
-	\item il solo job che sta eseguendo l'operazione, questo accade se non si va a modificare il \textit{ceiling} locale, di conseguenza non si causa blocco ai job a priorità inferiore a tale soglia;
-	\item la sola cpu in cui è allocato il job corrente, nei casi in cui i costi vengano generati in circostanze di \textit{ceiling} innalzato ma non si è in possesso della risorsa;
-	\item l'intero sistema, inteso come le cpu in cui vi sono job che stanno effettuando attesa attiva oltre che a quella del job che detiene la risorsa.
+	\item {\color{red} (i)} il solo job che esegue la primitiva, questo accade se non si va a modificare il ceiling locale, di conseguenza non si causa blocco ai job a priorità inferiore a tale valore;
+	\item {\color{red} (ii)} la sola cpu in cui è allocato il job corrente, questo succede nei casi in cui i costi vengono generati in circostanze di ceiling innalzato ma non si è in possesso della risorsa;
+	\item {\color{red} (iii)} l'intero sistema, inteso come le cpu in cui stanno eseguendo job che attendono di accedere la risorsa.
 \end{itemize}
 
-[IMMAGINE CON I TRE LIVELLI?]
+\begin{figure}
+\centering
+\overheadsSuffered{1.5}{1.5}
+\caption{Overhead e relativa influenza nel sistema.}
+\label{fig:overheads_suffered}
+\end{figure}
 
 \subsubsection{Risultati}
 \label{sec:overhead_ris}
@@ -379,6 +385,13 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 	\item in base alle informazioni ottenute al passo precedente, se il proprietario non è in esecuzione, cioè è accodato nella coda dei job ready di un altro processore, gli viene concesso di eseguire sulla cpu correte, viene percio' effettuata una migrazione;
 	\item se il job che ha effettuato la richiesta non ha ottenuto la risorsa effettua attesa attiva fino ad arrivare in testa alla coda FIFO.
 \end{enumerate}
+
+\begin{figure}
+\centering
+\data{1.5}{1.5}
+\caption{Strutture dati.}
+\label{fig:datas}
+\end{figure}
 
 [DIAGRAMMA DI FLUSSO?]
 
