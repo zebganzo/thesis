@@ -1,7 +1,212 @@
-% \section{Introduzione}
-% \label{sec:introduzione}
+\section{Introduzione}
+\label{sec:introduzione}
 
-% \noindent Gli esperimenti eseguiti hanno lo scopo di valutare l'implementazione proposta di \textit{MrsP} da diversi punti di vista.\\
+Il continuo progresso tecnologico ha portato ad un rapido incremento della complessita del software e della richiesta di prestazioni hardware. Inizialmente per aumentare la potenza di calcolo si ricorreva a processori sempre piu' potenti, ma tale approccio, una volta raggiunto un certo limite, ha portato a problematiche come l'elevato consumo di energia e l'eccessiva dissipazione di calore. Pertanto, i produttori, Intel in primis, hanno adottato piattaforme multiprocessor per lo sviluppo di sistemi real-time, quindi affiancando piu' processori piuttosto che potenziarne uno unico.\\
 
-% \subsection{Tmp}
-% \label{sec:introduzione_}
+Burns e Wellings ([Burns and Wellings, 2009]) definiscono un sistema real-time come segue:\\
+
+\textit{"an information processing system which has to respond to externally generated input stimuli within a finite and specified period. The correctness depends not only on the logical result but also on the time it was delivered. The failure to respond is as bad as the wrong response."}\\
+
+Il cambiamento di tendenza ha spostato l'attenzione della ricerca dai sistemi single processor, per i quali lo studio e' maturo, alle piattaforme multiprocessor. Nonostate i grandi sforzi ed i recenti risultati, gli algoritmi di scheduling e le tecniche di analisi di schedulabilita' per i sistemi multiprocessor non sono ancora al livello dei precedenti single processor [Davis and Burns, 2011].\\
+
+[Liu 1969] nota come lo scheduling sia un problema intrinsecamente piu' complicato:\\
+
+\textit{“Few of the results obtained for a single processor generalize directly to the multiple processor case; bringing in additional processors adds a new dimension to the scheduling problem. The simple fact that a task can use only one processor even when several processors are free at the same time adds a surprising amount of difficulty to the scheduling of multiple processors.”}\\
+
+\subsection{Overview sistemi real-time}
+\label{sec:overviewRTS}
+
+In questa sezione e' descritto il modello di task sporadico utilizzato e trae origine dal lavoro di Mok ([Mok 1983]). Tale scelta e' dettata dal fatto che il sistema LITMUS\textsuperscript{RT} e' sviluppato su questo modello, mentre MrsP e' anch'esso basato su un modello sporadico senza specificarne uno in particolare. Nel proseguo del documento la nomenclatura originale subisce alcune modifiche per coerenza con il lavoro di Burns e Wellings ~\cite{Burns:2013:SCM:2547348.2547350}.
+
+\subsubsection{Workload}
+\label{sec:overviewWL}
+
+Consiste in un insieme di $n$ task $\tau = {\tau_1, ... , \tau_n}$. Ogni task $\tau_i$ e' ripetutamente invocato in modo asicrono da un evento esterno, per esempio un interrupt da parte di un dispositivo o lo scadere di un timer. Quando invocato esso rilascia un \textit{job} per gestire l'evento che l'ha scaturito. Il $j-esimo$ job di un task $\tau_i$ e' identificato con $J_{i,j}$ ($j \geq 1$). In casi in cui l'indice del job risulti irrilevante $J_i$ denota un qualsiasi job di $\tau_i$.\\
+
+\paragraph{Tasks.} Ogni task $\tau_i$ e' caratterizzato da una tripla di valori:\\
+\begin{itemize}
+	\item $C_i$, \textit{worst case execution time} (WCET), cioe' il tempo massimo richiesto per eseguire;
+	\item $T_i$, il periodo, quindi il tempo minimo tra un evento di release ed il successivo;
+	\item $D_i$, la dealdine, lasso di tempo a disposizione per eseguire.\\
+\end{itemize}
+
+Mentre il periodo e la deadline sono arbitrarie, il WCET dipende dalla piattaforma di esecuzione, quindi l'hardware, e la semantica del job. Nel primo caso dipende da molti aspetti, per esempio la cache, la quale ha comportamenti che dipendono dalle esecuzioni precedenti che ne cambiano lo stato, o la frequenza di clock dei processori. Il secondo dipende dall'esecuzione del job, cioe' se contenga istruzioni di \textit{branch} o meno, di conseguenza il flusso delle operazioni varia modificando il tempo di esecuzione. Il valore di WCET deve essere un limite massimo certo che rende il modello deterministico.\\
+
+I valori che compongono la tripla sono soggetti ad alcuni vincoli:\\
+
+\begin{itemize}
+	\item $C_i > 0$, il tempo di esecuzione deve essere non nullo;
+	\item $T_i \geq C_i$, il periodo deve essere maggiore o uguale al WCET;
+	\item $D_i \geq C_i$, la dealdine deve essere maggiore o uguale al WCET.\\
+\end{itemize}
+
+\paragraph{Jobs.} Un job $J_{i,j}$ diviene disponibile per l'esecuzione al suo evento di rilascio $a_{i,j}$, con $a_{i,j} \geq 0$. La frequenza delle release di un job sono determinate dal periodo del task corrispondente: $a_{i,j+1} ≥ a_{i,j} + T_i$. Ogni job $J_{i,j}$ richiede al massimo $C_i$ tempo del processore per completare la propria esecuzione entro $f_{i,j}$, con $f_{i,j} \geq a_{i,j}$. Un job si definisce in \textit{pending} dal momento di rilascio fino al suo completamento. Un task non puo' avere due job in pending allo stesso momento, quindi un job viene rilasciato solamente se il suo predecessore ha terminato la propria esecuzione. Il \textit{response time} di un job e' pari al tempo in cui rimane pending; quindi $r_{i,j} = f_{i,j} − a_{i,j}$.\\
+Il modello sporadico deriva dal modello a task periodico rilassando il vincolo che obbliga un task ad avere release strettamente periodiche, cioe' $ai,j = a_{i,1} + (j − 1) * T_i$; tale limite diviene un valore minimo e non un vincolo stretto.
+
+\paragraph{Deadline.} La deadline relativa $D_i$ determina la quantita' di tempo a disposizione del job per il completamento. Il job $J_{i,j}$ deve eseguire entro la deadline assoluta $d_{i,j} = a_{i,j} + D_i$. In caso di esecuzione che termina dopo la deadline assoluta, si e' in presenza di \textit{deadline miss} e comporta un ritardo del job, formalmente definita \textit{tardiness}. Una deadline miss causa il ritardo nel release del successivo job.\\
+La relazione tra deadline e periodo permette di categorizzare i task:
+
+\begin{itemize}
+	\item deadline implicite se $D_i = T_i$ per ogni $\tau_i \in \tau$;
+	\item deadline vincolate se $D_i \leq T_i$ per ogni $\tau_i \in \tau$;
+	\item deadline arbitrarie se non vi e' alcun vincolo.
+\end{itemize}
+
+La categoria di deadline ha un importante impatto sulle tecniche di analisi di schedulabilita', al contrario dal punto di vista dell'implementazione non comporta rilevanti differenze. Nel prosuguo di questo documento si assume un insieme di task con deadline implicite.\\
+
+In figura [X] e' riassunto parte del modello visto finora:
+
+[IMMAGINE DEL JOB]
+
+\paragraph{Processor demand.} $C_i$ indica il tempo richiesto da ogni job di $\tau_i$, cioe' per quanto tempo al job e' assegnato uno dei processori per eseguire il WCET entro la deadline relativa. In presenza di una lunga serie di job rilasciata da parte di un task e' utile normalizzare la domanda di processore mettendo in relazione periodo e deadline; si definisce quindi un fattore di utilizzazione $U_i = C_i / P_i$ per ogni $\tau_i$. Tale valore e' importante in questo identifica l'ammontare di tempo in esecuzione richiesto per l'intera durata di vita del task; se tale necessita' non e' soddisfatta l'accumulo di tardiness puo' affliggere l'intero sistema.
+
+\paragraph{Vincoli temporali.} Un sistema viene categorizzato in base ai vincoli temporali dei task che lo compongono, cioe' cosa consegue ad una deadline miss:
+\begin{itemize}
+	\item hard real-time, se causa un \textit{fatal fault};
+	\item soft real-time, se e' indesiderabile;
+	\item firm, se non diminuisce i risultati delle computazioni non sono piu' utili.
+\end{itemize}
+
+\subsubsection{Modello delle risorse}
+\label{sec:overviewRM}
+
+Le risorse di un sistema si dividono in attive e passive. Un job necessita di una risorsa attiva per poter progredire nella propria esecuzione; esse consistono nei processori. Al contrario le risorse passive sono utilizzate dai job in quanto forniscono funzionalita', generalmente sono riutilizzabili a meno che il loro utilizzo non le esaurisca; esse sono per esempio memoria, lock e mutex.\\
+
+L'organizzazione dei processori permette di classificare i sistemi real-time in base al loro numero ed il loro funzionamento. Sistemi con un unico processore sono definiti \textit{uniprocessor}; al contrario \textit{multiprocessor} indica un numero pari o maggiore a due. In base alla loro configurazione un sistema multiprocessor puo' essere:
+
+\begin{itemize}
+	\item omogeneneo, i processori che lo compongono sono identici per prestazioni e caratteristiche (cache, I/O bus, set di istruzioni, etc.): il WCET di ogni job non dipende dall'unita' su cui esegue, di conseguenza sono interscambiabili;
+	\item uniforme, se si differenziano per prestazioni ma hanno caratteristiche differenti: i job eseguono con tempistiche differenti sui vari processori;
+	\item eterogeneo, i processori hanno differenti prestazioni e caratteristiche: non tutti i job possono eseguire su tutti i processori.
+\end{itemize}
+
+L'organizzazione dell'accesso alla memoria e le comunicazioni tra processori identifica due differenti categorie di sistemi: a memoria condivisa ed a memoria distribuita. Nel primo caso i processori condividono un'unica memoria centrale tramite un bus condiviso, nel secondo ogni processore (o un sottoinsieme ristretto) ha una propria memoria e comunica tramite un bus dedicato allo scambio di messaggi. [FIGURA PAG22 BBB] Baer (2010) - Bjerregaard and Mahadevan (2006). Il sistema a distribuita incombe in alti overhead in caso di migrazioni, in quanto l'intero stato del processo migrante deve essere copiato da una memoria all'altra. Il sistema a memoria condivisa necessita di copiare solamente i registri hardware da un processore all'altro, pertanto l'operazione e' dastricamente meno onerosa.\\
+Il sistema a memoria e' condivisa e' piu' utilizzato rispetto alla versione distribuita nonostante il bus condiviso per l'accesso alla memoria sia un collo di bottiglia: l'accesso e' garantito ad un solo processo o ad un numero limitato al medesimo momento. Un sistema di questo tipo si differenzia a sua volte in due categorie in base alla gestione dell'accesso: \textit{uniform memory access} (UMA), se viene garantito uguale gestione a tutti processi, o \textit{non-uniform memory access} (NUMA), nel caso contrario.\\
+
+Data la sua semplicita', la maggior parte dei lavori in letteratura riferiscono a sistemi multiprocessor identici con memoria condivisa ad accesso uniforme, piu' comunemente definita SMP (symmetric multiprocessor platform). Nel proseguo del documento e' adottata tale architettura.
+
+\subsubsection{Scheduler}
+\label{sec:overviewSCHED}
+
+L'obiettivo di uno scheduler real-time e' di gestire l'esecuzione del sistema, quindi soddisfare le richieste dei task che compongono il workload soddisfando i requisiti temporali. Formalmente, un algoritmo di scheduling e' un algoritmo che, dato una sequenza di job deve determinare in ogni istante quale job deve eseguire ed in quale processore. Il piano di esecuzioni risultante dall'algoritmo e' definito \textit{schedule}.Un algoritmo per essere valido deve rispettare i seguenti vincoli:\\
+
+\begin{itemize}
+	\item in ogni istante ad ogni processore e' assegnato al massimo un job 
+	\item in ogni istante un job e' assegnato al massimo un processore
+	\item un job non e' eseguito fino al momento della sua release
+	\item la quantita' di tempo del processore assegnata ad ogni job e' al massimo pari al suo WCET
+	\item un job esegue su un processore per volta.
+\end{itemize}
+
+Un algoritmo si definisce corretto se produce uno schedule valido. A sua volta uno schedule e' definito \textit{feasible} se ogni job esegue entro la propria deadline. A sua volta un taskset e' \textit{schedulable} in relazione ad un algoritmo di scheduling se produce uno schedule feasible, pertanto e' una proprieta' che dipende dal taskset e non dipende dall'algoritmo. Al contrario, un algoritmo e' definito ottimo se genera sempre uno schedule feasible dato un qualsiasi taskset feasible.\\
+
+Un test di schedulabilita' determina se un algoritmo genera uno schedule feasible se applicato ad un particolare taskset, esso puo' essere sufficiente o necessario: nel primo caso un esito negativo indica un taskset non feasible, nel secondo caso un risultato positivo indica un taskset feasible. Un test che e' sia sufficiente che necessario e' definito esatto.\\
+
+\subsection{Real-time scheduling in sistemi multiprocessor}
+\label{sec:SchedMulti}
+
+Lo scopo dello scheduler e' quello di selezionare ad ogni evento di scheduling un job dalla coda ready, quindi da quelli in attesa di eseguire. L'organizzazione e la gestione di tale coda permette di differenziare gli scheduler in base a diverse caratteristiche.\\
+
+I sistemi in cui e' presente un unica coda sono definiti globali: le esecuzioni su tutti i processori sono gestite prelevando i job da un'unica coda, essi possono di conseguenza eseguire su tutti i processori in modo indistinto. Al contrario in un sistema partizionato i task sono suddivisi ed allocati ognuno in un unico processore, di conseguenza vi e' una coda per ogni processore sulla quale lo scheduler opera. Una versione intermedia tra i due sistemi prevede che i processori siano divisi in sottoinsiemi e per ognuno di essi vi sia un'unica coda, tale configurazione prende il nome di scheduler a cluster. Questi tre sistemi sono messi a confronto in [FIGURA].\\
+
+L'ordinamento della coda avviene in base alla proprieta', la modalita' di assegnazione di tale valore ai job permette di distinguere gli algoritmi:
+
+\begin{itemize}
+	\item task a priorita' fissa: ad ogni task e' assegnata una certa priorita' che viene applicata ad ogni job che rilascia;
+	\item job a priorita' fissa: i job del medesimo task possono avere priorita' differente, ma ogni job ha un'unica priorita'; un esempio e' \textit{Earliest Deadline First} (EDF)
+	\item priorita' dinamica: la priorita' di un job puo' assumere differenti valori, per esempio \textit{Least Laxity First} (LLF).
+\end{itemize}
+
+L'approccio partizionato, studiato per la prima volta da Dhall and Liu (1978), e' largamente utilizzato in quanto ogni singola partizione puo' essere analizzata ed eseguita come un sistema single processor, con i relativi vantaggi dati da uno studio di tecniche ed algoritmi maturi. Nonostante questo ha lo svantaggio di dipendere dalla offline di allocazione dei task tra i processori; tale problema e' riportabile al ben piu' noto bin-packing. Esso e' uno dei problemi classici dell'informatica ed e' NP-hard (Garey and Johnson, 1979). Di conseguenza l'intero sistema dipende dalla risoluzione di tale problema, conducendo quindi ad una soluzione al di sotto delle effettive prestazioni della piattaforma utilizzata dato che non si raggiunge un fattore di utilizzazione vicino all'ottimo. Oltre a questo svantaggio, la condivisione di risorse tra task allocati in differenti processori causa un negativo impatto alla schedulabilita' del taskset. Al contrario un sistema globale garantisce un alto livello di utilizzazione, ma comporta alti valori di overhead dati dalla gestione di un'unica coda.\\
+
+Il lavordi [survey] propone un'ottima panoramica dei principali scheduler in sistemi partizionati, clustered e globali. Il proseguo del documento si focalizza su sistemi partizionati con utilizzo di task a priorita' fissa.
+
+\subsection{Real-Time Locking Protocols}
+\label{sec:lockProtocols}
+
+Il sistema descritto nella Sezione~\ref{sec:overviewRTS} assume che i task sono indipendenti, quindi che non condividano risorse diverse dal processore stesso, di conseguenza gli \textit{m} task ready (con \textit{m} pari al numero di processori) con priorita' maggiore eseguono, quindi i job proseguono fino al loro completamento ogni qual volta gli sia assegnato un processore. Molti degli algoritmi di scheduling studiati e le tecniche di analisi di schedulabilita' sono basati su un sistema di questo tipo. Tuttavia, in un sistema reale i task condividono delle risorse, basti pensare a dispositivi di I/O, buffer, strutture dati, etc. I task non risultano piu' indipendenti, il progredire della loro esecuzione dipende dai job con cui condividono delle risorse.\\
+
+La condivisione di risorse necessita di meccanismi di sincronizzazione per prevenire situazioni di inconsistenza. Questa necessita' e' soddisfatta tramite l'utilizzo di \textit{lock}: il job che rischiede una risorsa in uso deve attendere il suo rilascio, questo preclude l'avanzamento dell'esecuzione nonostante sia assegnato ad un processore. Sono possibili altri approcci definiti \textit{non-blocking} che permettono al job di non attendere, ma tali protocolli sono molto onerosi per memoria richiesta o overhead che comportano.\\
+
+In un sistema singleprocessor un job che richiede una risorsa occupata puo' solamente sospendersi in attesa del suo rilascio, in caso contrario il possessore non potrebbe portare a termine la sezione critica (cioe' la parte di esecuzione che richiede l'uso della risorsa e che necessita di sincronizzazione) causando cosi' stallo nell'intero sistema. Le circostanze in cui un job a priorita' inferiore esegue a discapito di uno a priorita' superiore a causa della condivisione di risorse e' chiamta \textit{inversione di priorita'}. Uno degli obiettivi principali di un protocollo di accesso a risorsa e' quello di limitare tale inversione in quanto rende complesso effettuare un test di schedulabilita'. In un sistema multiprocessor il job puo' sospendersi, come nel caso precendete, o effettuare attesa attiva fino al suo rilascio, tale tecnica e' definita \textit{spinlock}. [grafico con due job, uno esegue l'altro attende]. L'utilizzo di spinlock ha lo svantaggio di sprecare l'esecuzione del processore, ma ha il vantaggio di essere di semplice implementazione e causa basso overhead; al contrario la sospensione, tra i vari svantaggi, causa allungamento nel tempo di blocco subito da parte del job che richiede la risorsa. Per uno studio dettagliato della gestione del caso di blocco da parte di un job si veda [Brandenburg et al. 2008b].
+
+Nelle seguenti sezioni sono esposti i principali protocolli di accesso a risorsa, proponendo un iniziale panoramica sulle versione singleprocessor che sono alla base dei successivi protocolli multiprocessor.
+
+\subsection{Singleprocessor Protocols}
+\label{sec:lockProtocols.single}
+
+I protocolli per piattaforme con un unico processori sono stati ampiamenti studiati, in particolare diversi test di schedulabilita' per FP e EDF tengono conto dell'inversione di priorita' tra job.
+
+\paragraph{Non-preemptive critical section protocol (NPC).} Il modo piu' semplice per limitare il tempo di blocco causato dall'inversione di priorita' e' quello di inibire il prerilascio durante la sezione critica. Pertanto il job che richiede ed ottiene la risorsa non viene prerilasciato da job a priorita' superiore fino a che non porta a termine l'esecuzione della risorsa. NPC ha il vantaggio di essere facilmente implementabile e comporta bassi livelli di overhead, in particolare per task a livello kernel in quanto e' sufficiente disabilitare gli \textit{interrupt}.\\
+Il blocco subito da un job a priorita' superiore che richiede la risorsa occupata nel caso peggiore e' pari alla lughezza della sezione critica stessa ed avviene solamente una volta, precisamente prima del rilascio. Ne consegue che NPC e' facilmente integrabile nei test di schedulabilita'. Lo svantaggio e' che causa blocco anche ai job che non condividono la risorsa.\\
+
+\paragraph{Priority inheritance protocol (PIP).} Sha et al. (1990) propone un protocollo che mira a non causare blocco a job priorita' superiore che non accedono la risorsa. La particolarita' del protocollo e' che viene innescato solamente nei casi in cui il job che detiene la risorsa causa inversione di priorita', in tal caso la priorita' del job viene innalzata al valore massimo tra tutti i job in attesa in quel determinato istante. Tale protocollo ha lo svantaggio che non limita il tempo di blocco, inoltre, in determinate circostanze, conduce a deadlock.\\
+
+\paragraph{Priority-ceiling protocol (PCP).} (Sha et al., 1990), disegnato principalmente per algoritmi FP, risolve il problema di deadlock del protocollo precedente. Ad ogni risorsa e' abbinato un ceiling pari alla priorita' massima tra tutti i job che durante l'esecuzione la richiedono, inoltre e' previsto un ceiling di sistema pari al ceiling piu' alto tra tutte le risorse in uso in un determinato momento. La richiesta di accesso da parte di un job e' soddisfatta solamente se la sua priorita' e' superiore al ceiling di sistema, una volta ottenuta la risorsa, se nesessario, il ceiling di sistema viene innalazato. Questo meccanismo di ceiling garantisce che una richiesta di un job venga soddisfatta solamente se tutte le risorse di cui potrebbe necessitare sono al momento libere.\\
+
+\paragraph{Stack resource policy (SRP).} (Baker (1990, 1991)) E' anch'esso un protocollo basato su un sistema di ceiling. Ad ogni risorsa e' abbianto un ceiling ed inoltre e' presente un ceiling del sistema calcolati e gestiti secondo le indicazioni di PCP. La differenza sostanziale sta nel fatto che ad un job non e' permesso di eseguire fino a che la sua priorita' non e' superiore al ceiling di sistema, il comportamento che ne consegue e' che un job esegue solamente se tutte le risorse di cui potrebbe necessitare sono libere. Pertanto il job subisce l'inversione di priorita' solamente una volta e prima dell'inizio della sua esecuzione.\\
+
+\subsection{Multiprocessor Protocols}
+\label{sec:lockProtocols.multi}
+
+In sistemi multiprocessor le risorse sono distinte in due categore: locali e globali. Nel primo caso i task che la richiedono sono tutti allocati nel medesimo processore, quindi possono essere utilizzati protocolli di accesso tipici di sistemi singleprocessor. Al contrario, nel secondo caso la risorsa e' richiesta da job che eseguono su differenti processori.\\
+
+I primi protocolli per sistemi multiprocessor sono il frutto di un riadattamento di protocolli singleprocessor. Di seguito sono introdotti e brevemente discussi i principali.
+
+\paragraph{Distribuited priority-ceiling protocol (DPCP).} (Rajkumar, 1991) 
+
+
+
+Non ha senso comparare le priorita' tra processori differenti. -> boosting (come Non-preemtpin ma con la differenza che tra boosted si prerilasciano).
+Le richieste simultanee vengono gestite in base alla priorita' di base. La differenza tra i due e' dove avviene l'esecuzione della sezione critica.
+
+distributed-memory multiprocessors -> ogni risorsa e' accessibile solamente da un determinato processore.
+In a shared-memory system, la risorsa deve essere allocata ad un processore arbitrario a priori per poter effettuare le analisi.
+DPCP implementa remote procedure call (RPC), quando un job effettua una richiesta di accesso essa viene presa in carico da parte di un agente locale al processore della risorsa, esso esegue in modo sincrono. J_i si sospende fino a che la richiesta non viene portata a termine. La priorita' J_i resta invariata mentre viene aumentata quella dell'agente (i (indice del job) - n), esso accedera' la risorsa secondo le regole di PCP. Multiple richiste vengono elaborate in ordine in base alla priorita' del job richiedente e secondo le regole di PCP.
+
+DPCP prevede che la risorsa globale sia allocata in unico processore, e che ad ogni task che la richede corrisponda un agente che prende in carico tale richiesta e la sua esecuzione. Una volta attivato l'agente il job si sospende in attesa del completamento della sezione critica. L'agente innalza la propria priorita' al valore i (l'indice del job) - n (il numero di job totali), in questo modo si assicura che l'agente subisca un innalzamento di priorita' che permette solamente agli altri agenti in possesso di una risorsa di prerilasciarlo. L'indice i e' assegnato ai job in ordine di priorita' effettiva, in questo modo i prerilasci tra gli agenti rispecchiano le priorita' dei task che li attivano. Gli agenti locali sono gestiti in base al protocollo PCP.
+Questo tipo di approccio causa diversi tipi di blocco in cui incorrono i job nei vari processori e gli agenti nel processore di sincronizzazione rendendo cosi' i test di schedulabilita' particolarmente pessimistici.
+
+MPCP e' un'evoluzione del precedente protocollo, progettato per sistemi con memoria condivisa. Le risorse globali possono essere accedute da ogni processore, pertanto non vi e' piu' bisogno dell'utilizzo di agenti. Una volta ottenuto l'accesso ad una risorsa il job innalza la propria priorita' a quella piu' alta tra tutti i task che al richiedono. Questo tipo di priority boosting velocizza l'esecuzione della sezione critica diminuendo l'ammontare di inversione di priorita' subita dai job che condividono la risorsa o a priorita' inferiore al "ceiling", tuttavia senza creare blocco ai job con priorita' superiore al ceiling globale. Dato che le priorita' non sono uniche, a parita' di valore non viene permesso il prerilascio, in questo modo non si ritarda l'esecuzione della sezione critica.
+Anhce in questo caso i job che richiedono una risorsa occupata incorrono in diversi tipi di blocco in quanto l'accesso e' garantito in base alla priorita', permettendo quindi ad altri job di accedere prima anche se l'hanno richiesta piu' tardi. Inoltre il blocco generato da altri job che non richiedono la risorsa potenzialmente possono ritardare l'esecuzione da parte del job in testa alla coda, causando cosi' ulteriori ritardi al job stesso ed agli altri in attesa.
+MPCP, come DPCP, soffre di ritardi aggiuntivi derivanti dall'auto sospensione da parte dei job in attesa della risorsa. Lakshmanan  in et al. (2009) propone una versione di MPCP che prevede "virtual spinning", da cui MPCP-VS. Il protocollo rivisitato dispone che il job si auto sospenda, ma che nessun altro job del medesimo processore con priorita' inferiore possa accedere ad una risorsa globale.
+
+MSRP
+
+
+
+
+MPCP, DPCP, ECC
+MSRP poco sopra
+OMIP
+MRSP++
+
+- LITMUS
+
+cos'e'
+linux
+architettura litmusSchedulability Analysis Concepts
+domain (code ecc.)
+migrazioni
+
+- CONTRIBUTO
+
+- STRUTTURA
+
+
+1.4.5
+Spin-Based Locking Protocols PAG14 bbb
+
+DONE process symmetri, multicore-processors PAG23 bbb
+
+DONE Temporal Correctness (hard, soft, ecc) PAG45 bbb
+
+DONE Schedulability Analysis Concepts PAG52 bbb
+
+2.3.2 Partitioned Multiprocessor Real-Time Scheduling 64
+bin packing ed euristiche
+
+2.4 Real-Time Locking Protocols 101
+
+\subsection{Tmp}
+\label{sec:introduzione_}

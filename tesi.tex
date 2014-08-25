@@ -42,7 +42,7 @@
 \usepackage{wrapfig} % Allows in-line images
 
 \usepackage{mathpazo} % Use the Palatino font
-\usepackage[T1]{fontenc} % Required for accented characters
+\usepackage[utf8x]{inputenc} % Required for accented characters
 \linespread{1.05} % Change line spacing here, Palatino benefits from a slight increase by default
 
 \makeatletter
@@ -57,12 +57,16 @@
 
 \vspace{50pt} % Some vertical space between the title and author name
 
+\setlength{\parindent}{0pt}
+
 {\large\@author} % Author name
 \\\@date % Date
 
 \vspace{40pt} % Some vertical space between the author block and abstract
 \end{flushright}
 }
+
+\setlength{\parindent}{0pt} % Disables automatic paragraph indentation
 
 %\setcounter{tocdepth}{5}
 \usepackage{hyperref} % Enables hyperlinking (e.g., ToC)
