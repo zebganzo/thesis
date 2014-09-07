@@ -20,21 +20,21 @@
 
 \noindent In un primo insieme di esperimenti il protocollo viene messo a confronto con altri due protocolli che, come MrsP, sono sviluppati su sistemi partizionati con condivisione di risorse globali: il primo è basato su un approccio \textit{simple ceiling}, mentre il secondo utilizza inibizione di prerilascio. In questo esperimento si considerano le prestazioni dei protocolli nell'esecuzione di taskset creati su misura per confrontare i \textit{response time} dei vari task in specifiche circostanze. Infine i risultati delle elaborazioni vengono confrontati con i dati ottenuti dalle simulazioni in Burns et al.~\cite{Burns:2013:SCM:2547348.2547350}.\\
 
-\noindent In seguito avviene una valutazione delle performance dell'implementazione: una serie di campionamenti permettono di verificare il costo aggiunto da \textit{MrsP} alle primitive dello scheduler, in particolare gli overhead per integrare il protocollo a P-FP (\textit{Partitioned Fixed Priority}).\\
+\noindent In seguito, si discute una valutazione di costi e prestazioni dell'implementazione: una serie di campionamenti permette di verificare il costo aggiunto da MrsP alle primitive dello scheduler, in particolare il tempo computazionale aggiunto per integrare il protocollo in P-FP.\\
 
-\noindent Infine risulta interessante il funzionamento dello scheduler in assenza di risorse, questo in quanto la presenza di risorse globali condivise in un sistema partizionato è un caso particolare di esecuzione, quindi un buon funzionamento in sua assenza risulterebbe positivo ai fini di una valutazione completa. A tal fine il sistema viene messo a confronto con P-FP, cioè il medesimo \textit{scheduler} privo di integrazione di \textit{MrsP}.\\
+\noindent Infine, risulta interessante il funzionamento dello scheduler in assenza di risorse, questo in quanto la presenza di risorse globali condivise in un sistema partizionato è un caso particolare di esecuzione, quindi un buon funzionamento in sua assenza risulterebbe positivo ai fini di una valutazione completa. A tal fine il sistema viene messo a confronto con P-FP, cioè il medesimo scheduler privo di integrazione con MrsP.\\
 
 \newpage
 
 \subsection{Ambiente di esecuzione}
 \label{sec:ambiente}
 
-\noindent Gli esperimenti sono stati effettuati con supporto di una macchina dotata di piattaforma i7-2670QM, tale architettura è stata lanciata da Intel nell'ottobre del 2011.
+\noindent Gli esperimenti sono stati effettuati su una macchina fisica dotata di piattaforma i7-2670QM, architettura lanciata da Intel nell'ottobre del 2011.\\
 
-\paragraph{Sandy Bridge} è l'architettura alla base del sistema, esso consiste in un quad-core con frequenza di clock pari a 2.2 GHz, 3.1 GHz in \textit{Turbo mode}. Ogni core possiede due livelli di cache, L1 e L2 di dimensione rispettivamente pari a 64 KB e 256 KB, ed un terzo livello L3 condiviso tra i 4 core con dimensione di 6 MB. La memoria chace utilizza un metodo di gestione creato da Intel e chiamato "Smart chace": permette di diminuire il rapporto globale di chace miss aumentando così l'efficienza del suo utilizzo. La tecnologia \textbf{Simultaneous Multi-Threading} permette di raddoppiare il numero di core, trasformando i 4 fisici in 8 logici, tramite l'esecuzione di due thread sul medesimo core. Questa opzione viene disabilitata in fase di test, allo stesso modo anche le funzioni di gestione della potenza sono state disattivate. Il \textbf{BUS} interno alla CPU ha una velocità pari a 100 MHz, mentre il BUS seriale che permette le comunicazioni tra processori e con il chipset raggiunge i 5 GT/s. I BUS per le connessioni tra processori e chipset utilizzano la tecnologia \textit{QuickPath Interconnect} (QPI), la cui caratteristica principale consiste nel permettere comunicazioni "point-to-point" tra le varie componenti; questo è indubbiamente un vantaggio rispetto all'utilizzo del BUS come canale unico per tutte le comunicazioni, permettendo così trasferimenti simultanei.\\
-La piattaforma utilizzata supporta la \textbf{Vanderpool Tecnology}, una particolare tecnologia di virtualizzazione per piattaforme Intel che rende possibile l'esecuzione simultanea di più sistemi operativi differenti contemporaneamente.\\
+\paragraph{Sandy Bridge} è l'architettura alla base del sistema. Esso consiste in un quad-core con frequenza di clock pari a 2.2 GHz, 3.1 GHz in \textit{Turbo mode}. Ogni core possiede due livelli di cache, L1 e L2 di dimensione rispettivamente pari a 64 KB e 256 KB, ed un terzo livello L3 condiviso tra i 4 core con dimensione di 6 MB. La memoria cache utilizza un metodo di gestione creato da Intel e chiamato "Smart cache": permette di diminuire il rapporto globale di \textit{cache miss} aumentando così l'efficienza del suo utilizzo [TODO funzionamento]. La tecnologia \textbf{Simultaneous Multi-Threading} permette di raddoppiare il numero di core, trasformando i 4 fisici in 8 logici, tramite l'esecuzione di due thread sul medesimo core. Questa opzione viene disabilitata in fase di test; allo stesso modo anche le funzioni di gestione della potenza sono state disattivate. Il \textbf{bus} interno alla CPU ha una velocità pari a 100 MHz, mentre il bus seriale che permette le comunicazioni tra processori e con il chipset raggiunge i 5 GT/s. I bus per le connessioni tra processori e chipset utilizzano la tecnologia \textit{QuickPath Interconnect} (QPI), la cui caratteristica principale consiste nel permettere comunicazioni "point-to-point" tra le varie componenti; questo è indubbiamente un vantaggio rispetto all'utilizzo del bud come canale unico per tutte le comunicazioni, permettendo così trasferimenti simultanei. [NON SI CAPISCE LA CORREZIONE]\\
+La piattaforma utilizzata supporta la \textbf{Vanderpool Tecnology}, una particolare tecnologia di virtualizzazione per piattaforme Intel che rende possibile l'esecuzione simultanea di più sistemi operativi ospiti contemporaneamente.\\
 
-\noindent Gli esperimenti sono stati eseguiti con il supporto di macchina virtuale; l'infrastruttura di virtualizzazione è basata su \textit{Kernel-based Virtual Machine} (\textbf{KVM}) che è specifica per i sistemi LINUX, mentre il software di emulazione QEMU permette di eseguire il sistema operativo come ospite della macchina fisica. L'immagine virtuale utilizzata è in formato compatibile con QEMU ed esegue la bzImage generata tramite la compilazione del kernel LITMUS\textsuperscript{RT}.\\
+\noindent Gli esperimenti sono stati eseguiti con il supporto di macchina virtuale; l'infrastruttura di virtualizzazione è basata su \textit{Kernel-based Virtual Machine} (\textbf{KVM}) che è specifica per i sistemi Linux, mentre il software di emulazione QEMU permette di eseguire il sistema operativo, nel nostro caso l'estensione di Linux con LITMUS\textsuperscript{RT}, come ospite della macchina fisica. L'immagine virtuale utilizzata è in formato compatibile con QEMU ed esegue la bzImage generata tramite la compilazione del kernel LITMUS\textsuperscript{RT}.\\
 
 \noindent Il comando di lancio della VM è il seguente:\\
 
@@ -43,18 +43,18 @@ La piattaforma utilizzata supporta la \textbf{Vanderpool Tecnology}, una partico
 -kernel bzImage -append "console=ttyS0,115200 root=/dev/hda1" \\ 
 -hda ubuntu.backing.qcow2.img}\\
 
-\noindent Tramite i parametri specificati il sistema di virtualizzazione riconosce che viene lanciato un kernel a 64 bit utilizzando KVM; quest'ultimo supporta la tecnologia di virtualizzazione specifica di Intel denominata Vanderpool citata precedentemente: permette di dividere un sistema in macchine virtuali distinte nonostante condividano le stesse risorse di sistema; ne risultano quindi due macchine che operano in maniera totalmente indipendente grazie all'appoggio di specifiche funzionalità hardware che consentono di ottimizzare tale condivisione. In particolare l'architettura hardware abbinata a questa configurazione permette un accesso diretto ai core fisici senza alcun livello di virtualizzazione intermedio.\\
-Alla macchina virtuale vengono assegnati il kernel LINUX \texttt{-hda}, 4 core fisici e 512 MB di memoria.\\
+\noindent Tramite i parametri specificati il sistema di virtualizzazione riconosce che viene lanciato un kernel a 64 bit utilizzando KVM; quest'ultimo supporta la tecnologia di virtualizzazione specifica di Intel denominata Vanderpool citata precedentemente: permette di dividere un sistema in macchine virtuali distinte nonostante condividano le stesse risorse di sistema; ne risultano quindi due macchine logiche, che operano in maniera totalmente indipendente grazie all'appoggio di specifiche funzionalità hardware che consentono di ottimizzare tale condivisione. In particolare, l'architettura hardware abbinata a questa configurazione permette un accesso diretto ai core fisici senza alcun livello di virtualizzazione intermedio.\\
+Alla macchina virtuale vengono assegnati il kernel Linux \texttt{-hda}, 4 core fisici e 512 MB di memoria.\\
 
 \noindent In fase di sviluppo sono stati utilizzati alcuni strumenti \textit{user-space} per interagire con LITMUS\textsuperscript{RT}:
 
 \begin{itemize}
-  \item \textit{liblitmus}, appendice \ref{sec:liblitmus}, è una libreria che permette la creazione ed il controllo di task set;
+  \item \textit{liblitmus}, Appendice~\ref{sec:liblitmus}, è una libreria che permette la creazione ed il controllo di task set;
   \item \texttt{TRACE()} permette di ottenere informazioni dall'esecuzione, è il principale strumento per effettuare debugging.\\
 \end{itemize}
 
 \noindent I campionamenti sono effettuati tramite \textit{Feather-Trace}, il quale consiste in una serie di strumenti atti a calcolare gli overhead delle primitive e rilevare gli eventi di scheduling. Tramite i dati raccolti è stato possibile valutare l'implementazione e confrontare i vari protocolli.\\
-Maggiori informazioni sui metodi di tracciamento e campionamento sono presenti nell'appendice \ref{sec:trace}.\\
+Maggiori informazioni sui metodi di tracciamento e campionamento sono presentati in Aappendice~\ref{sec:trace}.\\
 
 \subsubsection{Generazione ed esecuzione degli esperimenti}
 
@@ -62,8 +62,8 @@ Maggiori informazioni sui metodi di tracciamento e campionamento sono presenti n
 
 \begin{itemize}
 	\item generati manualmente per ottenere un determinato comportamento;
-	\item tramite applicazione java per taskset che richiedano l'utilizzo di risorse;
-	\item \textit{experiment-scripts}, una suit di script in python per la creazione di taskset.
+	\item tramite applicazione Java per taskset che richiedano l'utilizzo di risorse;
+	\item \textit{experiment-scripts}, una suite di script in Python per la creazione di taskset.
 \end{itemize}
 
 \noindent La libreria \textit{experiment-scripts} definisce un formato di file con il quale è possibile avviare con un unico comando un intero taskset:
@@ -73,39 +73,39 @@ Maggiori informazioni sui metodi di tracciamento e campionamento sono presenti n
   \item \texttt{params.py} contiene informazioni che specificano il plugin utilizzato ed informazioni riguardanti il taskset.
 \end{itemize}
 
-\noindent Una volta deciso lo scheduler da utilizzare si genera manualmente o tramite script il file che specifica il taskset. Maggiori informazioni riguardanti \textit{experiment-scripts} in \ref{sec:exp-script}.\\
+\noindent Una volta deciso lo scheduler da utilizzare si genera manualmente o tramite script il file che specifica il taskset. Maggiori informazioni riguardanti \textit{experiment-scripts} sono riportate in Appendice~\ref{sec:exp-script}.\\
 
 \newpage
 
 \subsection{Confronto tra protocolli}
 \label{sec:confronto_protocolli}
 
-\noindent Con protocolli \textit{lock-based} l'accesso viene gestito, in caso di risorsa occupata, tramite sospensione oppure attesa attiva. Nel primo caso se la risorsa è occupata il task richiedente si sospende ed inserito in una coda in attesa del suo rilascio. Al contrario in presenza di un protocollo \textit{spin-based} il richiedente effettua attesa attiva fino al momento di accesso alla risorsa. Tale argomento viene maggiormente discusso in Brandenburg et al. ~\cite{Brandenburg:2008:RSM:1440456.1440601}. MrsP si basa su approccio spin-based, in quanto permette di limitare il tempo di blocco subito, ma risulta cruciale come ed in quali circostanze effettuare attesa attiva.\\
+\noindent Con protocolli \textit{lock-based} l'accesso viene gestito, in caso di risorsa occupata, tramite sospensione oppure attesa attiva. Nel primo caso, se la risorsa è occupata, il task richiedente si sospende e viene inserito in una coda in attesa del suo rilascio. Al contrario, in presenza di un protocollo \textit{spin-based}, il richiedente effettua attesa attiva fino al momento di accesso alla risorsa. Tale argomento viene discusso approfonditamente in Brandenburg et al.~\cite{Brandenburg:2008:RSM:1440456.1440601}. MrsP si basa su approccio spin-based, in quanto tale scelta permette di limitare il tempo di blocco subito, ma risulta cruciale come ed in quali circostanze effettuare attesa attiva.\\
 
 \noindent In questo esperimento ci si sofferma su questo aspetto, cioè in che modo effettuare attesa attiva ed a quali condizioni, a seconda del valore di priorità scelto per proseguire l'attesa si ottengono comportamenti differenti che influenzano in modo diverso il sistema.\\
 
-\subsubsection{Esperimento}
+\subsubsection{Esperimento: confronto tra MrsP, \textit{Simple Ceiling} e \textit{no-preemption} [TODO] 
 \label{sec:confronto_protocolli_exp}
 
-\noindent Il seguente esperimento mette a confronto tre protocolli differenti costruiti su sistema partizionato con dispatching basato su priorità, mentre l'accesso alla risorsa globale viene gestito tramite accodamento FIFO. In tutti e tre i casi i protocolli sono basati su SRP: un job inizia ad eseguire solamente quando le risorse di cui necessità sono libere, innalza la propria priorità al momento della richiesta ed effettua attesa attiva fino a quando ne ottiene l'accesso esclusivo.\\
+\noindent Il seguente esperimento mette a confronto tre protocolli differenti costruiti su sistema partizionato con dispatching basato su priorità, mentre l'accesso alla risorsa globale viene gestito tramite accodamento FIFO. In tutti e tre i casi i protocolli sono basati su SRP: un job inizia ad eseguire solamente quando le risorse di cui necessita sono libere, innalza la propria priorità al momento della richiesta ed effettua attesa attiva fino a quando ne ottiene l'accesso esclusivo.\\
 
-\noindent Il protocollo basato su \textit{simple ceiling} prevede che il job innalzi la propria priorità al valore della priorità più alta tra tutti i task allocati nella stessa CPU che la richiedono, esattamente come MrsP. Il suo comportamento è identico a quello di MrsP, salvo il fatto che non vi è nessun meccanismo di migrazione.\\
+\noindent Il protocollo basato su \textit{simple ceiling} prevede che il job innalzi la propria priorità al valore della priorità più alta tra tutti i task allocati nella stessa CPU che la richiedono, esattamente come MrsP. Il suo comportamento è analogo a quello di MrsP, salvo il fatto che non vi è nessun meccanismo di migrazione.\\
 
-\noindent Il terzo protocollo prevede che al momento della richiesta venga inibito il prerilascio, questo in fase di implementazione è stato ottenuto innalzando la priorità al valore massimo, non permettendo a nessun job di causare prerilascio.\\
+\noindent Il terzo protocollo prevede che al momento della richiesta venga inibito il prerilascio localmente alla CPU del richiedente. Questo effetto in fase di implementazione è stato ottenuto innalzando la priorità al valore massimo, non permettendo a nessun job di causare prerilascio.\\
 
-\noindent L'esperimento prevede di mettere a confronto i response time dei task che compongono il sistema, analizzando quali vengono maggiormente penalizzati dall'attesa attiva nei tre protocolli a variare di parametri come la lunghezza della sezione critica o del WCET di determinati task.\\
+\noindent L'esperimento prevede di mettere a confronto i response time dei task che compongono il sistema, analizzando quali vengano maggiormente penalizzati dall'attesa attiva nei tre protocolli al variare di parametri come la lunghezza della sezione critica o del WCET di determinati task.\\
 
 \subsubsection{Configurazione}
 \label{sec:confronto_protocolli_conf}
 
-\noindent Il taskset prevede 3 job divisi su due CPU: sulla prima CPU viene allocato un task a priorità maggiore ed uno a priorità inferiore, quest'ultimo condivide la risorsa globale con un job identico allocato nella seconda CPU.\\
+\noindent Il taskset prevede 3 task ($\tau_1, \tau_2, \tau_3$) allocati su due CPU: sulla prima CPU viene allocato un task a priorità maggiore ed uno a priorità inferiore, quest'ultimo condivide la risorsa globale con un task allocato nella seconda CPU.\\
 
 \noindent L'esecuzione è impostata in modo tale che il primo job ad essere rilasciato ed eseguire sia quello a priorità inferiore allocato nella prima CPU, poi il job della seconda CPU ed infine quello a priorità più alta. L'esecuzione voluta è rappresentata nella figura \ref{fig:test_protocols}: 
 
 \begin{itemize}
   \item punto {\color{red} 1}, il job a priorità più bassa viene rilasciato ed ottiene la risorsa in quanto libera;
   \item punto {\color{red} 2}, il secondo job a bassa priorità si accoda ed effettua attesa attiva nella seconda CPU;
-  \item punto {\color{red} 3}, Il job a priorità più alta tenta di eseguire causando prerilasciare il primo job; quest'ultimo passaggio viene gestito in modo differente dai tre protocolli.\\
+  \item punto {\color{red} 3}, Il job a priorità più alta tenta di eseguire causando prerilascio del primo job; quest'ultimo passaggio viene gestito in modo differente dai tre protocolli.\\
 \end{itemize}
 
 \begin{figure}
@@ -120,11 +120,13 @@ Maggiori informazioni sui metodi di tracciamento e campionamento sono presenti n
 
 \noindent Variando il tempo di esecuzione del job a priorità più alta e la lunghezza della sezione critica della risorsa globale il comportamento atteso è che in ogni protocollo sia differente il job che soffre maggiormente tale cambiamento.\\
 
-\noindent Nei capitoli precedenti è stato chiarito come la condivisione della risorsa tra più CPU in un sistema partizionato vada ad aumentare il costo pagato da alcuni job, in MrsP influenza solamente i job che la vogliono ottenere e coloro che subiscono blocco da essi, cioè non la richiedono ma un job a priorità più bassa la contende ad uno a priorità superiore alla propria tra quelli della medesima CPU.\\
+\noindent Nei capitoli precedenti è stato chiarito come la condivisione della risorsa tra più CPU in un sistema partizionato vada ad aumentare il costo pagato da alcuni job. In MrsP, tale condivisione influenza solamente i job che la vogliono ottenere e coloro che subiscono blocco da essi, cioè non la richiedono, ma un job a priorità più bassa la contende ad uno a priorità superiore alla propria tra quelli della medesima CPU.\\
 
 \noindent Privando MrsP dei meccanismi per gestire i prerilasci si ottiene un comportamento simile a quello del protocollo basato su \textit{simple ceiling}: i job a priorità maggiore non verranno influenzati, al tempo stesso aumenta il tempo di blocco subito dai job a priorità inferiore al ceiling ed i tempi di attesa dei job accodati sulla risorsa allocati in altre CPU. Tale aumento di blocco ed attesa è determinato dal fatto che il proprietario della risorsa non può proseguire l'esecuzione della sezione critica in quanto prerilasciato. Il risultato è un sistema in cui l'interferenza subita dal lock holder si ripercuote anche sugli altri processori.\\
 
-\noindent Il comportamento atteso dal protocollo che inibisce il prerilascio è che il job a soffrire maggiormente della condivisione sia quello a priorità più alta, esso subisce l'esecuzione della sezione critica nonostante non necessiti della risorsa globale. Il risultato è quindi che soffrono blocco anche i job che non rispecchiano la condizioni fornite in precedenza, la loro esecuzione di conseguenza viene ritardata fino a che il job non ripristina la proprio priorità al momento del rilascio della risorsa.\\
+\noindent Il comportamento atteso dal protocollo che inibisce il prerilascio è che il job a soffrire maggiormente della condivisione sia quello localmente pronto a priorità più alta: esso subisce un ritardo pari all'esecuzione della sezione critica nonostante non necessiti della risorsa globale. Il risultato è quindi che soffrono blocco anche i job che non rispecchiano la condizioni fornite in precedenza, la loro esecuzione di conseguenza viene ritardata fino a che il job non ripristina la proprio priorità al momento del rilascio della risorsa.\\
+
+asdasd
 
 \noindent Un altro aspetto che si vuole studiare è come le migrazioni vadano ad influenzare le prestazioni di MrsP: un ultimo taskset è configurato in modo tale che le circostante che forzano il job dalla prima CPU alla seconda a migrare si ripresentino anche in quest'ultima, obbligando ad una seconda migrazione nella terza CPU in cui eseguire la sezione critica.
 
