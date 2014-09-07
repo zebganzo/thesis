@@ -1,11 +1,12 @@
 \input{figure/model_job.tex}
+\input{figure/mrsp_omip_intro.tex}
 
 \section{Introduzione}
 \label{sec:introduzione}
 
 Il progresso tecnologico ha portato ad un rapido incremento della complessità del software e all'esigenza di prestazioni sempre maggiori da parte dell'hardware. Inizialmente, per aumentare la potenza di calcolo, si ricorreva a processori sempre più potenti, ma tale approccio causava problematiche significative come l'elevato consumo di energia e l'eccessiva dissipazione di calore. Per questo motivo i produttori, Intel in primis, hanno iniziato ad adottare piattaforme multiprocessor per lo sviluppo di sistemi real-time: affiancando più processori piuttosto che potenziarne uno unico.\\
 
-Questa è la definizione che Burns e Wellings in ~\cite{Burns:2009:RSP:1643588} danno di un sistema real-time:
+Questa è la definizione che Burns e Wellings in ~\cite{Burns:2009:RSP:1643588} danno di un sistema real-time:\\
 
 \textit{"an information processing system which has to respond to externally generated input stimuli within a finite and specified period. The correctness depends not only on the logical result but also on the time it was delivered. The failure to respond is as bad as the wrong response."}\\
 
@@ -226,7 +227,14 @@ Il protocollo utilizza una serie di accodamenti:
 \item una coda a priorità è apposta a quella del punto precedente.
 \end{itemize}
 
-Il funzionamento alla base prevede che una richiesta venga accodata nella coda FIFO del proprio processore e non appena raggiunge la testa passa alla coda globale. Nel caso in cui la prima coda sia piena, la richiesta viene accodata nella coda a priorità. Questo sistemi ad accodamenti preserva l'indipendenza dei job e limita il tempo di blocco.
+Il funzionamento alla base (Figura~\ref{fig:locks.omip}) prevede che una richiesta venga accodata nella coda FIFO del proprio processore e non appena raggiunge la testa passa alla coda globale. Nel caso in cui la prima coda sia piena, la richiesta viene accodata nella coda a priorità. Questo sistemi ad accodamenti preserva l'indipendenza dei job e limita il tempo di blocco.
+
+\begin{figure}
+\centering
+\OMIP{1.5}{1.5}
+\caption{O(m) Independence-preserving Protocol.}
+\label{fig:locks.omip}
+\end{figure}
 
 \subsection{Multiprocessor Resource Sharing Protocol}
 \label{sec:lockProtocols.mrsp}
@@ -239,15 +247,15 @@ Infine, definiamo $e_j$ come un parametro di tempo di esecuzione di $r_j$:\\
 
 \centerline{$e_j = | map(G(r_j)) | * c_j$.}
 
-Intuitivamente, $e_j$ indica il tempo massimo richiesto da un job per ottenere ed eseguire una risorsa, il quale tiene conto dello smaltimento delle richieste gia’ in coda e l’esecuzione da parte del job stesso.\\
+Intuitivamente, $e_j$ indica il tempo massimo richiesto da un job per ottenere ed eseguire una risorsa, il quale tiene conto dello smaltimento delle richieste gia’ in coda e l’esecuzione da parte del job stesso. Si evidenzia la necessita' che il protocollo garantisca che al massimo un job per processore possa essere in attesa per accedere la risorsa, altrimenti la coda avrebbe una lunghezza superiore rispetto a $| map(G(r_j)) |$.\\
 
-L’approccio proposto e’ un’estensione di PCP/SRP atta a gestire gli accessi alla risorsa in un sistema partizionato con scheduler fixed priority. Ad ogni risorsa e' abbinato un insieme di ceiling, uno per ogni processore: ogni valore e' pari alla priorita' massima tra i job che la richiedono e sono allocati nel medesimo processore.\\
+L’approccio proposto e’ un’estensione di PCP/SRP atta a gestire gli accessi alla risorsa in un sistema partizionato con scheduler fixed priority. Ad ogni risorsa e' abbinato un insieme di ceiling, uno per ogni processore: ogni valore e' pari alla priorita' massima tra i job che la richiedono e sono allocati nello stesso processore.\\
 MrsP eredita le caratteristiche di SRP (Sezione~\ref{sec:lockProtocols.single}):
 
 \begin{itemize}
 \item un job e’ bloccato al massimo una volta durante la sua esecuzione;
 \item tale blocco avviene prima dell’inizio dell’effettiva esecuzione;
-\item quando il job inizia ad eseguire, tutte le risorse di cui necessita sono libere o non sono in uso nel processore corrente;
+\item quando il job inizia ad eseguire, non vi e' nessuna richiesta pendendte alla risorsa nel processore;
 \item impedisce deadlock.
 \end{itemize}
 
@@ -257,15 +265,14 @@ Il protocollo ha l’obiettivo di riutilizzare la tecnica di analisi di schedula
 
 \vspace{4 mm}
 
-Il secondo termine identifica il tempo di blocco subito dal job causato dalla condivisione di risorse tra job a priorita’ inferiore con job a priorita’ superiore dal quale eredita la priorita’. $C_i$ rappresenta il WCET piu’ le sezioni critiche corrispondenti alle risorse di cui necessita durante l’esecuzione ($n_i$ indica il numero di volte che $\tau_i$ utilizza $r_j$):\\
+Il secondo termine identifica il tempo di blocco subito dal job causato dalla condivisione di risorse tra job a priorita’ inferiore con job a priorita’ superiore dal quale eredita la priorita’. Quest'ultimo valore e' messo a contronto con il costo introdotto dall'implementazione del protocollo stesso ($\hat{b}$). $C_i$ rappresenta il WCET piu’ le sezioni critiche corrispondenti alle risorse di cui necessita durante l’esecuzione ($n_i$ indica il numero di volte che $\tau_i$ utilizza $r_j$):\\
 
 \centerline{$C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \textcolor{red}{c^j}$}
 
 \vspace{4 mm}
 
-Il passaggio da un protocollo di acceso a risorsa da un sistema singleprocessor ad uno multiprocessor comporta una scelta tra limitare il tempo di interferenza agli altri job causato dalle richieste parallele ed un aumento nel tempo richiesto per accedere la risorsa. Di conseguenza si necessita di fare delle scelte algoritmiche che permettano di utilizzare le equazioni viste precedentemente aumentando il costo relativo all’accesso alle risorse.\\
-
-MrsP incorpora la proprieta’ fondamentale di PCP/SPR, cioe’ che le risorse di un job quando inizia ad eseguire sono logicamente libere, ma l’esecuzione della risorsa non e’ pari ad una singola sezione critica $c_j$, bensi’ $e_j$.\\
+Il passaggio da un protocollo di acceso a risorsa da un sistema singleprocessor ad uno multiprocessor comporta un aumento nel tempo richiesto per accedere la risorsa ed il conseguente ritardo causato ai job a priorita' superiore che non la accedono. Di conseguenza, vi e' la necessita' di adoperare scelte algoritmiche che permettano di utilizzare le equazioni viste precedentemente aumentando il costo relativo all’accesso alle risorse, cioe' che garantiscano un limitato tempo di attesa per accedere la risorsa e l'indipendenza dei job a priorita' superiore al ceiling del processore.\\
+MrsP incorpora la proprieta’ fondamentale di PCP/SPR, cioe’ che le risorse siano logicamente libere quanto un job che le richiede inizia ad eseguire, ma l’esecuzione della risorsa non e’ pari ad una singola sezione critica $c_j$ come nel caso singleprocessor, bensi’ rispecchia il parallelismo dato dalla presenza di piu' processori: $e_j$.\\
 
 Le equanzioni risultano quindi le seguenti:\\
 
@@ -275,8 +282,16 @@ Le equanzioni risultano quindi le seguenti:\\
 
 \vspace{4 mm}
 
-Per ottenere questo, MrsP prevede che una volta che un job effettua una richiesta esso continui la propria esecuzione, cioe’ fino all’acquisizione della risorsa e la sua esecuzione, con priorita’ pari al ceiling della risorsa del processore corrispondente. Se al contrario si fosse scelto di far eseguire con priorita’ piu’ alta rispetto a tutti gli altri job, quindi ottenendo un comportamento pari all’inibizione di prerilscio, si causerebbe blocco ai job che non richiedono la risorsa. Situazione ancora peggiore se il job decidesse di sospendersi in caso di risorsa occupata, il job subirebbe ulteriori inversioni di priorita’, aumentando il tempo di blocco. Eseguendo al valore di ceiling di risorsa si limita il tempo di attesa ma il job puo’ ancora essere prerilasciato, di conseguenza il tempo di blocco e’ potenzialmente illimitato. Per ovviare a tale problema, in caso di prerilascio entrano in gioco meccanismi che permettano ai job in attesa di prendersi carico di portare a termine l’esecuzione della sezione critica per conto del suo possessore (Sezione~\ref[help])].
+Per ottenere questo, MrsP prevede che una volta che un job effettua una richiesta esso continui la propria esecuzione fino all’acquisizione della risorsa e la sua esecuzione, cioe' effettuando attesa attiva, con priorita’ pari al ceiling della risorsa del processore corrispondente. Se al contrario si fosse scelto di far eseguire con priorita’ piu’ alta rispetto a tutti gli altri job, quindi ottenendo un comportamento pari all’inibizione di prerilscio, si causerebbe blocco ai job che non richiedono la risorsa. Situazione ancora peggiore se il job decidesse di sospendersi in caso di risorsa occupata, il job subirebbe ulteriori inversioni di priorita’, aumentando il tempo di blocco. Eseguendo al valore di ceiling di risorsa si limita il tempo di attesa ma il job puo’ ancora essere prerilasciato, aumentando, di conseguenza, il tempo di attesa dei job in coda ed il tempo di blocco per i job a priorita' inferiore al ceiling in ogni processore. Per ovviare a tale problema, in caso di prerilascio entrano in gioco meccanismi che permettano ai job in attesa di prendersi carico dell’esecuzione della sezione critica per conto del suo possessore (Sezione~\ref{sec:lockProtocols.help}).\\
 Pertanto, MrsP dispone che un job effettui attesa attiva con priorita’ pari al ceiling locale se richiede una risorsa non disponibile e che la relativa richiesta venga accodata in una coda FIFO abbinata alla risorsa. Una volta ottenuta la risorsa esso continua ad eseguire con la priorita’ innalzata ed in caso di prerilascio il primo job della coda che sta effettuando attesa attiva (quindi non e’ stato prerilasciato a sua volta nel proprio processore) esegue la sezione critica per suo conto.\\
+Il funzionamento descritto e' rappresentato graficamente in Figura~\ref{fig:locks.mrsp}: in ogni processore le richieste sono gestite tramite un approccio simile al protocollo SRP che poi vengono accodate nella coda FIFO della risorsa ed effettuano attesa attiva fino all'acquisizione.\\
+
+\begin{figure}
+\centering
+\MrsP{1.5}{1.5}
+\caption{Multiprocessor Resource Sharing Protocol.}
+\label{fig:locks.mrsp}
+\end{figure}
 
 Questi meccanismi rendono possibile affermare che:
 
@@ -284,7 +299,7 @@ Questi meccanismi rendono possibile affermare che:
 \item al massimo un job per processore richiede la risorsa in un determinato istante;
 \item la lunghezza massima della coda FIFO di una risorsa $r_k$ e’ pari a $| map(G(r_k)) |$;
 \item ogni job subisce blocco solamente una volta e prima della sua effettiva esecuzione;
-\item il tempo di blocco subito e’ pari al massimo a $e_j$.
+\item il tempo di blocco subito ed il tempo di attesa delle richieste in coda e’ pari al massimo a $e_j$.
 \end{itemize}
 
-Le proprieta’ elencate permettono di utillizzare le equazioni descritte per verificare la schedulabilita’ di un taskset utilizzando MrsP come protocollo di accesso a risorsa.
+Le proprieta’ elencate permettono di utillizzare le equazioni descritte per verificare la schedulabilita’ di un taskset utilizzando MrsP come protocollo di accesso a risorsa.\\
