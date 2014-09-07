@@ -307,3 +307,69 @@ Le considerazioni fatte finora ci permettono di affermare che:
 \end{itemize}
 
 Le proprietà elencate permettono di utillizzare le equazioni descritte per verificare la schedulabilità di un taskset che utilizza MrsP come protocollo di accesso a risorsa.\\
+
+
+
+
+
+
+
+LITMUS^RT (LInux Testbed for MUltiprocessor Scheduling in Real-Time systems) è un'estensione del kernel Linux sviluppato dall'università della Nord Carolina a Chapel Hill per la creazione e la valutazione di algoritmi di scheduling e e protocolli di accesso a risorsa per sitemi multiprocessor. Esso propone un insieme di componenti (code, timer, ...), system call per i task real-time e una semplice interfaccia per la creziazione di plugin per l'implementazione di specifiche politiche di scheduling. Diversi plugin sono già stati sviluppati e messi a disposizione con LITMUS dalla release del 2013: EDF per sistemi partizionati, globali ed a cluster, partitioned fixed-priority ed algoritmi P-Fair. Inoltre, il sistema mette a disposizione un framework per il tracciamento di eventi, la fase di debugging e per la valutazione delle primitive di scheduling ed i costi del sistema.
+
+the linux scheduling framework
+
+Il kernel Linux ha alcune limitazione che non gli permettono di essere appropriato per applicazioni hard-real time, per esempio, è chiamato alla gestione di interrupt,ì di durata indeterminata o di sezioni critiche non prerilasciabili. Ciò nonostante, esso è in grado di gestire un ampio sottoinsieme di applicazioni real time ed è in grado di scalare senza particolari restrizioni su piattaforme multicore.
+
+Lo scheduler di Linux è organizzato come una gerarchia di classi di scheduling. Ogni classe definisce una politica di scheduling e fornisce una serie di funzionalità: aggiungere un task alla classe, recuperare il prossimo task da eseguire, richiamare lo scheduler, e così via. Ogni classe è legata ad un'altra creando una lista. Ogni processo può essere eseguito in accordo con gli scheduler di differenti classi, ma deve appartenere ad una unica. Ogni qual folta sia necessaria una decisione di scheduling, viene percorsa la lista di classi sino a trovarne una con almeno un processo pendente. Di conseguenza, un processo di una classe a bassa priorità è eseguito solamente se i processi delle classi superiori sono inattivi.
+
+"A runqueue is associated with each processor and contains
+the state of each scheduling class, which, among other, includes
+ a processor-local ready queue, the current time, scheduling statistics."
+
+Da un punto di vista implementativo, lo scheduler Linux è fondamentalmente partizionato, favorendo l'esecuzione di processi locali. Una coda di esecuzione è associata ad ogni processore e contiene lo stato di ogni classe di scheduling, il quale include, tra le altre cose, una coda dei processi ready, il tempo corrente e le statistiche di scheduling. Inoltre, la coda di esecuzione è protetta tramite lock contro gli accessi concorrenti. Dato che un processo appartiene ad un solo processore, una migrazione richiede il lock di entrambe le code, di conseguenza, gli scheduler globali sono supportati con non poche difficoltà.
+
+E' importante osservere come i motelli teorici ed i test di schedulabilità non tengano conto dei costi dovuti dallo scheduler stesso. In pratica, gli eventi di scheduling non sono atomici e vi sono diverse situazioni in cui lo scheduler può cambiare di stato. Di conseguenza, tale problematica rende critica la gestione degli eventi in quanto si possono prendere decisioni erronee a causa di cambiamenti di stato durante la loro gestione.
+
+Architectural overview
+
+L'infrastruttura di LITMUS consiste in quattro componenti (figura XXX):
+
+\item il core dell'infrastruttura
+\item un numero di plugin, cioè gli scheduler a disposizione
+\item un'interfaccia user-space
+\item librerie e strumenti user-space
+
+Questa sezione descrive il core dell'infrastruttura e l'astrazione del dominio real-time ad alto livello. Per altri dettagli, come le interfacce del plug-in e delle componenti user-space, si veda l'appendice XXX.
+
+Gli obiettivi del core sono quelli di (i) semplificare lo sviluppo ed il mantenimento dei plugin e la loro correttezza nascondendo dietro l'interfaccia la complessità del framework di scheduling di Linux e (ii) fornendo strutture dati e meccanismi facili da riutilizzare. Dato che LITMUS è un'estensione di Linux, i task real-time sono implementati tramite dei processi standard: ogni ciclo di esecuzione del processo corrisponde ad un rilascio di un job. 
+Riguardo al punto (i), LITMUS aggiunge una nuova classe di scheduling in testa alla gerarchia, abbassando quindi di un livello la priorità della classe di LINUX. Di conseguenza, le altre classi della gerarchia eseguono solamente quando non vi sono processi di LITMUS in attesa. Un processo cambia di livello (da LITMUS a LINUX e viceversa) tramite system call.
+La classe di scheduling di LITMUS non implementa nessun algoritmo di scheduling, invece, astraendo tramite l'interfaccia del plugin, permette di integrare la logica di uno scheduler, cioè demanda le decisioni di scheduling e la gestione degli eventi al plugins.
+L'utilizzo di un layer intermedio come LITMUS porta numerosi vantaggi, per esempio, l'astrazione dal sistema sottostante protegge dai cambi di versione del kernel LINUX. Inoltre, fornisce un solido supporto per la migrazione per gli algoritmi globali ed a cluster.
+Riguardo a (ii), nella prossima sezione sono discussi l'interfaccia del plugin ed il dominio real-time che fornisce code ready e code di release.
+
+The real-time domain abstraction
+
+Ogni scheduler richiede meccanismi che permettano di ordinare i job nella coda ready ed accodarli per futuri rilasci. LITMUS integra due strutture dati per soddisfare tali necessità: la coda ready e la coda di release. Quando un job viene rilasciato, viene trasferito dalla coda di release alla corrispondente coda ready, e lo scheduler viene invocato per controllora se è necessario un prerilascio. Tutti questi meccanismi sono forniti da una componente chiamata real-time domain (\texttt{rt_domain} nel codice). La sua implementazione utilizza il sistema di \textit{hrtimers}, cioè timer hardware ad alta risoluzione (??), i quali sono fondamentali in quanto permettono di rispondere al rilascio di eventi e, quindi, di implementare algoritmi di scheduling basati su eventi.
+Per una questione di ottimizzazione, la coda di release utilizza timer per ogni tempo di release, piuttosto che un timer per ogni job. I job che condividono lo stesso tempo di rilascio sono organizzati in un albero binomiale, il quale permette di spostare i job dalla coda di release a quella ready in modo efficiente. I timer sono associati ad ogni release heap (??) e programmati per scadere al momento del rilascio. I riferimenti ad ogni release heap sono memorizzati in una hash table per minimizzare il tempo di interazione. Infine, le due code sono protette da spinlock che ne gestisce gli accessi e, inoltre, serializza le decisioni di scheduling.
+
+La struttura rt_domain permette principalmente quattro operazioni:
+
+• add_release() aggiunge un job al release heap
+• add_ready() aggiunge un job alla coda ready
+• take_ready() rimuove il job con la priorità più alta dalla coda ready. 
+• peek_ready() ritorna il job con la priorità più alta dalla coda ready senza rimuoverlo. Utilizzato per controllare se è necessario un prerilascio.
+
+Per ordinare la coda ready deve essere definita un'operazione di confronto dato che la priorità di un job dipende dall'algoritmo di scheduling.
+Scheduler globali e partizionati si differenziano principalmente nell'uso della struttura rt_domain. Nel primo caso è definito un unico rt_domain ed è condiviso nello spazio globale. Al contrario, scheduler partizionati definiscono un rt_domain per ogni partizione (o cluster).
+
+Contributo
+
+Il lavoro di tesi è focalizzato sull'implementazione di Multiprocessor Resource Sharing Protocol a partire dalla versione di Partitioned-Fixed Priority fornita con la versione 1.2.3 di LITMUS e sulla sua valutazione empirica in termini di schedulabilità ed i costi che l'implementazione stessa ed i meccanismi utilizzati causano al sistema.
+
+Struttura
+
+...
+
+
+
+
