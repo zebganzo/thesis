@@ -314,7 +314,7 @@ Le proprietà elencate permettono di utillizzare le equazioni descritte per veri
 
 
 
-LITMUS^RT (LInux Testbed for MUltiprocessor Scheduling in Real-Time systems) è un'estensione del kernel Linux sviluppato dall'università della Nord Carolina a Chapel Hill per la creazione e la valutazione di algoritmi di scheduling e e protocolli di accesso a risorsa per sitemi multiprocessor. Esso propone un insieme di componenti (code, timer, ...), system call per i task real-time e una semplice interfaccia per la creziazione di plugin per l'implementazione di specifiche politiche di scheduling. Diversi plugin sono già stati sviluppati e messi a disposizione con LITMUS dalla release del 2013: EDF per sistemi partizionati, globali ed a cluster, partitioned fixed-priority ed algoritmi P-Fair. Inoltre, il sistema mette a disposizione un framework per il tracciamento di eventi, la fase di debugging e per la valutazione delle primitive di scheduling ed i costi del sistema.
+LITMUS RT (LInux Testbed for MUltiprocessor Scheduling in Real-Time systems) è un'estensione del kernel Linux sviluppato dall'università della Nord Carolina a Chapel Hill per la creazione e la valutazione di algoritmi di scheduling e e protocolli di accesso a risorsa per sitemi multiprocessor. Esso propone un insieme di componenti (code, timer, ...), system call per i task real-time e una semplice interfaccia per la creziazione di plugin per l'implementazione di specifiche politiche di scheduling. Diversi plugin sono già stati sviluppati e messi a disposizione con LITMUS dalla release del 2013: EDF per sistemi partizionati, globali ed a cluster, partitioned fixed-priority ed algoritmi P-Fair. Inoltre, il sistema mette a disposizione un framework per il tracciamento di eventi, la fase di debugging e per la valutazione delle primitive di scheduling ed i costi del sistema.
 
 the linux scheduling framework
 
@@ -334,10 +334,13 @@ Architectural overview
 
 L'infrastruttura di LITMUS consiste in quattro componenti (figura XXX):
 
+\begin{itemize}
 \item il core dell'infrastruttura
 \item un numero di plugin, cioè gli scheduler a disposizione
 \item un'interfaccia user-space
 \item librerie e strumenti user-space
+\end{itemize}
+
 
 Questa sezione descrive il core dell'infrastruttura e l'astrazione del dominio real-time ad alto livello. Per altri dettagli, come le interfacce del plug-in e delle componenti user-space, si veda l'appendice XXX.
 
@@ -349,22 +352,22 @@ Riguardo a (ii), nella prossima sezione sono discussi l'interfaccia del plugin e
 
 The real-time domain abstraction
 
-Ogni scheduler richiede meccanismi che permettano di ordinare i job nella coda ready ed accodarli per futuri rilasci. LITMUS integra due strutture dati per soddisfare tali necessità: la coda ready e la coda di release. Quando un job viene rilasciato, viene trasferito dalla coda di release alla corrispondente coda ready, e lo scheduler viene invocato per controllora se è necessario un prerilascio. Tutti questi meccanismi sono forniti da una componente chiamata real-time domain (\texttt{rt_domain} nel codice). La sua implementazione utilizza il sistema di \textit{hrtimers}, cioè timer hardware ad alta risoluzione (??), i quali sono fondamentali in quanto permettono di rispondere al rilascio di eventi e, quindi, di implementare algoritmi di scheduling basati su eventi.
+Ogni scheduler richiede meccanismi che permettano di ordinare i job nella coda ready ed accodarli per futuri rilasci. LITMUS integra due strutture dati per soddisfare tali necessità: la coda ready e la coda di release. Quando un job viene rilasciato, viene trasferito dalla coda di release alla corrispondente coda ready, e lo scheduler viene invocato per controllora se è necessario un prerilascio. Tutti questi meccanismi sono forniti da una componente chiamata real-time domain (\texttt{rt\_domain} nel codice). La sua implementazione utilizza il sistema di \textit{hrtimers}, cioè timer hardware ad alta risoluzione (??), i quali sono fondamentali in quanto permettono di rispondere al rilascio di eventi e, quindi, di implementare algoritmi di scheduling basati su eventi.
 Per una questione di ottimizzazione, la coda di release utilizza timer per ogni tempo di release, piuttosto che un timer per ogni job. I job che condividono lo stesso tempo di rilascio sono organizzati in un albero binomiale, il quale permette di spostare i job dalla coda di release a quella ready in modo efficiente. I timer sono associati ad ogni release heap (??) e programmati per scadere al momento del rilascio. I riferimenti ad ogni release heap sono memorizzati in una hash table per minimizzare il tempo di interazione. Infine, le due code sono protette da spinlock che ne gestisce gli accessi e, inoltre, serializza le decisioni di scheduling.
 
-La struttura rt_domain permette principalmente quattro operazioni:
+La struttura rt\_domain permette principalmente quattro operazioni:
 
-• add_release() aggiunge un job al release heap
-• add_ready() aggiunge un job alla coda ready
-• take_ready() rimuove il job con la priorità più alta dalla coda ready. 
-• peek_ready() ritorna il job con la priorità più alta dalla coda ready senza rimuoverlo. Utilizzato per controllare se è necessario un prerilascio.
+• add\_release() aggiunge un job al release heap
+• add\_ready() aggiunge un job alla coda ready
+• take\_ready() rimuove il job con la priorità più alta dalla coda ready. 
+• peek\_ready() ritorna il job con la priorità più alta dalla coda ready senza rimuoverlo. Utilizzato per controllare se è necessario un prerilascio.
 
 Per ordinare la coda ready deve essere definita un'operazione di confronto dato che la priorità di un job dipende dall'algoritmo di scheduling.
-Scheduler globali e partizionati si differenziano principalmente nell'uso della struttura rt_domain. Nel primo caso è definito un unico rt_domain ed è condiviso nello spazio globale. Al contrario, scheduler partizionati definiscono un rt_domain per ogni partizione (o cluster).
+Scheduler globali e partizionati si differenziano principalmente nell'uso della struttura rt\_domain. Nel primo caso è definito un unico rt\_domain ed è condiviso nello spazio globale. Al contrario, scheduler partizionati definiscono un rt\_domain per ogni partizione (o cluster).
 
 Contributo
 
-Il lavoro di tesi è focalizzato sull'implementazione di Multiprocessor Resource Sharing Protocol a partire dalla versione di Partitioned-Fixed Priority fornita con la versione 1.2.3 di LITMUS e sulla sua valutazione empirica in termini di schedulabilità ed i costi che l'implementazione stessa ed i meccanismi utilizzati causano al sistema.
+Il lavoro di tesi è focalizzato sull'implementazione di Multiprocessor Resource Sharing Protocol a partire dalla versione di Partitioned-Fixed Priority fornita con la versione 1.2.3 di LITMUS e sulla sua valutazione empirica in termini di schedulabilità e i costi che l'implementazione stessa e i meccanismi utilizzati causano al sistema.
 
 Struttura
 

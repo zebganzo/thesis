@@ -54,7 +54,7 @@ Alla macchina virtuale vengono assegnati il kernel Linux \texttt{-hda}, 4 core f
 \end{itemize}
 
 \noindent I campionamenti sono effettuati tramite \textit{Feather-Trace}, il quale consiste in una serie di strumenti atti a calcolare gli overhead delle primitive e rilevare gli eventi di scheduling. Tramite i dati raccolti è stato possibile valutare l'implementazione e confrontare i vari protocolli.\\
-Maggiori informazioni sui metodi di tracciamento e campionamento sono presentati in Aappendice~\ref{sec:trace}.\\
+Maggiori informazioni sui metodi di tracciamento e campionamento sono presentati in Appendice~\ref{sec:trace}.\\
 
 \subsubsection{Generazione ed esecuzione degli esperimenti}
 
@@ -84,7 +84,7 @@ Maggiori informazioni sui metodi di tracciamento e campionamento sono presentati
 
 \noindent In questo esperimento ci si sofferma su questo aspetto, cioè in che modo effettuare attesa attiva ed a quali condizioni, a seconda del valore di priorità scelto per proseguire l'attesa si ottengono comportamenti differenti che influenzano in modo diverso il sistema.\\
 
-\subsubsection{Esperimento: confronto tra MrsP, \textit{Simple Ceiling} e \textit{no-preemption} [TODO] 
+\subsubsection{Esperimento: confronto tra MrsP, \textit{Simple Ceiling} e \textit{non-preemption}}
 \label{sec:confronto_protocolli_exp}
 
 \noindent Il seguente esperimento mette a confronto tre protocolli differenti costruiti su sistema partizionato con dispatching basato su priorità, mentre l'accesso alla risorsa globale viene gestito tramite accodamento FIFO. In tutti e tre i casi i protocolli sono basati su SRP: un job inizia ad eseguire solamente quando le risorse di cui necessita sono libere, innalza la propria priorità al momento della richiesta ed effettua attesa attiva fino a quando ne ottiene l'accesso esclusivo.\\
@@ -126,14 +126,12 @@ Maggiori informazioni sui metodi di tracciamento e campionamento sono presentati
 
 \noindent Il comportamento atteso dal protocollo che inibisce il prerilascio è che il job a soffrire maggiormente della condivisione sia quello localmente pronto a priorità più alta: esso subisce un ritardo pari all'esecuzione della sezione critica nonostante non necessiti della risorsa globale. Il risultato è quindi che soffrono blocco anche i job che non rispecchiano la condizioni fornite in precedenza, la loro esecuzione di conseguenza viene ritardata fino a che il job non ripristina la proprio priorità al momento del rilascio della risorsa.\\
 
-asdasd
+\noindent Un altro aspetto che si vuole studiare è come le migrazioni vadano ad influenzare le prestazioni di MrsP: un ultimo taskset è configurato in modo tale che le circostanze che forzano il job dalla prima CPU alla seconda a migrare si ripresentino anche in quest'ultima, obbligando ad una seconda migrazione nella terza CPU in cui eseguire la sezione critica.
 
-\noindent Un altro aspetto che si vuole studiare è come le migrazioni vadano ad influenzare le prestazioni di MrsP: un ultimo taskset è configurato in modo tale che le circostante che forzano il job dalla prima CPU alla seconda a migrare si ripresentino anche in quest'ultima, obbligando ad una seconda migrazione nella terza CPU in cui eseguire la sezione critica.
-
-\subsubsection{Risultati}
+\subsubsection{Risultati: confronto tra MrsP, \textit{Simple Ceiling} e \textit{non-preemption}}
 \label{sec:confronto_protocolli_ris}
 
-Nella tabella \ref{tab:test_protocols_Taskset1} è rappresentato il primo task set, in esso i job hanno i medesimi tempi di esecuzione (pari ad un millisecondo). La durata della sezione critica è compresa nell'esecuzione del WCET; nel caso abbiano lo stesso valore si intende che il job effettui immediatamente la richiesta di accesso ed al momento del rilascio esegua le ultime istruzioni in modo tale da completare la propria esecuzione. Ne consegue che l'evento di rilascio della risorsa e quello di completamento non coincidono, questo particolare è importante in quanto in alcuni casi nelle tempistiche riportate si considera il momento di rilascio della risorsa.\\
+Nella tabella \ref{tab:test_protocols_Taskset1} è rappresentato il primo task set. In esso i job hanno i medesimi tempi di esecuzione (pari ad un millisecondo). La durata della sezione critica è compresa nell'esecuzione del WCET; nel caso abbiano lo stesso valore si intende che il job effettui la richiesta di accesso come prima azioni e completi al momento del rilascio la propria esecuzione. Ne consegue che l'evento di rilascio della risorsa e quello di completamento del task non coincidono. Questo particolare è importante in quanto in alcuni casi nelle tempistiche riportate si considera il momento di rilascio della risorsa.\\
 
 \begin{table}
   \centering
@@ -187,10 +185,10 @@ Nella tabella \ref{tab:test_protocols_Taskset1} è rappresentato il primo task s
     \end{figure}
 
 \noindent L'esecuzione del taskset è rappresentato graficamente in \ref{fig:test_protocols_mrsp}, \ref{fig:test_protocols_sc} e \ref{fig:test_protocols_np}. Analizzando i dati, si nota come in MrsP la migrazione renda minimo il tempo di attesa subito da $L_3$ e nullo il blocco subito da $H_2$. I valori di esecuzione rappresentati subiscono degli overhead dati dal sistema, in particolare il costo della migrazione. Questo comportamento viene messo in risalto nella figura \ref{fig:test_protocols_mrsp}, le due linee rosse tratteggiate evidenziano l'overhead dato dal cambio di processore. Tale lasco di tempo consiste nel tempo che impiega il job a migrare, per cui $L_3$ continua ad effettuare attesa attiva e lo smaltimento della coda FIFO viene rallentato in quanto $L_1$ non sta progredendo nell'esecuzione della sezione critica.\\
-Con l'approccio basato su simple ceiling il tempo di attesa di $H_2$ non dipende più solamente dalla lunghezza della coda della risorsa, ma anche dall'interferenza che il lock holder subisce. \ref{fig:test_protocols_sc} mostra come l'interferenza penalizzi ogni processore in cui vi sia un job in attesa della risorsa. Modificando il tempo di esecuzione di $H_2$ ci si aspetta che tale costo aumenti o diminuisca di conseguenza.\\
-Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire maggiormente la condivisione della risorsa è $H_2$ in quanto non riesce ad eseguire nonostante non la richieda. L'inizio dell'esecuzione del job a priorità maggiore viene quindi ritardata; in figura \ref{fig:test_protocols_np} è evidenziato questo comportamento, pertanto all'aumentare della sezione critica $H_2$ subisce un maggiore blocco.\\
+Con l'approccio basato su simple ceiling il tempo di attesa di $H_2$ non dipende più solamente dalla lunghezza della coda della risorsa, ma anche dall'interferenza che il lock holder subisce. La figura~\ref{fig:test_protocols_sc} mostra come l'interferenza penalizzi ogni processore in cui vi sia un job in attesa della risorsa. Modificando il tempo di esecuzione di $H_2$ ci si aspetta che tale costo aumenti o diminuisca di conseguenza.\\
+Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire maggiormente la condivisione della risorsa è $H_2$ in quanto non riesce ad eseguire nonostante non la richieda. L'inizio dell'esecuzione del job a priorità maggiore viene quindi ritardata; in figura \ref{fig:test_protocols_np} è evidenziato questo comportamento. Pertanto all'aumentare della sezione critica $H_2$ subisce un maggiore blocco.\\
 
-\noindent Nei taskset  \ref{tab:test_protocols_Taskset2} e \ref{tab:test_protocols_Taskset3} sono state apportate modifiche rispettivamente alla lunghezza della sezione critica ed al tempo di esecuzione del job a priorità maggiore.\\
+\noindent Nei taskset ~\ref{tab:test_protocols_Taskset2} e ~\ref{tab:test_protocols_Taskset3} sono state apportate modifiche rispettivamente alla lunghezza della sezione critica ed al tempo di esecuzione del job a priorità maggiore.\\
 
 \begin{table}
   \centering
@@ -220,7 +218,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
   \label{tab:test_protocols_Taskset3}
   \end{table}
 
-\noindent Nel primo caso il comportamento è quello che ci si aspetta: \ref{tab:test_protocols_Taskset2_ris} mostra come un aumento della sezione critica con MrsP dilunghi il tempo di attesa di $L_3$, che viene utilizzato come nel caso precedente per far proseguire $L_1$ al momento del prerilascio, mentre $H_2$ resta inalterato. Al contrario con simple ceiling sia $L_1$ che $L_3$ subiscono l'interferenza da parte di $H_2$. Infine inibendo il prerilascio il job di $L_3$ subisce ulteriormente l'inversione di priorità.\\
+\noindent Nel primo caso il comportamento è quello che ci si aspetta: la figura~\ref{tab:test_protocols_Taskset2_ris} mostra come un aumento della sezione critica con MrsP dilunghi il tempo di attesa di $L_3$, che viene utilizzato come nel caso precedente per far proseguire $L_1$ al momento del prerilascio, mentre $H_2$ resta inalterato. Al contrario, con simple ceiling sia $L_1$ che $L_3$ subiscono l'interferenza da parte di $H_2$. Infine inibendo il prerilascio il job di $L_3$ subisce ulteriormente l'inversione di priorità.\\
 
 \begin{table}
   \centering
@@ -236,7 +234,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
   \label{tab:test_protocols_Taskset2_ris}
   \end{table}
 
-\noindent Agendo sul WCET di $H_2$ (\ref{tab:test_protocols_Taskset3_ris}) si dimostra come MrsP sia più performante salvo i costi della migrazione, mentre con simple ceiling la maggiore interferenza subita da $L_1$ rende maggiore il tempo di attesa di $L_3$. Inibendo il prerilascio il maggior tempo di esecuzione non influisce sui job che vogliono accedere la risorsa e l'inizio dell'esecuzione di $H_2$ è posticipato allungando così il tempo di completamento.\\
+\noindent Agendo sul WCET di $H_2$ (\ref{tab:test_protocols_Taskset3_ris}) si dimostra come MrsP sia più performante al netto dei costi della migrazione, mentre con simple ceiling la maggiore interferenza subita da $L_1$ rende maggiore il tempo di attesa di $L_3$. Inibendo il prerilascio il maggior tempo di esecuzione non influisce sui job che vogliono accedere la risorsa e l'inizio dell'esecuzione di $H_2$ è posticipato allungando così il tempo di completamento.\\
 
 \begin{table}
   \centering
@@ -291,7 +289,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \subsubsection{Considerazioni}
 \label{sec:confronto_protocolli_cons}
 
-\noindent I risultati esaminati mettono in risalto le differenze tra i vari protocolli nella gestione della risorsa globale. Si nota come MrsP sia migliore rispetto alle alternative qui studiate: simple ceiling è inadatto a gestire la condivisione di risorse in ogni caso analizzato, mentre l'inibizione del prerilascio risulterebbe migliore in uno scenario in cui la lunghezza della sezione critica sia inferiore rispetto agli overhead dati da MrsP, in particolare il costo della migrazione.\\
+\noindent I risultati esaminati mettono in risalto le differenze tra i vari protocolli nella gestione della risorsa globale. Si nota come MrsP sia migliore rispetto alle alternative qui studiate: simple ceiling è inadatto a gestire la condivisione di risorse in ogni caso analizzato, mentre l'inibizione del prerilascio risulterebbe migliore in uno scenario in cui la lunghezza della sezione critica fosse inferiore rispetto agli overhead dati da MrsP, in particolare il costo della migrazione.\\
 
 \noindent Quest'ultimo aspetto è discusso da Burns et al.~\cite{Burns:2013:SCM:2547348.2547350}: se i costi aggiunti dal sistema sono superiori rispetto alla lunghezza della sezione critica allora il protocollo non è più utile. Tale affermazione è confermata a seguito dell'implementazione e dei test, essi mettono in risalto come la presenza di costi aggiuntivi vada a penalizzarne le prestazioni.\\
 
@@ -304,7 +302,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
   \label{fig:test_protocols_L1}
 \end{figure}
 
-\noindent In \ref{fig:test_protocols_L1} viene preso in considerazione $L_1$, cioè il task a bassa priorità che richiede ed accede la risorsa per primo. Il grafico evidenzia come MrsP ed l'inibizione del prerilascio abbiano prestazioni molto simili, salvo il costo della migrazione nel primo caso; al contrario simple ceiling porta a risultati peggiori in ogni configurazione del sistema.\\
+\noindent In figura~\ref{fig:test_protocols_L1} viene preso in considerazione $L_1$, cioè il task a bassa priorità che richiede ed accede la risorsa per primo. Il grafico evidenzia come MrsP ed l'inibizione del prerilascio abbiano prestazioni molto simili, salvo il costo della migrazione nel primo caso; al contrario simple ceiling porta a risultati peggiori in ogni configurazione del sistema.\\
 
 \begin{figure}
   \centering
@@ -322,18 +320,18 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
   \label{fig:test_protocols_L3}
 \end{figure}
 
-\noindent Infine \ref{fig:test_protocols_L3} evidenzia come il job $L_3$ subisca l'interferenza a cui è soggetto $L_1$: MrsP e non preemption tentano di minimizzare tale interferenza, di conseguenza anche $L_3$ giova di questi meccanismi anche se con il primo protocollo si notano i costi dovuti dalla migrazione. Nel caso di simple ceiling il job in questione incorre nell'interferenza che avviene nella prima CPU oltre che nei tempi di attesa dovuti dallo smaltimento della FIFO.\\
+\noindent Infine il grafico~\ref{fig:test_protocols_L3} evidenzia come il job $L_3$ subisca l'interferenza a cui è soggetto $L_1$: MrsP e non preemption tentano di minimizzare tale interferenza, di conseguenza anche $L_3$ giova di questi meccanismi anche se con il primo protocollo si notano i costi dovuti dalla migrazione. Nel caso di simple ceiling il job in questione incorre nell'interferenza che avviene nella prima CPU oltre che nei tempi di attesa dovuti dallo smaltimento della FIFO.\\
 
-\noindent L'esperimento illustrato in questa sezione è stato tratto dai test simulati da Burns e Wellings in ~\cite{Burns:2013:SCM:2547348.2547350}. L'implementazione sviluppata e valutata in questo lavoro di tesi rispecchia ciò che affermano, in particolare si evidenzia come MrsP sia una buona combinazione dei vantaggi degli altri approcci esaminati in questo esperimento. Inoltre una reale implementazione al contrario della simulazione permette di ottenere un migliore riscontro dei costi aggiuntivi dati dalle primitive e, soprattutto, dalle migrazioni.\\
+\noindent L'esperimento illustrato in questa sezione è stato tratto dai test simulati da Burns e Wellings in ~\cite{Burns:2013:SCM:2547348.2547350}. L'implementazione sviluppata e valutata in questo lavoro di tesi rispecchia ciò che gli autori affermano. In particolare si evidenzia come MrsP sia una buona combinazione dei vantaggi degli altri approcci esaminati in questo esperimento. Inoltre una reale implementazione al contrario della simulazione permette di ottenere un migliore riscontro dei costi aggiuntivi dati dalle primitive e, soprattutto, dalle migrazioni.\\
 
 \newpage
 
 \subsection{Calcolo degli overhead}
 \label{sec:overhead}
 
-\noindent MrsP combina approcci differenti in parte tratti da protocolli esistenti, i quali, nonostante alcuni aspetti positivi, hanno un funzionamento inapplicabile ad un sistema real-time oppure hanno una complessità che a livello teorico sembra ragionevole ma che in un ambiente reale non è sostenibile. Uno degli obiettivi di questo lavoro di tesi è quello di dimostrare che è possibile implementare il protocollo di Burns et al.~\cite{Burns:2013:SCM:2547348.2547350} a partire da uno scheduler P-FP con un sovraccarico ragionevole del sistema.
+\noindent MrsP combina approcci differenti in parte tratti da protocolli esistenti, i quali, nonostante alcuni aspetti positivi, hanno un funzionamento inapplicabile ad un sistema real-time oppure hanno una complessità che a livello teorico sembra ragionevole ma che in un ambiente reale non è sostenibile. Uno degli obiettivi di questo lavoro di tesi è dimostrare che è possibile implementare il protocollo di Burns et al.~\cite{Burns:2013:SCM:2547348.2547350} a partire da uno scheduler P-FP con un sovraccarico ragionevole del sistema.
 
-\subsubsection{Esperimento}
+\subsubsection{Esperimento: valutazione dell'implementazione}
 \label{sec:overhead_exp}
 
 \noindent Gli esperimenti esposti in questa sezione mirano a valutare l'implementazione e le scelte algoritmiche, i relativi overhead vengono studiati per capire quali task ne risentono ed in quali circostanze.\\
@@ -352,7 +350,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \subsubsection{Configurazione}
 \label{sec:overhead_conf}
 
-\noindent Il sistema non permette di avere un release time unico per tutti i job a meno di creare un taskset caratterizzato da periodi armonici, ma in questo caso risulterebbe difficile riuscire a testare alcuni meccanismi che solamente in casi particolari entrano in gioco. In un sistema privo di periodi armonici i task sono soggetti a release latency, di conseguenza non è possibile forzare determinate dinamiche con precisione. Per ottenere dei campionamenti per ogni meccanismo che caratterizza MrsP è necessario creare un taskset sufficientemente grande in modo che si vengano a creare naturalmente le circostanze per poterne usufruire.\\
+\noindent Il sistema non permette di avere un release time unico per tutti i job a meno di creare un taskset caratterizzato da periodi armonici, ma in questo caso risulterebbe difficile riuscire a testare alcuni meccanismi che solamente in casi particolari entrano in gioco. In un sistema privo di periodi armonici i task sono soggetti a \textit{release latency}, di conseguenza non è possibile forzare determinate dinamiche con precisione. Per ottenere campionamenti per ogni meccanismo che caratterizza MrsP è necessario creare un taskset sufficientemente grande in modo che si vengano a creare naturalmente le circostanze per poterne usufruire.\\
 \noindent Il taskset è generato randomicamente con 25 job suddivisi su 4 CPU in modo il più possibile bilanciato. Per ogni CPU sono selezionati alcuni job ai quali è aggiunta la richiesta alla risorsa condivisa. Ogni taskset prima di essere eseguito è analizzato con uno script creato per verificare che sia \textit{feasible} andando ad applicare la \textit{response time analysis} aumentata con il protocollo MrsP.\\
 
 \subsubsection{Obiettivo}
@@ -360,7 +358,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 
 \noindent Lo scopo di questo esperimento è valutare l'impatto del protocollo in termini di overhead; i campionamenti sono messi in relazione con i tempi di esecuzione ed i costi aggiunti dal sistema.\\
 
-\noindent Non tutte le primitive sono interessanti per lo studio dei costi che il protocollo aggiunge a \textit{run-time}: la creazione e la chiusura non sono presi in considerazione in quanto eseguite in fase di inizializzazione e finalizzazione della risorsa.\\
+\noindent Non tutte le primitive sono interessanti per lo studio dei costi che il protocollo aggiunge a \textit{runtime}: la creazione e la chiusura non sono presi in considerazione in quanto eseguite in fase di inizializzazione e finalizzazione della risorsa.\\
 
 \noindent L'operazione di scheduling subisce un'unica modifica che permette di bloccare la coda dei job ready quando la richiesta in testa a tale coda ha priorità inferiore rispetto al ceiling locale. Ne consegue che il costo della primitiva risulta uguale o minore rispetto alla versione originale, di conseguenza è poco interessante per i campionamenti.\\
 
@@ -369,8 +367,8 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \noindent I costi rilevati durante i campionamenti possono influenzare il sistema a tre differenti livelli (figura \ref{fig:overheads_suffered}):\\
 
 \begin{itemize}
-	\item {\color{red} (i)} il solo job che esegue la primitiva, questo accade se non si va a modificare il ceiling locale, di conseguenza non si causa blocco ai job a priorità inferiore a tale valore;
-	\item {\color{red} (ii)} la sola CPU in cui è allocato il job corrente, questo succede nei casi in cui i costi vengano generati in circostanze di ceiling innalzato ma non si è in possesso della risorsa;
+	\item {\color{red} (i)} il solo job che esegue la primitiva: questo accade se non si va a modificare il ceiling locale, di conseguenza non si causa blocco ai job a priorità inferiore a tale valore;
+	\item {\color{red} (ii)} la sola CPU in cui è allocato il job corrente: questo succede nei casi in cui i costi vengano generati in circostanze di ceiling innalzato ma non si è in possesso della risorsa;
 	\item {\color{red} (iii)} l'intero sistema, inteso come le CPU in cui stanno eseguendo job che attendono di accedere la risorsa.
 \end{itemize}
 
@@ -384,7 +382,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \subsubsection{Risultati}
 \label{sec:overhead_ris}
 
-\noindent I dati del sistema sono organizzati secondo la figura \ref{fig:datas}: per ogni CPU è presente una struttura dati che tiene traccia del task attualmente in esecuzione, il numero della CPU, la coda dei task ready in attesa di eseguire ed il ceiling locale; la risorsa invece è composta dal task che la detiene, la coda di task in attesa di ottenerla e la lista dei ceiling calcolati in fase di inizializzazione. L'accesso alle strutture dati da parte dei processi viene reso sequenziale ed in mutua esclusione tramite l'uso dei \textbf{spin-lock}. Quest'ultimo consiste in un particolare tipo di lock del kernel LINUX, lo si acquisisce tramite l'operazione \texttt{spin\_lock(lock)} e lo si rilascia con \texttt{spin\_unlock(lock)}. Di conseguenza le primitive che prevedono l'utilizzo delle strutture dati prima di eseguire la sezione critica devono ottenere lo spin-lock, tale operazione aggiunge ulteriori overhead oltre a quelli dettati dal protocollo in sé.\\
+\noindent I dati del sistema sono organizzati secondo la figura \ref{fig:datas}: per ogni CPU è presente una struttura dati che tiene traccia del task attualmente in esecuzione, il numero della CPU, la coda dei task ready in attesa di eseguire ed il ceiling locale; la risorsa invece è composta dal task che la detiene, la coda di task in attesa di ottenerla e la lista dei ceiling calcolati in fase di inizializzazione. L'accesso alle strutture dati da parte dei processi viene reso sequenziale ed in mutua esclusione tramite l'uso dei \textbf{spin-lock}. Quest'ultimo consiste in un particolare tipo di lock del kernel Linux, lo si acquisisce tramite l'operazione \texttt{spin\_lock(lock)} e lo si rilascia con \texttt{spin\_unlock(lock)}. Di conseguenza le primitive che prevedono l'utilizzo delle strutture dati prima di eseguire la sezione critica devono ottenere lo spin-lock, tale operazione aggiunge ulteriori overhead oltre a quelli dettati dal protocollo in sé.\\
 
 \begin{figure}
 \centering
@@ -400,7 +398,7 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 
 \begin{enumerate}
 	\item innalzamento della priorità del job e del ceiling locale al valore calcolato in fase di inizializzazione, cioè la priorità più alta tra tutti i job allocati in quella CPU che accedono la risorsa, accodamento della richiesta nella FIFO ed infine determina la stato corrente della risorsa ed eventuale proprietario;
-	\item in base alle informazioni ottenute al passo precedente, se il proprietario non è in esecuzione, cioè è accodato nella coda dei job ready di un altro processore, gli viene concesso di eseguire nella CPU correte, viene perciò effettuata una migrazione;
+	\item in base alle informazioni ottenute al passo precedente, se il proprietario non è in esecuzione, cioè è accodato nella coda dei job ready di un altro processore, gli viene concesso di eseguire nella CPU corrente, viene perciò effettuata una migrazione;
 	\item se il job che ha inoltrato la richiesta non ha ottenuto la risorsa effettua attesa attiva fino ad arrivare in testa alla coda FIFO.
 \end{enumerate}
 
@@ -410,15 +408,15 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \label{fig:mrsplock}
 \end{figure}
 
-\noindent La prima fase causa un overhead pari a circa \textbf{800 ns} ed il costo principale riguarda le operazioni sulla coda di richieste. Questo costo è intrinseco alla risorsa e viene pagato dal job stesso e da quelli della stessa CPU. Tale influenza è motivata dal fatto che la prima operazione che viene effettuata è l'innalzamento di priorità e del ceiling, di conseguenza il tempo di blocco oltre alla sezione critica comprende anche questo overhead.\\
+\noindent La prima fase causa un overhead pari a circa \textbf{800 ns} e costituisce il costo principale riguarda le operazioni sulla coda di richieste. Questo costo è intrinseco alla risorsa e viene pagato dal job stesso e da quelli della stessa CPU. Tale influenza è motivata dal fatto che la prima operazione che viene effettuata è l'innalzamento di priorità e del ceiling, di conseguenza il tempo di blocco oltre alla sezione critica comprende anche questo overhead.\\
 
-\noindent I dati utili a questa operazione sono condivisi con altri processi, di conseguenza l'accesso deve essere gestito tramite il sistema di spin-lock in modo da garantire mutua esclusione ed evitare stati inconsistenti causati da accessi in parallelo da distinte CPU. Quindi per eseguire i passaggi indicati in questa fase è necessario prima di tutto aver acquisito lo spin-lock della risorsa aumentando il tempo necessario per effettuare la richiesta di accesso. Il suo costo va ad influire solamente sul job in questione ed il suo ammontare dipende dal numero di processori che contendono: un maggior numero di richieste in parallelo significa maggior interferenza, quindi un incremento dell'attesa.\\
+\noindent I dati utili a questa operazione sono condivisi con altri processi, di conseguenza l'accesso deve essere gestito tramite il sistema di spin-lock in modo da garantire mutua esclusione ed evitare stati inconsistenti causati da accessi in parallelo da distinte CPU. Per eseguire i passaggi indicati in questa fase è necessario quindi aver acquisito lo spin-lock della risorsa, aumentando il tempo necessario per effettuare la richiesta di accesso. Il suo costo va ad influire solamente sul job in questione ed il suo ammontare dipende dal numero di processori che contendono: un maggior numero di richieste in parallelo significa maggior interferenza, quindi un incremento dell'attesa.\\
 
-\noindent La seconda fase consiste nel togliere il job dalla coda ready della CPU in cui si trova per poi modificarne la priorità ed accodarlo in quella corrente, in questo modo è possibile selezionarlo per l'esecuzione alla successiva operazione di scheduling. Le due singole operazioni sulle code richiedono in media un tempo pari a \textbf{500 ns}. Anche in questo caso il sistema è dotato di un sistema di lock che mirano a serializzare le operazioni, quindi è necessario ottenere lo spin-lock prima di una CPU e poi, dopo aver rilasciato il precedente, di quella corrente. Le misurazioni del tempo complessivo della seconda fase indicano che le tempistiche medie sono vicine ai \textbf{2k ns}, e rispecchiano la contesa per ottenere il lock sulle CPU.\\
+\noindent La seconda fase consiste nel togliere il job dalla coda ready della CPU in cui si trova per modificarne la priorità ed accodarlo in quella corrente. In questo modo è possibile selezionarlo per l'esecuzione alla successiva operazione di scheduling. Le due singole operazioni sulle code richiedono in media un tempo pari a \textbf{500 ns}. Anche in questo caso il sistema è dotato di un sistema di lock che mirano a serializzare le operazioni, quindi è necessario ottenere lo spin-lock prima di una CPU e poi, dopo aver rilasciato il precedente, di quella corrente. Le misurazioni del tempo complessivo della seconda fase indicano che le tempistiche medie sono vicine ai \textbf{2k ns}, e rispecchiano la contesa per ottenere il lock sulle CPU.\\
 
-\noindent Il costo della migrazione è in media pari a \textbf{6k ns}, esso consiste nel tempo che impiega la CPU corrente ad effettuare il context switch tra il job che richiede la risorsa e quello che la detiene. Tale cambio di job in esecuzione viene effettuato tramite un'operazione di scheduling; i strumenti di misurazione delle primitive di sistema confermano che il tempo campionato influenza il costo di tale operazione.\\
+\noindent Il costo della migrazione è in media pari a \textbf{6k ns}, esso consiste nel tempo che impiega la CPU corrente ad effettuare il context switch tra il job che richiede la risorsa e quello che la detiene. Tale cambio di job in esecuzione viene effettuato tramite un'operazione di scheduling; i strumenti di misurazione delle primitive di sistema confermano che il costo complessivo della migrazione è composta dai singoli costi delle primitive richiamate per togliere il job dall'esecuzione in un processore e trasferirla sul processore di destinazione.\\
 
-\noindent Gli overhead identificati influiscono sull'intero sistema in quanto l'esecuzione della sezione critica da parte del job che detiene la risorsa non riprende immediatamente non appena vi è una nuova CPU disponibile, bensì dopo una quantità di tempo dettata principalmente dalla migrazione.\\
+\noindent Gli overhead identificati influiscono sull'intero sistema in quanto l'esecuzione della sezione critica da parte del job che detiene la risorsa non riprende immediatamente non appena vi è una nuova CPU disponibile, bensì dopo una quantità di tempo determinata principalmente dalla migrazione.\\
 
 \noindent La terza ed ultima fase della primitiva di richiesta della risorsa consiste nell'eseguire attesa attiva. Essa consiste nell'eseguire ciclicamente un controllo alla testa della coda FIFO, e nel caso sia il turno del job corrente acquisisce la risorsa. Ogni ciclo ha un costo di \textbf{500 ns}, anche in questo caso dettato dalle operazioni sulla coda; questo dato non tiene conto dell'overhead per ottenere lo spin-lock della risorsa.\\
 
@@ -465,9 +463,9 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 
 \noindent Il primo prevede di cercare una CPU disponibile per la migrazione, il suo costo dipendente principalmente dalla lunghezza della coda. In caso di successo, il job modifica la propria CPU di riferimento e la priorità in base al nuovo ceiling, infine viene accodato nella CPU disponibile, forzando su di essa un'operazione di scheduling. Questo insieme di operazioni risulta onerosa in quanto opera sulla coda e necessita dello spin-lock della risorsa e della coda ready. Il campionamento ha evidenziato un caso medio di circa \textbf{24k ns}.\\
 
-\noindent Inoltre tali operazioni generano una migrazione: al contrario dei casi precedenti il job non è accodato, bensì è in uno stato di prerilascio, il costo campionato è pari a \textbf{37k ns}.\\
+\noindent Inoltre tali operazioni generano una migrazione: al contrario dei casi precedenti il job non è accodato, bensì è in uno stato di prerilascio. Il costo campionato è pari a \textbf{37k ns}.\\
 
-\noindent Nel secondo caso viene inizialmente elaborato lo stato della CPU e del lock holder, se quest'ultimo non è in esecuzione e la CPU corrente è tra quelle accodate nella FIFO della risorsa si ricorre alla migrazione per cedere l'esecuzione. I campionamenti indicano che la prima parte ha un costo di \textbf{3k ns}, questo in quanto si necessita di mutua esclusione durante la manipolazione della coda, quindi di acquisire lo spin-lock. II costo della migrazione è in linea con gli altri casi in cui il job preso in considerazione è accodato: circa \textbf{6k ns}.\\
+\noindent Nel secondo caso viene inizialmente elaborato lo stato della CPU e del lock holder, se quest'ultimo non è in esecuzione e la CPU corrente è tra quelle accodate nella FIFO della risorsa si ricorre alla migrazione per cedere l'esecuzione. I campionamenti indicano che la prima parte ha un costo di \textbf{3k ns}. Questo in quanto si necessita di mutua esclusione durante la manipolazione della coda, quindi di acquisire lo spin-lock. II costo della migrazione è in linea con gli altri casi in cui il job preso in considerazione è accodato: circa \textbf{6k ns}.\\
 
 \noindent Gli overhead campionati che caratterizzano la primitiva di finish-switch affliggono il job mentre detiene la risorsa, quindi i ritardi provocati penalizzano l'intero sistema.
 
@@ -531,6 +529,8 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 
 \noindent Alla luce di queste considerazioni, come accennato in precedenza, MrsP risulta utile in quelle situazioni in cui la somma degli overhead hanno un valore inferiore rispetto all'interferenza che viene causata dai job a priorità superiore, di conseguenza dipende dalla lunghezza della sezione critica. Se tali costi fossero superiori è conveniente un approccio basato sull'inibizione del prerilascio in quanto gli overhead pagati dal sistema sarebbero superiori ai benefici tratti dai job a priorità più alta del ceiling.
 
+[TABELLA RIASSUNTIVA DEI COSTI ED EVIDENZIARE IL FAMOSO VALORE SOTTO IL QUALE IL PROTOCOLLO NON E' PIU' UTILE]
+
 \subsection{Confronto in assenza di risorsa}
 \label{sec:confronto_norisorsa}
 
@@ -544,16 +544,18 @@ Al contrario dei casi precedenti, inibendo il prerilascio il job a soffrire magg
 \subsubsection{Configurazione}
 \label{sec:confronto_norisorsa_conf}
 
-\noindent I taskset sono generati casualmente con alcuni accorgimenti: i periodi sono armonici e variano tra i 25ms ed i 200ms, i tempi di esecuzione sono calcolati con distribuzione di probabilità uniforme tra 0.1 e 0.4 in relazione al periodo, l'esecuzione dell'ultimo task creato viene ridimensionata in base alle esigenze per ottenere un utilizzazione dell'intero taskset pari al valore richiesto. Il problema del \textit{bin-packing} per allocare i task nei processori segue l'euristica \textit{worst-fit}. Infine ogni esecuzione ha una durata di 15 secondi.\\
+\noindent I taskset sono generati casualmente con alcuni accorgimenti: i periodi sono armonici e variano tra i 25ms ed i 200ms, i tempi di esecuzione sono calcolati con distribuzione di probabilità uniforme tra 0.1 e 0.4 in relazione al periodo, l'esecuzione dell'ultimo task creato viene ridimensionata in base alle esigenze per ottenere un utilizzazione dell'intero taskset pari al valore richiesto. Il problema del \textit{bin-packing} per allocare i task nei processori segue l'euristica \textit{worst-fit}. Infine, ogni esecuzione osservata ha una durata di 15 secondi.\\
 
 \noindent Il valore di utilizzazione del taskset è pari alla somma del rapporto tra WCET e periodo di ogni task ed il carico di lavoro di sistema. L'esperimento prevede che i taskset siano creati in modo tale da rispettare una soglia di utilizzazione che varia dal 50\% del carico totale fino al 100\%, nel caso di un sistema composto da 4 processori le soglie saranno 2.0, 2.4, 2.8, 3.0, 3.2, 3.4, 3.6, 4.0.
 
 \subsubsection{Obiettivo}
 \label{sec:confronto_norisorsa_ob}
 
-\noindent L'obiettivo è quello di studiare le esecuzioni dei taskset ed il comportamento degli scheduler all'aumentare del fattore di utilizzazione. Quello che ci si aspetta è che l'overhead aggiunto dall'integrazione di MrsP non vada ad intaccare il normale svolgimento di \textit{partitioned fixed priority}, ma ad alti livelli di sovraccarico del sistema anche i minimi costi possono causare deadline miss che altrimenti non avverrebbero, questo considerando che già il sistema di per sé aggiunge dei ritardi dati dalle singole primitive.\\
+\noindent L'obiettivo è studiare le esecuzioni dei taskset ed il comportamento degli scheduler all'aumentare del fattore di utilizzazione. Quello che ci si aspetta è che l'overhead aggiunto dall'integrazione di MrsP non vada ad intaccare il normale svolgimento di \textit{partitioned fixed priority}, ma ad alti livelli di carico del sistema anche i minimi costi possono causare deadline miss che altrimenti non avverrebbero, questo considerando che già il sistema di per sé aggiunge dei ritardi dati dalle singole primitive.\\
 
-\noindent La scelta di incrementare il livello campionamento per carichi vicini all'80\% è data dal comportamento atteso: l'assegnamento della priorità di ogni singolo task è stato effettuato utilizzato la tecnica di \textit{rate monotonic assignment}, di conseguenza possiamo far uso della \textit{utilization-based analysis}, secondo cui un valore di utilizzazione inferiore al 0.69 è condizione sufficiente ma non necessaria per ottenere un taskset schedulabile (Liu et al.~\cite{Liu:1973:SAM:321738.321743}). Di conseguenza se il protocollo aggiunge elevati costi rispetto ad un'implementazione che non lo supporta ci si aspetta che sia nell'intorno di questa soglia che i due scheduler abbiano comportamenti diversi per quanto riguarda il numero di \textit{deadline miss}.\\
+\noindent La scelta di incrementare il livello campionamento per carichi vicini all'80\% è data dal comportamento atteso: l'assegnamento della priorità di ogni singolo task è stato effettuato utilizzato la tecnica di \textit{rate monotonic assignment}, di conseguenza possiamo far uso della \textit{utilization-based analysis}, secondo cui un valore di utilizzazione inferiore al 0.69 è condizione sufficiente ma non necessaria per ottenere un taskset schedulabile (Liu et al.~\cite{Liu:1973:SAM:321738.321743}). Di conseguenza se il protocollo aggiunge elevati costi rispetto ad un'implementazione che non lo supporta, ci si aspetta che sia nell'intorno di questa soglia che i due scheduler abbiano comportamenti diversi per quanto riguarda il numero di \textit{deadline miss}.\\
+
+[RATE MONOTONIC UTILIZZABILE SOLO SE I TASK SONO INDIPENDENTI]
 
 \subsubsection{Risultati}
 \label{sec:confronto_norisorsa_ris}
