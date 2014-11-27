@@ -1,27 +1,39 @@
 \input{figure/model_job.tex}
 \input{figure/mrsp_omip_intro.tex}
+\input{figure/timelines/introduction_chapter/single_processor/protocols.tex}
+\input{figure/timelines/introduction_chapter/multiprocessor/protocols.tex}
 
-\section{Introduzione}
+\chapter{Introduzione}
 \label{sec:introduzione}
 
-Il progresso tecnologico ha portato ad un rapido incremento della complessità del software e all'esigenza di prestazioni sempre maggiori da parte dell'hardware. Inizialmente, per aumentare la potenza di calcolo, si ricorreva a processori sempre più potenti, ma tale approccio causava problematiche significative come l'elevato consumo di energia e l'eccessiva dissipazione di calore. Per questo motivo i produttori, Intel in primis, hanno iniziato ad adottare piattaforme multiprocessor per lo sviluppo di sistemi real-time: affiancando più processori piuttosto che potenziarne uno unico.\\
+Il progresso tecnologico ha portato a un rapido incremento della complessità del software e all'esigenza di prestazioni sempre maggiori da parte dell'hardware. Inizialmente, per aumentare la potenza di calcolo, si ricorreva a processori sempre più potenti, ma tale approccio causava problematiche significative come l'elevato consumo di energia e l'eccessiva dissipazione di calore. Per questo motivo i produttori, Intel in primis, hanno iniziato ad adottare piattaforme multiprocessor per lo sviluppo di sistemi real-time: affiancando più processori piuttosto che potenziarne uno unico.\\
 
 Questa è la definizione che Burns e Wellings in ~\cite{Burns:2009:RSP:1643588} danno di un sistema real-time:\\
 
-\textit{"an information processing system which has to respond to externally generated input stimuli within a finite and specified period. The correctness depends not only on the logical result but also on the time it was delivered. The failure to respond is as bad as the wrong response."}\\
+\textit{“An information processing system which has to respond to externally generated input stimuli within a finite and specified period. The correctness depends not only on the logical result but also on the time it was delivered. The failure to respond is as bad as the wrong response.“}\\
 
-La ricerca si è quindi spostata sulle piattaforme multiprocessor. Nonostate i grandi sforzi ed i recenti risultati, gli algoritmi di scheduling e le tecniche di analisi di schedulabilità per i sistemi multiprocessor non hanno ancora raggiunto il livello dei precedenti single processor (Davis et al.~\cite{Davis:2011:SHR:1978802.1978814}).\\
+La ricerca si è quindi spostata sulle piattaforme multiprocessor. Nonostate i grandi sforzi e i recenti risultati, gli algoritmi di scheduling e le tecniche di analisi di schedulabilità per i sistemi multiprocessor non hanno ancora raggiunto il livello di maturità dei precedenti single processor (Davis et al.~\cite{Davis:2011:SHR:1978802.1978814}).\\
 
 Liu et al.\cite{Liu:1973:SAM:321738.321743} evidenziano come lo scheduling sia un problema intrinsecamente più complicato in ambito multiprocessor:\\
 
 \textit{“Few of the results obtained for a single processor generalize directly to the multiple processor case; bringing in additional processors adds a new dimension to the scheduling problem. The simple fact that a task can use only one processor even when several processors are free at the same time adds a surprising amount of difficulty to the scheduling of multiple processors.”}\\
 
-\subsection{Introduzione ai Sistemi Real-Time}
+\section{Contributo}
+\label{sec:intro.contributo}
+
+Il lavoro di tesi è focalizzato sull'implementazione di Multiprocessor Resource Sharing Protocol a partire dalla versione di Partitioned-Fixed Priority fornita da LITMUS\textsuperscript{RT}. Quest'ultimo è un'estensione di Linux che ne permette l'utilizzo come sistema real-time. Esso mette a disposizione un sistema, basato su plugin, per l'implementazione di algoritmi di scheduling e protocolli per la condivisione di risorse. Il protocollo sviluppato, che si appoggia su tale sistema, è successivamente valutato empiricamente in termini di schedulabilità e di costi che l'implementazione stessa e i meccanismi utilizzati causano all'esecuzione.
+
+\section{Struttura}
+\label{sec:intro.struct}
+
+Nel primo capitolo~\ref{sec:introduzione} sono fornite le informazioni basilari riguardanti un sistema real-time, il suo modello e le categorie di scheduler; in seguito, è proposta una panoramica dei protocolli di accesso a risorsa single processor e multiprocessor, fino ad arrivare all'analisi di MrsP. Inoltre, capitolo presenta una panoramica su LITMUS\textsuperscript{RT}, che identifica il sistema di supporto per implementazione ed esperimenti. Nel capitolo~\ref{sec:implementazione}, è discussa la soluzione alla base della tesi e la relativa implementazione; la sezione~\ref{sec:mrsp_exe} descrive un esempio di esecuzione con l'obiettivo di dare risalto ai meccanismi del protocollo e in che modo interagiscono con le strutture dati. Gli esperimenti, atti a valutare il protocollo da diversi punti di vista, sono esposti e discussi nel capitolo~\ref{sec:esperimenti}. Infine, nel capitolo~\ref{sec:conclusione}, sono tratte le conclusioni riguardo il lavoro di tesi e i possibili sviluppi futuri a partire da esso.
+
+\section{Introduzione ai Sistemi Real-Time}
 \label{sec:overviewRTS}
 
-In questa sezione si procederà alla descrizione del modello con task sporadici utilizzato e che trae origine dal lavoro di Mok et al.~\cite{Sha:2004:RTS:1028913.1028959}. La scelta nasce dal fatto che il sistema LITMUS\textsuperscript{RT} è sviluppato a partire da questo modello, mentre MrsP, che comunque si basa su un modello sporadico, non ne specifica uno in particolare. Nel proseguo del documento la nomenclatura originale subirà alcune modifiche coerentemente con il lavoro di Burns e Wellings ~\cite{Burns:2013:SCM:2547348.2547350}.
+Questa sezione descrive il modello con task sporadici utilizzato e che trae origine dal lavoro di Mok et al.~\cite{Sha:2004:RTS:1028913.1028959}. La scelta nasce dal fatto che il sistema LITMUS\textsuperscript{RT} è sviluppato a partire da questo modello, mentre MrsP, che comunque si basa su un modello sporadico, non ne specifica uno in particolare. Nel prosieguo del documento la nomenclatura originale subisce alcune modifiche coerentemente con il lavoro di Burns e Wellings ~\cite{Burns:2013:SCM:2547348.2547350}.
 
-\subsubsection{Workload}
+\subsection{Workload}
 \label{sec:overviewWL}
 
 Il \textit{workload} consiste in un insieme di $n$ task $\tau = {\tau_1, ... , \tau_n}$. Ogni task $\tau_i$ è ripetutamente invocato in modo asincrono da un evento esterno, per esempio un \textit{interrupt} da parte di un dispositivo o lo scadere di un timer. Quando è invocato esso rilascia un \textit{job} per gestire l'evento che l'ha generato. Il $j-esimo$ job di un task $\tau_i$ è identificato con $J_{i,j}$ ($j \geq 1$). Nei casi in cui l'indice del job risulti irrilevante $J_i$ denota un qualsiasi job di $\tau_i$.\\
@@ -30,7 +42,7 @@ Il \textit{workload} consiste in un insieme di $n$ task $\tau = {\tau_1, ... , \
 \begin{itemize}
 	\item $C_i$, \textit{worst case execution time} (WCET), il tempo massimo richiesto per l'esecuzione;
 	\item $T_i$, il periodo, il tempo minimo tra un evento di rilascio di un job ed il successivo;
-	\item $D_i$, la dealdine, lasso di tempo a disposizione per l'esecuzione.\\
+	\item $D_i$, la deadline, lasso di tempo a disposizione per l'esecuzione.\\
 \end{itemize}
 
 Mentre il periodo e la deadline sono arbitrarie, il WCET dipende dalla piattaforma di esecuzione e dalla semantica del job. Nel primo caso dipende dalle componenti dell'hardware, per esempio la cache, la quale ha comportamenti che dipendono dalle esecuzioni precedenti che ne cambiano lo stato, o la frequenza di clock dei processori. Il secondo dipende dall'esecuzione del job, cioè dalla presenza o meno di istruzioni di \textit{branch} che modifica il flusso delle operazioni variando il tempo di esecuzione. Il valore di WCET deve essere un limite massimo certo che rende il modello deterministico.\\
@@ -40,10 +52,10 @@ I valori che compongono la tripla sono soggetti ad alcuni vincoli:\\
 \begin{itemize}
 	\item $C_i > 0$, il tempo di esecuzione deve essere non nullo;
 	\item $T_i \geq C_i$, il periodo deve essere maggiore o uguale al WCET;
-	\item $D_i \geq C_i$, la dealdine deve essere maggiore o uguale al WCET.\\
+	\item $D_i \geq C_i$, la deadline deve essere maggiore o uguale al WCET.\\
 \end{itemize}
 
-\paragraph{Jobs.} Un job $J_{i,j}$ diviene disponibile per l'esecuzione nel momento del rilascio $a_{i,j}$, con $a_{i,j} \geq 0$. La frequenza dei rilasci di un job è determinata dal periodo del task corrispondente: $a_{i,j+1} ≥ a_{i,j} + T_i$. Ogni job $J_{i,j}$ richiede al massimo $C_i$ unità di tempo del processore per completare la propria esecuzione entro $f_{i,j}$, con $f_{i,j} \geq a_{i,j}$. Un job si definisce in \textit{pending} dal momento di rilascio fino al suo completamento. Un task non può avere due job in pending nello stesso momento; di conseguenza un job viene rilasciato solamente se il suo predecessore ha terminato l'esecuzione. Il \textit{response time} di un job è pari al tempo in cui rimane pending; quindi $r_{i,j} = f_{i,j} − a_{i,j}$.\\
+\paragraph{Jobs.} Un job $J_{i,j}$ diviene disponibile per l'esecuzione nel momento del rilascio $a_{i,j}$, con $a_{i,j} \geq 0$. La frequenza dei rilasci di un job è determinata dal periodo del task corrispondente: $a_{i,j+1} ≥ a_{i,j} + T_i$. Ogni job $J_{i,j}$ richiede al massimo $C_i$ unità di tempo del processore per completare la propria esecuzione entro $f_{i,j}$, con $f_{i,j} \geq a_{i,j}$. Un job si definisce \textit{pending} dal momento di rilascio fino al suo completamento. Un task non può avere due job pending nello stesso momento; di conseguenza un job viene rilasciato solamente se il suo predecessore ha terminato l'esecuzione. Il \textit{response time} di un job è pari al tempo in cui rimane pending; quindi $r_{i,j} = f_{i,j} − a_{i,j}$.\\
 Il modello sporadico deriva dal modello a task periodico in cui viene rilassato il vincolo che obbliga un task ad avere rilasci strettamente periodici, cioè $ai,j = a_{i,1} + (j − 1) * T_i$; tale limite diviene un valore minimo e non un vincolo stretto.
 
 \paragraph{Deadline.} La deadline relativa $D_i$ determina la quantità di tempo a disposizione del job per il completamento. Il job $J_{i,j}$ deve eseguire entro la deadline assoluta $d_{i,j} = a_{i,j} + D_i$. Nel caso in cui l'esecuzione termini dopo la deadline assoluta, si è in presenza di \textit{deadline miss} e si verifica un ritardo del job, formalmente definito \textit{tardiness}. Una deadline miss ritarda il rilascio del successivo job.\\
@@ -52,12 +64,12 @@ La relazione tra deadline e periodo permette di categorizzare i task:
 \begin{itemize}
 	\item deadline implicite se $D_i = T_i$ per ogni $\tau_i \in \tau$;
 	\item deadline vincolate se $D_i \leq T_i$ per ogni $\tau_i \in \tau$;
-	\item deadline arbitrarie se non vi e' alcun vincolo.
+	\item deadline arbitrarie se non vi è alcun vincolo.
 \end{itemize}
 
-La categoria di deadline ha un importante impatto sulle tecniche di analisi di schedulabilità mentre, dal punto di vista dell'implementazione, non comporta rilevanti differenze. Nel prosuguo di questo documento si assumeranno un insieme di task con deadline implicite.\\
+La categoria di deadline ha un'importante impatto sulle tecniche di analisi di schedulabilità mentre, dal punto di vista dell'implementazione, non comporta rilevanti differenze. Nel prosuguo di questo documento si assumeranno un insieme di task con deadline implicite.\\
 
-Nella figura \ref{fig:model_job} si vede parte del modello discusso finora.
+Nella figura~\ref{fig:model_job} si vede parte del modello discusso finora.
 
 \begin{figure}
 \centering
@@ -66,9 +78,9 @@ Nella figura \ref{fig:model_job} si vede parte del modello discusso finora.
 \label{fig:model_job}
 \end{figure}
 
-\paragraph{Processor demand.} $C_i$ indica il tempo di esecuzione richiesto da ogni job di $\tau_i$, cioè per quanto tempo il job necessita di essere assegnato ad uno dei processori per eseguire il WCET entro la deadline. In presenza di una lunga serie di job rilasciata da parte di un task, è utile normalizzare la domanda del processore mettendo in relazione periodo e deadline. Pertanto, si definisce un fattore di utilizzazione $U_i = C_i / P_i$ per ogni $\tau_i$. Tale valore è importante in quanto identifica l'ammontare di tempo in esecuzione richiesto per l'intera durata di vita del task. Se tale necessità non è soddisfatta l'accumulo di tardiness può affliggere l'intero sistema.
+\paragraph{Processor demand.} $C_i$ indica il tempo di esecuzione richiesto da ogni job di $\tau_i$, cioè per quanto tempo il job necessita di essere assegnato ad uno dei processori per eseguire il WCET entro la deadline. Data la presenza di una lunga serie di job rilasciata da parte di un task, è utile normalizzare la domanda del processore mettendo in relazione periodo e deadline. Pertanto, si definisce un fattore di utilizzazione $U_i = C_i / P_i$ per ogni $\tau_i$. Tale valore è importante in quanto identifica l'ammontare di tempo in esecuzione richiesto per l'intera durata di vita del task. Se tale necessità non è soddisfatta l'accumulo di tardiness può affliggere l'intero sistema.
 
-\paragraph{Vincoli temporali.} Un sistema viene categorizzato in base ai vincoli temporali dei task che lo compongono, cioè in base a cosa consegue a una deadline miss:
+\paragraph{Vincoli temporali.} Un sistema è categorizzato in base ai vincoli temporali dei task che lo compongono, cioè in base a cosa consegue a una deadline miss:
 
 \begin{itemize}
 	\item hard real-time, se causa un \textit{fatal fault};
@@ -76,23 +88,23 @@ Nella figura \ref{fig:model_job} si vede parte del modello discusso finora.
 	\item firm, se non causa \textit{fatal fault} ma l'utilità del risultato scende a zero.
 \end{itemize}
 
-\subsubsection{Le risorse}
+\subsection{Le risorse}
 \label{sec:overviewRM}
 
-Le risorse di un sistema si dividono in attive e passive. Un job per progredire nella propria esecuzioni ha bisogno della risorsa attiva che consiste nel processore. Al contrario le risorse passive sono utilizzate dai job in quanto forniscono funzionalità, generalmente riutilizzabili a meno che il loro utilizzo non le esaurisca. Esse sono per esempio memoria, lock e mutex.\\
+Le risorse di un sistema si dividono in attive e passive. Un job per progredire nella propria esecuzioni ha bisogno della risorsa attiva, cioè del processore. Al contrario le risorse passive sono utilizzate dai job in quanto forniscono funzionalità, generalmente riutilizzabili a meno che il loro utilizzo non le esaurisca. Esse sono per esempio memoria, lock e mutex.\\
 
-L'organizzazione dei processori permette di classificare i sistemi real-time in base al loro numero e al loro funzionamento. Sistemi con un unico processore sono definiti \textit{singleprocessor}; mentre \textit{multiprocessor} indica sistemi con un numero di processori maggiore o uguale a due. In base alla loro configurazione, un sistema multiprocessor può essere:
+L'organizzazione dei processori permette di classificare i sistemi real-time in base al loro numero e al loro funzionamento. Sistemi con un unico processore sono definiti \textit{single processor}; mentre \textit{multiprocessor} indica sistemi con un numero di processori maggiore o uguale a due. In base alla loro configurazione, un sistema multiprocessor può essere:
 
 \begin{itemize}
 	\item omogeneneo, se i processori che lo compongono sono identici per prestazioni e caratteristiche (cache, I/O bus, set di istruzioni, etc.): in questo caso il WCET di ogni job non dipende dall'unità su cui esegue e di conseguenza sono interscambiabili;
-	\item uniforme, se i processori si differenziano per prestazioni ma hanno caratteristiche differenti: i job eseguono con tempistiche differenti sui vari processori;
+	\item uniforme, se i processori si differenziano per le prestazioni: i job eseguono con tempistiche differenti sui vari processori;
 	\item eterogeneo, se i processori hanno differenti prestazioni e caratteristiche: non tutti i job possono eseguire su tutti i processori.
 \end{itemize}
 
-L'organizzazione dell'accesso alla memoria e le comunicazioni tra processori identifica due differenti categorie di sistemi: a memoria condivisa e a memoria distribuita. Nel primo caso i processori condividono un'unica memoria centrale tramite un bus condiviso (architettura a sx in Figura~\ref{fig:memory}); nel secondo ogni processore (o sottoinsieme ristretto) ha una propria memoria e comunica tramite un bus dedicato allo scambio di messaggi (dx in Figura~\ref{fig:memory}). Il sistema a memoria distribuita va incontro ad alti overhead in caso di migrazioni, in quanto l'intero stato del processo migrante deve essere copiato da una memoria all'altra. Al contrario, il sistema a memoria condivisa necessita di copiare solamente i registri hardware da un processore all'altro, rendendo l'operazione meno onerosa.\\
-Per questo motivo, il sistema a memoria condivisa è più utilizzato rispetto alla versione distribuita nonostante il bus condiviso per l'accesso alla memoria permetta l'accesso a un numero limitato di processo nel medesimo momento. Un sistema di questo tipo si differenzia a sua volta in due categorie in base alla gestione dell'accesso: \textit{uniform memory access} (UMA), se viene garantito uguale gestione a tutti processi, o \textit{non-uniform memory access} (NUMA), nel caso contrario.\\
+L'organizzazione dell'accesso alla memoria e le comunicazioni tra processori identifica due differenti categorie di sistemi: a memoria condivisa e a memoria distribuita. Nel primo caso i processori condividono un'unica memoria centrale tramite un bus condiviso (architettura a sx in figura~\ref{fig:memory}); nel secondo ogni processore (o sottoinsieme ristretto) ha una propria memoria e comunica tramite un bus dedicato allo scambio di messaggi (dx in figura~\ref{fig:memory}). Il sistema a memoria distribuita va incontro ad alti overhead in caso di migrazioni, in quanto l'intero stato del processo migrante deve essere copiato da una memoria all'altra. Al contrario, il sistema a memoria condivisa necessita di copiare solamente i registri hardware da un processore all'altro, rendendo l'operazione meno onerosa.\\
+Per questo motivo, il sistema a memoria condivisa è più utilizzato rispetto alla versione distribuita nonostante il bus condiviso per l'accesso alla memoria permetta l'accesso a un numero limitato di processo nel medesimo momento. Un sistema di questo tipo si differenzia a sua volta in due categorie in base alla gestione dell'accesso alla memoria: \textit{uniform memory access} (UMA), se viene garantito uguale gestione a tutti processi, o \textit{non-uniform memory access} (NUMA), nel caso contrario.\\
 
-Data la sua semplicità, la maggior parte dei lavori in letteratura si fa riferimento a sistemi multiprocessor identici con memoria condivisa ad accesso uniforme, più comunemente definiti SMP (\textit{symmetric multiprocessor platform}). Nel proseguo del documento si adotterà tale architettura.
+Data la sua semplicità, la maggior parte dei lavori in letteratura si fa riferimento a sistemi multiprocessor identici con memoria condivisa ad accesso uniforme, più comunemente definiti SMP (\textit{symmetric multiprocessor platform}). Nel prosieguo del documento si adotterà tale architettura.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{images/memory_arch.jpeg}
@@ -100,66 +112,114 @@ Data la sua semplicità, la maggior parte dei lavori in letteratura si fa riferi
 \label{fig:memory}
 \end{figure}
 
-\subsubsection{Scheduler}
+\subsection{Scheduler}
 \label{sec:overviewSCHED}
 
 L'obiettivo di uno scheduler real-time è gestire l'esecuzione del sistema, adempiendo alle richieste dei task che compongono il workload entro i requisiti temporali. Formalmente, un algoritmo di scheduling è un algoritmo che, dato una sequenza di job, deve determinare in ogni istante quale job deve eseguire e in quale processore. Il piano di esecuzioni risultante dall'algoritmo è definito \textit{schedule}. Un algoritmo per essere valido deve rispettare i seguenti vincoli:\\
 
 \begin{itemize}
-	\item in ogni istante, ad ogni processore è assegnato al massimo un job; 
-	\item in ogni istante un job è assegnato al massimo ad un processore;
+	\item in ogni istante, a ogni processore è assegnato al massimo un job; 
+	\item in ogni istante un job è assegnato al massimo a un processore;
 	\item un job non è eseguito fino al momento del suo rilascio;
-	\item la quantità di tempo del processore assegnata ad ogni job è al massimo pari al suo WCET;
+	\item la quantità di tempo del processore assegnata a ogni job è al massimo pari al suo WCET;
 	\item un job esegue su un processore per volta.
 \end{itemize}
 
-Un algoritmo si definisce corretto se produce uno schedule valido. A sua volta uno schedule è definito \textit{feasible} se ogni job esegue entro la propria deadline. Un taskset è \textit{schedulable}, in relazione ad un algoritmo di scheduling, se produce uno schedule feasible, di conseguenza è una proprietà che dipende dal taskset e non dall'algoritmo. Infine, un algoritmo è ottimo se genera sempre uno schedule feasible dato un qualsiasi taskset feasible.\\
+Un algoritmo si definisce corretto se produce uno schedule valido. A sua volta uno schedule è definito \textit{feasible} se ogni job esegue entro la propria deadline. Un taskset è \textit{schedulable}, in relazione a un algoritmo di scheduling, se produce uno schedule feasible, di conseguenza è una proprietà che dipende dal taskset e non dall'algoritmo. Infine, un algoritmo è ottimo se genera sempre uno schedule feasible dato un qualsiasi taskset feasible.\\
 
-Un test di schedulabilità determina se un algoritmo genera uno schedule feasible se applicato ad un particolare taskset e può essere sufficiente o necessario: nel primo caso un esito negativo indica un taskset non feasible, nel secondo caso un risultato positivo indica un taskset feasible. Un test contemporaneamente sufficiente e necessario e' definito esatto.\\
+Un test di schedulabilità determina se un algoritmo genera uno schedule feasible se applicato ad un particolare taskset e può essere sufficiente o necessario: nel primo caso un esito negativo indica un taskset non feasible, nel secondo caso un risultato positivo indica un taskset feasible. Un test contemporaneamente sufficiente e necessario è definito esatto.\\
 
-\subsection{Real-time scheduling in sistemi multiprocessor}
+\section{Real-time scheduling in sistemi multiprocessor}
 \label{sec:SchedMulti}
 
-Lo scopo dello scheduler è quello di selezionare ad ogni evento di scheduling un job dalla coda ready, cioè da quelli in attesa di esecuzione. L'organizzazione e la gestione di tale coda permette di differenziare gli scheduler in base a diverse caratteristiche.\\
+Lo scopo dello scheduler è selezionare a ogni evento di scheduling un job dalla coda ready, cioè da quelli in attesa di eseguire. L'organizzazione e la gestione di tale coda permette di differenziare gli scheduler in base a diverse caratteristiche.\\
 
-I sistemi in cui è presente un'unica coda sono definiti globali: in questo caso le esecuzioni su tutti i processori sono gestite prelevando i job da un'unica coda, e dunque essi possono eseguire su tutti i processori in modo indistinto. In un sistema partizionato, invece, i task sono suddivisi ed allocati in un unico processore e di conseguenza vi è una coda per ogni processore sulla quale lo scheduler opera. Una versione ibrida tra i due sistemi prevede che i processori siano divisi in sottoinsiemi e per ognuno di essi vi sia un'unica coda: tale configurazione prende il nome di scheduler a \textit{cluster}.\\
+I sistemi in cui è presente un'unica coda sono definiti globali: in questo caso le esecuzioni su tutti i processori sono gestite prelevando i job da un'unica coda, e dunque essi possono eseguire su tutti i processori in modo indistinto. In un sistema partizionato, invece, i task sono suddivisi e allocati in un unico processore e, di conseguenza, vi è una coda per ogni processore sulla quale lo scheduler opera. Una versione ibrida tra i due sistemi prevede che i processori siano divisi in sottoinsiemi e per ognuno di essi vi sia un'unica coda: tale configurazione prende il nome di scheduler a \textit{cluster}.\\
 
 L'ordinamento della coda avviene in base alla priorietà e la modalità di assegnazione di tale valore ai job permette di distinguere i seguenti algoritmi:
 
 \begin{itemize}
-	\item task a priorità fissa: ad ogni task è assegnata una certa priorità che viene applicata ad ogni job che rilascia;
+	\item task a priorità fissa: a ogni task è assegnata una certa priorità che viene applicata a ogni job che rilascia;
 	\item job a priorità fissa: i job del medesimo task possono avere priorità differente, ma ogni job ha un'unica priorità; un esempio è \textit{Earliest Deadline First} (EDF)
 	\item priorità dinamica: la priorità di un job può assumere differenti valori, per esempio \textit{Least Laxity First} (LLF).
 \end{itemize}
 
-L'approccio partizionato è largamente utilizzato in quanto permette di analizzare ed eseguire ogni singola partizione come un sistema single processor, con i conseguenti vantaggi dati da uno studio di tecniche e algoritmi maturi. Questo approccio, però, ha lo svantaggio di dipendere dalla fase offline di allocazione dei task tra i processori. Tale problema è riportabile al ben più noto \textit{bin-packing}. Esso è uno dei problemi classici dell'informatica ed e' NP-hard (Garey et al.~\cite{Garey:1979:CIG:578533}). Di conseguenza l'intero sistema dipende dalla risoluzione di tale problema e ciò porta a una soluzione al di sotto delle effettive prestazioni della piattaforma utilizzata, perché non si raggiunge un fattore di utilizzazione vicino all'ottimo. Inoltre la condivisione di risorse tra task allocati in differenti processori causa un negativo impatto sulla schedulabilità del taskset. Al contrario, un sistema globale garantisce un alto livello di utilizzazione, ma comporta alti costi per la gestione di un'unica coda.\\
+L'approccio partizionato è largamente utilizzato in quanto permette di analizzare ed eseguire ogni singola partizione come un sistema single processor, con i conseguenti vantaggi dati da uno studio di tecniche e algoritmi maturi. Questo approccio, però, ha lo svantaggio di dipendere dalla fase offline di allocazione dei task tra i processori. Tale problema è riportabile al ben più noto \textit{bin-packing}. Esso è uno dei problemi classici dell'informatica ed è NP-hard (Garey et al.~\cite{Garey:1979:CIG:578533}). Di conseguenza l'intero sistema dipende dalla risoluzione di tale problema e ciò porta a una soluzione al di sotto delle effettive prestazioni della piattaforma utilizzata, perché non si raggiunge un fattore di utilizzazione vicino all'ottimo. Inoltre, la condivisione di risorse tra task allocati in differenti processori causa un negativo impatto sulla schedulabilità del taskset. Al contrario, un sistema globale garantisce un alto livello di utilizzazione, ma comporta alti costi per la gestione di un'unica coda.\\
 
-Davis et al.~\cite{Davis:2011:SHR:1978802.1978814} propongono una panoramica dei principali scheduler in sistemi partizionati, clustered e globali. Nel proseguo del documento approfondiremo i sistemi partizionati con utilizzo di task a priorità fissa.
+Davis et al.~\cite{Davis:2011:SHR:1978802.1978814} propongono una panoramica dei principali scheduler in sistemi partizionati, clustered e globali. Nel prosieguo del documento approfondiremo i sistemi partizionati con utilizzo di task a priorità fissa, quindi con scheduler \textit{Partitioned Fixed Priority} (P-FP).
 
-\subsection{Real-Time Locking Protocols}
+\section{Real-Time Locking Protocols}
 \label{sec:lockProtocols}
 
-Il sistema descritto nella Sezione~\ref{sec:overviewRTS} assume che i task siano indipendenti, cioè che non condividano risorse diverse dal processore stesso. In un sistema a task indipendenti, gli \textit{m} job ready con priorità maggiore (con \textit{m} pari al numero di processori) eseguono. I job proseguono fino al loro completamento ogni volta che gli è assegnato un processore. Molti degli algoritmi di scheduling studiati e molte tecniche di analisi di schedulabilità sono basati su un sistema di questo tipo. Tuttavia, in un sistema reale, i task condividono delle risorse. Pensiamo, ad esempio, a dispositivi di I/O, buffer, strutture dati, etc. I task non risultano più indipendenti e il progredire della loro esecuzione dipende dai job con cui condividono delle risorse.\\
+Il sistema descritto nella Sezione~\ref{sec:overviewRTS} assume che i task siano indipendenti, cioè che non condividano risorse diverse dal processore stesso. In un sistema a task indipendenti, gli \textit{m} job ready con priorità maggiore (con \textit{m} pari al numero di processori) eseguono. I job proseguono fino al loro completamento ogni volta che gli è assegnato un processore. Molti degli algoritmi di scheduling studiati e molte tecniche di analisi di schedulabilità sono basati su un sistema di questo tipo. Tuttavia, in un sistema reale, i task condividono delle risorse. Si pensi, per esempio, a dispositivi di I/O, buffer, strutture dati, etc. I task non risultano più indipendenti e il progredire della loro esecuzione dipende dai job con cui condividono delle risorse.\\
 
-La condivisione di risorse necessita di meccanismi di sincronizzazione per prevenire situazioni di inconsistenza. L'utilizzo di \textit{lock} permette di soddisfare questa necessità: il job richiede una risorsa, se questa è in uso attende il suo rilascio e, una volta libera, ne acquisisce il possesso. Potenzialmente, questo funzionamento preclude l'avanzamento dell'esecuzione nonostante sia assegnato ad un processore. Sono possibili altri approcci, definiti \textit{non-blocking}, che permettono al job di non attendere. Tali protocolli, però, sono molto onerosi per quantità di memoria richiesta o overhead generati.\\
+La condivisione di risorse necessita di meccanismi di sincronizzazione per prevenire situazioni di inconsistenza. L'utilizzo di \textit{lock} permette di soddisfare questa necessità: il job che richiede una risorsa, se questa è in uso, attende il suo rilascio e, una volta libera, ne acquisisce il possesso. Potenzialmente, questo funzionamento preclude l'avanzamento dell'esecuzione nonostante sia assegnato a un processore. Sono possibili altri approcci, definiti \textit{non-blocking}, che permettono al job di non attendere. Tali protocolli, però, sono molto onerosi per quantità di memoria richiesta o overhead generati.\\
 
-In un sistema singleprocessor, un job che richiede una risorsa occupata può solamente sospendersi in attesa del suo rilascio, per consentire al possessore di portare a termine la sezione critica (cioè la parte di esecuzione che richiede l'uso della risorsa e che necessita di sincronizzazione), altrimenti causerebbe stallo all'intero sistema. Le circostanze in cui un job a priorità inferiore esegue a discapito di uno a priorità superiore a causa della condivisione di risorse è chiamata \textit{inversione di priorità}. Uno degli obiettivi principali di un protocollo di accesso a risorsa è quello di limitare tale inversione perché rende complesso effettuare test di schedulabilità, oltre a snaturare il normale flusso dell'esecuzione in cui un job a priorità superiore esegue prima di uno a priorità inferiore. In un sistema multiprocessor, il job può sospendersi, come nel caso precendete, o effettuare l'attesa attiva fino al suo rilascio. L'utilizzo di attesa attiva ha lo svantaggio di sprecare l'esecuzione del processore ma ha il vantaggio di essere di semplice implementazione e causare un basso overhead; al contrario la sospensione, tra i vari svantaggi, causa l'allungamento del tempo di blocco subito da parte del job che richiede la risorsa. Per uno studio dettagliato della gestione del caso di blocco da parte di un job si veda Brandenburg et al.~\cite{Brandenburg:2008:RSM:1440456.1440601}.\\
+In un sistema single processor, un job che richiede una risorsa occupata può solamente sospendersi in attesa del suo rilascio, per consentire al possessore di portare a termine la sezione critica (cioè la parte di esecuzione che richiede l'uso della risorsa e che necessita di sincronizzazione), altrimenti causerebbe stallo all'intero sistema (figura~\ref{fig:singleResource}). Le circostanze in cui un job a priorità inferiore esegue a discapito di uno a priorità superiore a causa della condivisione di risorse è chiamata \textit{inversione di priorità}. Uno degli obiettivi principali di un protocollo di accesso a risorsa è limitare tale inversione perché rende complesso effettuare test di schedulabilità, oltre a snaturare il normale flusso dell'esecuzione in cui un job a priorità superiore esegue prima di uno a priorità inferiore. In un sistema multiprocessor, il job può sospendersi (figura~\ref{fig:multiSuspResource}), come nel caso precendete, o effettuare l'attesa attiva fino al suo rilascio (figura~\ref{fig:multiBusyWaitResource}). L'utilizzo di attesa attiva ha lo svantaggio di sprecare l'esecuzione del processore ma ha il vantaggio di essere di semplice implementazione e causare un basso overhead; al contrario la sospensione, tra i vari svantaggi, causa l'allungamento del tempo di blocco subito da parte del job che richiede la risorsa. Per uno studio dettagliato della gestione del caso di blocco da parte di un job si veda Brandenburg et al.~\cite{Brandenburg:2008:RSM:1440456.1440601}.\\
 
-Un protocollo di accesso di risorsa deve garantire che i ritardi causati agli altri job siano limitati e calcolabili con precisione; allo stesso tempo, i job a priorità superiore non devono subire ritardi da job con cui non condividono risorse. Questo problema è stato risolto in ambito singleprocessor con i protocolli PIP, PCP e SRP (Sezione~\ref{sec:lockProtocols.single}). La maggior parte dei protocolli dei sistemi multiprocessor, invece, risolvono il primo problema, cioè limitano il ritardo per i job, ma non garatiscono l'indipendenza ai job a priorità superiore (Sezione~\ref{sec:lockProtocols.multi}). Al contrario OMIP (Sezione~\ref{sec:lockProtocols.omip}) e MrsP (Sezione~\ref{sec:lockProtocols.mrsp}), con approcci differenti, garantiscono sia blocco ridotto che l'indipendenza dei job a priorità superiore.\\
+\begin{figure}
+    \centering
+      \begin{subfigure}[b]{0.80\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\singleResource
+        \caption{In ambito single processor, il job $J_2$ può solamente sospendersi al momento della richiesta della risorsa ($t_2$); altrimenti $J_1$, prerilasciato al tempo $t_1$, non rilascia la risorsa.}
+        \label{fig:singleResource}
+      \end{subfigure}
+      \vspace{1cm}
+      \begin{subfigure}[b]{0.70\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\multiSuspResource
+        \caption{In un sistema multiprocessor, il job $J_2$, al tempo $t_1$ può sospendersi in attesa che $J_1$ rilasci la risorsa ($t_2$).}
+        \label{fig:multiSuspResource}
+      \end{subfigure}
+      \vspace{1cm}
+      \begin{subfigure}[b]{0.70\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\multiBusyWaitResource
+        \caption{Con un approccio \textit{spin-based}, $J_2$ effettua attesa attiva fino al rilascio della risorsa ($t_1$ - $t_2$).}
+        \label{fig:multiBusyWaitResource}
+      \end{subfigure}
+    \caption{Gestione delle risorse in ambito single processor e multiprocessor. Per ogni job $prio(J_i) = i$ e $i < j \implies prio(J_i) < prio(J_j)$.}
+    \label{fig:solutions}
+  \end{figure}
 
-\subsection{Singleprocessor Protocols}
+
+Un protocollo di accesso di risorsa deve garantire che i ritardi causati agli altri job siano limitati e calcolabili con precisione; allo stesso tempo, i job a priorità superiore non devono subire ritardi da job con cui non condividono risorse. Questo problema è stato risolto in ambito single processor con i protocolli PIP, PCP e SRP (Sezione~\ref{sec:lockProtocols.single}). La maggior parte dei protocolli dei sistemi multiprocessor, invece, risolvono il primo problema, cioè limitano il ritardo per i job, ma non garatiscono l'indipendenza ai job a priorità superiore (Sezione~\ref{sec:lockProtocols.multi}). Al contrario OMIP (Sezione~\ref{sec:lockProtocols.omip}) e MrsP (Sezione~\ref{sec:lockProtocols.mrsp}), con approcci differenti, garantiscono sia blocco ridotto che l'indipendenza dei job a priorità superiore.\\
+
+\section{Single processor Protocols}
 \label{sec:lockProtocols.single}
 
-I protocolli per piattaforme con un unico processore sono stati ampiamenti studiati, in particolare sono presenti test di schedulabilità per FP e EDF che considerano l'inversione di priorità tra job data dalla condivisione di risorse.\\
+I protocolli per piattaforme con un unico processore sono stati ampiamenti studiati, in particolare sono presenti test di schedulabilità per FP e EDF che considerano l'inversione di priorità tra job data dalla condivisione di risorse.
 
-\paragraph{Non-preemptive critical section protocol (NPC).} Il modo più semplice per limitare il tempo di blocco causato dall'inversione di priorità è quello di inibire il prerilascio durante la sezione critica. Pertanto, il job che richiede ed ottiene la risorsa non viene prerilasciato dal job a priorità superiore fino a che non porta a termine l'esecuzione della risorsa. NPC ha il vantaggio di essere facilmente implementabile e comporta bassi livelli di overhead, in particolare per task a livello kernel in quanto è sufficiente disabilitare gli \textit{interrupt}.\\
-Il blocco subito da un job a priorità superiore che richiede la risorsa occupata nel caso peggiore è pari alla lughezza della sezione critica stessa ed avviene solamente una volta, precisamente prima dell'inizio della sua esecuzione. Ne consegue che NPC è facilmente integrabile nei test di schedulabilità. Lo svantaggio è che causa il blocco anche ai job che non condividono la risorsa.\\
+\paragraph{Non-preemptive critical section protocol (NPC).} Il modo più semplice per limitare il tempo di blocco causato dall'inversione di priorità è inibire il prerilascio durante la sezione critica. Pertanto, il job che richiede e ottiene la risorsa non viene prerilasciato dal job a priorità superiore fino a che non porta a termine l'esecuzione della risorsa. Questo funzionamento è illustrato in figura~\ref{fig:NPC}.NPC ha il vantaggio di essere facilmente implementabile e comporta bassi livelli di overhead, in particolare per task a livello kernel in quanto è sufficiente disabilitare gli \textit{interrupt}.\\
+Il blocco subito da un job a priorità superiore che richiede la risorsa occupata nel caso peggiore è pari alla lughezza della sezione critica stessa e avviene solamente una volta, precisamente prima dell'inizio della sua esecuzione. Ne consegue che NPC è facilmente integrabile nei test di schedulabilità. Lo svantaggio è che causa blocco anche ai job che non condividono la risorsa.
 
-\paragraph{Priority inheritance protocol (PIP).} Sha et al.~\cite{Sha:1990:PIP:102822.626613} propone un protocollo che mira a non causare il blocco dei job con priorità superiore che non accedono alla risorsa. La particolarità del protocollo è che viene attivato solamente nei casi in cui il job che detiene la risorsa causi blocco ad un job a priorità superiore. In tal caso la priorità del job viene innalzata al valore massimo tra tutti i job in attesa in quel determinato istante. Tale protocollo ha lo svantaggio che, in determinate circostanze, conduce a deadlock.\\
+\begin{figure}
+\centering
+\NPC
+\caption{NPC - Gestione della risorsa tramite inibizione del prerilascio: $J_1$ non permette di eseguire ai job a priorità superiore fino a che non rilascia la risorsa.}
+\label{fig:NPC}
+\end{figure}
 
-\paragraph{Priority-ceiling protocol (PCP).} Sha et al.~\cite{Sha:1990:PIP:102822.626613} presenta un protocollo disegnato principalmente per algoritmi FP e risolve il problema di deadlock del protocollo precedente. Ad ogni risorsa è abbinato un ceiling pari alla priorità massima tra tutti i job che durante l'esecuzione la richiedono; inoltre, è previsto un ceiling di sistema pari al ceiling più alto tra tutte le risorse in uso in un determinato momento. La richiesta di accesso da parte di un job è soddisfatta solamente se la sua priorità è superiore al ceiling di sistema. Una volta ottenuta la risorsa, se nesessario, il ceiling di sistema viene innalazato. Questo meccanismo di ceiling garantisce che una richiesta di un job venga soddisfatta solamente se tutte le risorse di cui potrebbe necessitare sono libere.\\
+\paragraph{Priority inheritance protocol (PIP).} Sha et al.~\cite{Sha:1990:PIP:102822.626613} propone un protocollo che mira a non causare il blocco dei job con priorità superiore che non accedono alla risorsa. La particolarità del protocollo è che viene attivato solamente nei casi in cui il job che detiene la risorsa causi blocco a un job a priorità superiore. In tal caso la priorità del job viene innalzata al valore massimo tra tutti i job in attesa in quel determinato istante (figura~\ref{fig:PIP}). Tale protocollo ha lo svantaggio che, in determinate circostanze, conduce a deadlock.
 
-\paragraph{Stack resource policy (SRP).} Il protocollo delineato da Baker~\cite{Baker:1991:SSR:113595.113601} è anch'esso basato su un sistema di ceiling. Ad ogni risorsa è abbinato un ceiling ed è presente un ceiling di sistema, entrambi calcolati e gestiti secondo le indicazioni di PCP. La differenza sostanziale sta nel fatto che ad un job non è permesso di eseguire fino a che la sua priorità non è superiore al ceiling di sistema. Ne consegue che un job esegue solamente se tutte le risorse di cui potrebbe necessitare sono libere. Pertanto il job subisce l'inversione di priorità solamente una volta e prima dell'inizio della sua esecuzione. SRP e' alla base del protocollo studiato in questo elaborato per le sue proprietà fondamentali:
+\begin{figure}
+\centering
+\PIP
+\caption{PIP - $J_1$ eredita la priorità di $J_3$ solamente al momento della sua richiesta di accesso alla risorsa ($t$).}
+\label{fig:PIP}
+\end{figure}
+
+\paragraph{Priority-ceiling protocol (PCP).} Sha et al.~\cite{Sha:1990:PIP:102822.626613} presenta un protocollo disegnato principalmente per algoritmi FP e risolve il problema di deadlock del protocollo precedente. A ogni risorsa è abbinato un ceiling pari alla priorità massima tra tutti i job che durante l'esecuzione la richiedono; inoltre, è previsto un ceiling di sistema pari al ceiling più alto tra tutte le risorse in uso in un determinato momento. La richiesta di accesso da parte di un job è soddisfatta solamente se la sua priorità è superiore al ceiling di sistema. Una volta ottenuta la risorsa, se nesessario, il ceiling di sistema viene innalazato. Questo meccanismo di ceiling, illustrato in figura~\ref{fig:PCP}, garantisce che una richiesta di un job venga soddisfatta solamente se tutte le risorse di cui potrebbe necessitare sono libere.
+
+\begin{figure}
+\centering
+\PCP
+\caption{PCP - $\tau_1$ e $\tau_2$ condividono le risorse innestate $r_1$ e $r_2$; $\tau_3$ accede alla risorsa $r_3$. La richiesta di accesso alla risorsa al tempo $t_1$ viene concessa in quanto $j_3$ ha priorità superiore rispetto al ceiling attuale, rispettivamente 3 e 2. Di conseguenza, il ceiling viene innalzato a 3. Al contrario, la richiesta di accesso al tempo $t_2$ viene ritardata in quanto il job ha priorità pari al ceiling, pertanto, deve attendere il rilascio delle risorse da parte di $J_1$ e il conseguente abbassamento del ceiling.}
+\label{fig:PCP}
+\end{figure}
+
+\paragraph{Stack resource policy (SRP).} Il protocollo delineato da Baker~\cite{Baker:1991:SSR:113595.113601} è anch'esso basato su un sistema di ceiling. A ogni risorsa è abbinato un ceiling ed è presente un ceiling di sistema, entrambi calcolati e gestiti secondo le indicazioni di PCP. La differenza sostanziale sta nel fatto che a un job non è permesso di eseguire fino a che la sua priorità non è superiore al ceiling di sistema (figura~\ref{fig:SRP}). Ne consegue che un job esegue solamente se tutte le risorse di cui potrebbe necessitare sono libere. Pertanto il job subisce l'inversione di priorità solamente una volta e prima dell'inizio della sua esecuzione. SRP è alla base del protocollo studiato in questo elaborato per le sue proprietà fondamentali:
 
 \begin{itemize}
 \item un job è bloccato al massimo una volta durante la sua esecuzione;
@@ -168,52 +228,68 @@ Il blocco subito da un job a priorità superiore che richiede la risorsa occupat
 \item previene situazioni di deadlock.
 \end{itemize}
 
-\subsection{Multiprocessor Protocols}
+\begin{figure}
+\centering
+\SRP
+\caption{SRP - $\tau_1$ e $\tau_2$ condividono le risorse innestate $r_1$ e $r_2$; $\tau_3$ accede alla risorsa $r_3$. Al tempo $t_1$, viene concesso di eseguire a $j_3$  in quanto ha priorità superiore rispetto al ceiling attuale, rispettivamente 3 e 2. Al contrario, l'esecuzione di $j_2$, rilasciato al tempo $t_2$, è ritardata in quanto ha priorità pari al ceiling, pertanto, deve attendere il rilascio delle risorse da parte di $J_1$ e il conseguente abbassamento del ceiling.}
+\label{fig:SRP}
+\end{figure}
+
+\section{Multiprocessor Locking Protocols}
 \label{sec:lockProtocols.multi}
 
-Nei sistemi multiprocessor le risorse sono distinte in due categore: locali e globali. Nel primo caso i task che la richiedono sono tutti allocati nel medesimo processore, quindi possono essere utilizzati protocolli di accesso tipici dei sistemi singleprocessor. Nel secondo caso, la risorsa è richiesta da job che eseguono su differenti processori.\\
-I primi protocolli per sistemi multiprocessor sono il frutto di un riadattamento di protocolli singleprocessor. Se in presenza di un unico processore la serializzazione degli accessi è intrinseca al fatto che esista un unico luogo di esecuzione, con un maggior numero di processori gli accessi sono potenzialmente paralleli e di conseguenza necessitano di meccanismi che permettano ai vari riadattamenti di soddisfare questa necessità.\\
+Nei sistemi multiprocessor le risorse sono distinte in due categore: locali e globali. Nel primo caso i task che la richiedono sono tutti allocati nel medesimo processore, quindi possono essere utilizzati protocolli di accesso tipici dei sistemi single processor. Nel secondo caso, la risorsa è richiesta da job che eseguono su differenti processori.\\
+I primi protocolli per sistemi multiprocessor sono il frutto di un riadattamento di protocolli single processor. Se in presenza di un unico processore la serializzazione degli accessi è intrinseca al fatto che esista un unico luogo di esecuzione, con un maggior numero di processori gli accessi sono potenzialmente paralleli e, di conseguenza, necessitano di meccanismi che permettano ai vari riadattamenti di soddisfare questa necessità.\\
 
-Un'altra problematica, derivante dal fatto che i job su processori differenti condividono un'unica risorsa, sta nel fatto che non è significativo comparare le loro proprietà: un job con la priorità più alta nel proprio processore potrebbe essere meno urgente rispetto ad uno in un altro processore. I primi protocolli sviluppati per la condivisione di risorse globali ovviano a tale problema tramite il \textit{boosting} del job, cioè innalzando la priorità del job al di sopra di tutte le priorità di base degli altri job. La differenza sostanziale tra la tecnica di boosting e l'inibizione del prerilascio sta nel fatto che tra \textit{boosted job} avvengono prerilasci. Le richieste vengono poi gestite in base all'arrivo (FIFO) o tramite code ordinate secondo la priorità di base.
+Un'altra problematica, derivante dal fatto che i job su processori differenti condividono un'unica risorsa, sta nel fatto che non è significativo comparare le loro proprietà: un job con la priorità più alta nel proprio processore potrebbe essere meno urgente rispetto a uno in un altro processore. I primi protocolli sviluppati per la condivisione di risorse globali ovviano a tale problema tramite il \textit{boosting} del job, cioè innalzando la priorità del job al di sopra di tutte le priorità di base degli altri job. La differenza sostanziale tra la tecnica di boosting e l'inibizione del prerilascio sta nel fatto che tra \textit{boosted job} avvengono prerilasci. Le richieste vengono poi gestite in base all'arrivo (FIFO) o tramite code ordinate secondo la priorità di base.
 
-\subsubsection{DPCP e MPCP}
+\subsection{DPCP e MPCP}
 \label{sec:lockProtocols.dpcp.mpcp}
 
-Le prime versioni derivano da un adattamento di PCP. Nonostante un approccio molto simile essi si differenziano in quanto sono stati studiati per architetture differenti: in sistemi con memoria distribuita ogni risorsa è accessibile solamente da un determinato processore nel quale è allocata; invece, in presenza di memoria condivisa, la risorsa è accessibile da ogni processore.\\
+Le prime versioni derivano da un adattamento di PCP. Nonostante un approccio molto simile, i due protocolli si differenziano in quanto sono stati studiati per architetture differenti: in sistemi con memoria distribuita, ogni risorsa è accessibile solamente da un determinato processore nel quale è allocata; invece, in presenza di memoria condivisa, la risorsa è accessibile da ogni processore.
 
-\paragraph{Distribuited priority-ceiling protocol (DPCP).} Rajkumar~\cite{Rajkumar:1991:SRS:532621} utilizza RPC \textit{remote procedure call} per gestire gli accessi alla risorsa: la richiesta viene presa in carico da un agente locale del processore della risorsa che esegue in modo sincrono ed il job si sospende fino a che la richiesta non viene portata a termine. La priorità del richiedente resta invariata mentre viene aumentata quella dell'agente: assumendo che $i$ sia l'indice del job richiedente, la priorità dell'agente è pari a $n - 1$ (con $n$ pari al numero totale di task nel sistema). L'indice è assegnato ai job in ordine di priorità effettiva. In questo modo i prerilasci tra gli agenti rispecchiano le priorità dei task che li attivano. Gli agenti locali sono gestiti in base al protocollo PCP. Con questo tipo di approccio, i job incorrono in diversi tipi di blocco e lo stesso accade per gli agenti nel processore di sincronizzazione. Per questo i test di schedulabilità sono particolarmente pessimistici.\\
+\paragraph{Distributed priority-ceiling protocol (DPCP).} Rajkumar~\cite{Rajkumar:1991:SRS:532621} utilizza RPC \textit{remote procedure call} per gestire gli accessi alla risorsa: la richiesta viene presa in carico da un agente locale del processore della risorsa che esegue in modo sincrono e il job si sospende fino a che la richiesta non viene portata a termine. La priorità del richiedente resta invariata mentre viene aumentata quella dell'agente: assumendo che $i$ sia l'indice del job richiedente ed $n$ pari al numero totale di task nel sistema, la priorità dell'agente è innalzata a $n - 1$. L'indice è assegnato ai job in ordine di priorità effettiva; di conseguenza, i prerilasci tra gli agenti rispecchiano le priorità dei task che li attivano. Gli agenti locali sono gestiti in base al protocollo PCP.\\
 
-\paragraph{Multiprocessor priority-ceiling protocol (MPCP).} E' un'evoluzione del precedente protocollo, progettato per sistemi con memoria condivisa. Le risorse globali possono essere accedute da ogni processore senza l'utilizzo di agenti. Una volta ottenuto l'accesso ad una risorsa, il job innalza la propria priorità a quella più alta tra tutti i task che la richiedono. Questo tipo di \textit{priority boosting} velocizza l'esecuzione della sezione critica diminuendo l'ammontare di inversione di priorità subita dai job che condividono la risorsa o a priorità inferiore al "ceiling", senza tuttavia creare blocco ai job con priorità superiore al ceiling globale. Dato che le priorità non sono uniche, a parità di valore non viene permesso il prerilascio, in questo modo non si ritarda l'esecuzione della sezione critica.\\
+Con questo tipo di approccio, i job incorrono in diversi tipi di blocco e lo stesso accade per gli agenti nel processore di sincronizzazione. Pertanto, i test di schedulabilità sono particolarmente pessimistici.
+
+\paragraph{Multiprocessor priority-ceiling protocol (MPCP).} \`E un'evoluzione del precedente protocollo, progettato per sistemi con memoria condivisa. Le risorse globali possono essere accedute da ogni processore senza l'utilizzo di agenti. Una volta ottenuto l'accesso ad una risorsa, il job innalza la propria priorità a quella più alta tra tutti i task che la richiedono. Questo tipo di \textit{priority boosting} velocizza l'esecuzione della sezione critica diminuendo l'ammontare di inversione di priorità subita dai job che condividono la risorsa o a priorità inferiore al "ceiling", senza tuttavia creare blocco ai job con priorità superiore al ceiling globale. Dato che le priorità non sono uniche, a parità di valore non viene permesso il prerilascio, in questo modo non si ritarda l'esecuzione della sezione critica.\\
 Anche in questo caso, i job che richiedono una risorsa occupata incorrono in diversi tipi di blocco in quanto l'accesso è garantito in base alla priorità, permettendo quindi ad altri job di accedere prima anche se l'hanno richiesta successivamente. Inoltre il blocco generato da altri job che non richiedono la risorsa potenzialmente possono ritardare l'esecuzione da parte del job in testa alla coda, causando così ulteriori ritardi al job stesso e agli altri in attesa.\\
 
 MPCP, come DPCP, soffre di ritardi aggiuntivi derivanti dall'auto sospensione da parte dei job in attesa della risorsa. Lakshmanan et al.~\cite{5368127} propone una versione di MPCP che prevede "virtual spinning", da cui MPCP-VS. Il protocollo rivisitato dispone che il job si auto sospenda, ma che nessun altro job del medesimo processore con priorità inferiore possa accedere ad una risorsa globale.\\
 
-\subsubsection{MSRP}
+\subsection{MSRP}
 \label{sec:lockProtocols.msrp}
 
-Gai~\cite{Gai:2003:CMM:827266.828537} propongono un riadattamento del protocollo singleprocessor SRP, da cui \textit{Multiprocessor SRP}, anche se quest'ultimo non è utilizzato per le risorse globali, bensì per quelle locali. La gestione dell'accesso alle risorse globali è gestito tramite inibizione del prerilascio: quando un job effettua la richiesta inibisce il prerilascio e, se la risorsa è occupata, si accoda nella FIFO della risorsa corrispondente ed effettua attesa attiva sino al raggiungimento della testa; una volta acquisita, esegue la sezione critica senza permettere ai job a priorità superiore del medesimo processore di eseguire. Nella Sezione~\ref{sec:lockProtocols.single} si è visto come un approccio di questo tipo abbia vantaggi e svantaggi: l'attesa attiva comporta spreco di esecuzione del processore in cui il job la sta effettuando e causa blocco ai job a priorità più alta che condividono il processore ma non la risorsa, ma, allo stesso tempo, limita tale tempo di blocco, nel caso peggiore, alla lunghezza di un'unica sezione critica. Inoltre, dato che solamente un job alla volta per ogni processore può effettare una richiesta, la lunghezza della coda FIFO è al massimo pari al numero di processori. Di conseguenza, l'attesa da parte dei job in coda per la risorsa è limitata al tempo necessario per smaltire le richieste che lo precedono nella FIFO, quindi è determinata dalla sua lunghezza.\\
+Gai~\cite{Gai:2003:CMM:827266.828537} propone un riadattamento del protocollo single processor SRP, da cui \textit{Multiprocessor SRP}, anche se quest'ultimo non è utilizzato per le risorse globali, bensì per quelle locali. La gestione dell'accesso alle risorse globali è gestito tramite inibizione del prerilascio: quando un job effettua la richiesta inibisce il prerilascio e, se la risorsa è occupata, si accoda nella FIFO della risorsa corrispondente ed effettua attesa attiva sino al raggiungimento della testa; una volta acquisita, esegue la sezione critica senza permettere ai job a priorità superiore del medesimo processore di eseguire (figura~\ref{fig:MSRP}). Nella Sezione~\ref{sec:lockProtocols.single} si è visto come un approccio di questo tipo abbia vantaggi e svantaggi: l'attesa attiva comporta spreco di esecuzione del processore in cui il job la sta effettuando e causa blocco ai job a priorità più alta che condividono il processore ma non la risorsa, ma, allo stesso tempo, limita tale tempo di blocco, nel caso peggiore, alla lunghezza di un'unica sezione critica. Inoltre, dato che solamente un job alla volta per ogni processore può effettare una richiesta, la lunghezza della coda FIFO è al massimo pari al numero di processori. Di conseguenza, l'attesa da parte dei job in coda per la risorsa è limitata al tempo necessario per smaltire le richieste che lo precedono nella FIFO, quindi è determinata dalla sua lunghezza.\\
 I test di schedulabilità sono costruiti tenendo in considerazione questi tempi, i quali sono limitati grazie al protocollo di accesso a risorsa.
 
-\subsubsection{FMLP}
+\begin{figure}
+\centering
+\MSRP
+\caption{MSRP - $\tau_1$, $\tau_2$, $\tau_3$ e $\tau_4$ assegnati a 2 processori e 2 risorse.}
+\label{fig:MSRP}
+\end{figure}
+
+\subsection{FMLP}
 \label{sec:lockProtocols.fmlp}
 
-Block in ~\cite{Block:2007:FRL:1306877.1307316} propone un protocollo (\textit{flexible multiprocessor locking protocol} combinando i due differenti approcci suspensione-based e spin-based: le risorse sono suddivise tra "brevi" e "lunghe" in relazione alla durata della sezione critica. Le prime sono gestite tramite accodamento FIFO e inibizione di prerilascio mentre, nel secondo caso, tramite un protocollo che prevede sospensione. Con le risorse "brevi" è opportuno utilizzare inibizione del prerilascio, il quale è implementato in modo efficiente a livello kernel. Infatti, l'utilizzo di altri meccanismi, proprio per la durata della sezione critica, comportorebbe un costo superiore rispetto al beneficio. Per le risorse "lunghe", invece, i job in attesa del rilascio della risorsa si sospendono in modo tale da non creare ritardi agli altri job, in particolare a quelli a priorità superiore che non la richiedono. Oltre ad essere integrabile sia con scheduler globale che partizionato, questo protocollo permette accumulo di risorse tramite l'utilizzo di "Group locks": risorse innestate che creano un unico gruppo al quale i job accedono in mutua esclusione; in tal modo, una volta ottenuto il lock sull'intero gruppo, è garantito che le risorse di cui necessita il job siano libere. Quest'ultimo approccio ha però il difetto di penalizzare il parallelismo, in quanto un job non permette ad altri job di accedere alle risorse che potenzialmente non utilizza, ma che fanno parte del medesimo gruppo.\\
+Block in~\cite{Block:2007:FRL:1306877.1307316} propone un protocollo (\textit{flexible multiprocessor locking protocol}) combinando i due differenti approcci suspensione-based e spin-based: le risorse sono suddivise tra "brevi" e "lunghe" in relazione alla durata della sezione critica. Le prime sono gestite tramite accodamento FIFO e inibizione di prerilascio mentre, nel secondo caso, tramite un protocollo che prevede sospensione. Con le risorse "brevi" è opportuno utilizzare inibizione del prerilascio, il quale è implementato in modo efficiente a livello kernel. Infatti, l'utilizzo di altri meccanismi, proprio per la durata della sezione critica, comportorebbe un costo superiore rispetto al beneficio. Per le risorse "lunghe", invece, i job in attesa del rilascio della risorsa si sospendono in modo tale da non creare ritardi agli altri job, in particolare a quelli a priorità superiore che non la richiedono. Oltre ad essere integrabile sia con scheduler globale che partizionato, questo protocollo permette accumulo di risorse tramite l'utilizzo di "Group locks": risorse innestate che creano un unico gruppo al quale i job accedono in mutua esclusione; in tal modo, una volta ottenuto il lock sull'intero gruppo, è garantito che le risorse di cui necessita il job siano libere. Quest'ultimo approccio ha però il difetto di penalizzare il parallelismo, in quanto un job non permette ad altri job di accedere alle risorse che potenzialmente non utilizza, ma che fanno parte del medesimo gruppo.\\
 
-\subsubsection{Helping protocol}
+\subsection{Helping protocol}
 \label{sec:lockProtocols.help}
 
-Con \textit{Helping protocol} si identifica quell'insieme di protocolli in cui un job può prendersi carico dell'esecuzione della sezione critica, corrispondente ad una risorsa, per conto di un altro job. Nei protocolli discussi nei paragrafi precedenti è emerso che l'aspetto cruciale è la gestione dell'esecuzione della sezione critica: inibendo il prerilascio si danneggiano i job a priorità superiore che non la richiedono, ma, in questo modo, il tempo di blocco è limitato al tempo di utilizzo della risorsa. Al contrario, un innalzamento di priorità ad un valore precalcolato comporta la possibilità di essere prerilasciati, facendo aumentare il blocco subito dagli altri job o in attesa del risorsa o a priorità inferiore al ceiling del processore in questione. Questa categoria di protocolli prevede che l'avanzamento della sezione critica possa essere presa in carico da parte di uno dei job accodati qualora il suo detentore venga prerilasciato. Pertanto, l'esecuzione della risorsa viene portata a termine da un altro job ed il relativo risultato viene messo a disposizione del detentore al momento del suo risveglio. Attraverso questo meccanismo, il tempo di blocco ha durata massima pari alla lunghezza della sezione critica senza intaccare l'esecuzione dei job a priorità superiore.\\
+Con \textit{Helping protocol} si identifica quell'insieme di protocolli in cui un job può prendersi carico dell'esecuzione della sezione critica, corrispondente ad una risorsa, per conto di un altro job. Nei protocolli discussi nei paragrafi precedenti è emerso che l'aspetto cruciale è la gestione dell'esecuzione della sezione critica: inibendo il prerilascio si danneggiano i job a priorità superiore che non la richiedono, ma, in questo modo, il tempo di blocco è limitato al tempo di utilizzo della risorsa. Al contrario, un innalzamento di priorità ad un valore precalcolato comporta la possibilità di essere prerilasciati, facendo aumentare il blocco subito dagli altri job o in attesa del risorsa o a priorità inferiore al ceiling del processore in questione. Questa categoria di protocolli prevede che l'avanzamento della sezione critica possa essere presa in carico da parte di uno dei job accodati qualora il suo possessore venga prerilasciato. Pertanto, l'esecuzione della risorsa viene portata a termine da un altro job ed il relativo risultato viene messo a disposizione del possessore al momento del suo risveglio. Attraverso questo meccanismo, il tempo di blocco ha durata massima pari alla lunghezza della sezione critica senza intaccare l'esecuzione dei job a priorità superiore.\\
 
-SPEEP (\textit{Spinning Processor Executes for Pre-empted Processor} di Takada et al.~\cite{641276}) si basa sull'assunzione che l'operazione corrispondente alla risorsa sia atomica: i job che ne necessitano accodano la propria richiesta nella corrispondente FIFO ed essa viene presa in carica dal primo job in coda in esecuzione. Il limite di tale protocollo è l'assunzione di partenza, cioè il fatto che la sezione critica sia atomica e quindi facilmente eseguibile da ogni job in coda.\\
+\paragraph{SPEEP.} (\textit{Spinning Processor Executes for Pre-empted Processor} di Takada et al.~\cite{641276}) si basa sull'assunzione che l'operazione corrispondente alla risorsa sia atomica: i job che ne necessitano accodano la propria richiesta nella corrispondente FIFO ed essa viene presa in carica dal primo job in coda in esecuzione. Il limite di tale protocollo è l'assunzione di partenza, cioè il fatto che la sezione critica sia atomica e quindi facilmente eseguibile da ogni job in coda.\\
 
-Faggioli at el.~\cite{5562902} propongo \textit{Multiprocessor Bandwidth Inheritance Protocol} (M-BWI), che rappresenta un approccio differente e maggiormente complesso. In questo protocollo, i task eseguono all'interno di server fino all'esaurimento del suo \textit{budget}. Il budget è la quantità di tempo, rinnovata ad ogni periodo, riservata ad un server per eseguire il job a cui è stato assegnato. I job che richiedono la risorsa effettuano busy-wait, senza inibire il prerilascio, fino a che non ne ottengono l'accesso, il quale è garantito in ordinamento FIFO. I job che attendono il rilascio utilizzano il budget del proprio server per effettuare attesa attiva oppure lo possono cedere al detentore della risorsa nel caso in cui esso venga prerilasciato. Ne consegue che, al contrario di SPEEP, il job non prenda in carico l'esecuzione per conto del job prerilasciato, bensì gli ceda l'esecuzione nel proprio processore per una quantità di tempo pari al budget residuo.\\
+\paragraph{M-BWI.} Faggioli at el.~\cite{5562902} propongono \textit{Multiprocessor Bandwidth Inheritance Protocol}, che rappresenta un approccio differente e maggiormente complesso. In questo protocollo, i task eseguono all'interno di server fino all'esaurimento del suo \textit{budget}. Il budget è la quantità di tempo, rinnovata ad ogni periodo, riservata ad un server per eseguire il job a cui è stato assegnato. I job che richiedono la risorsa effettuano busy-wait, senza inibire il prerilascio, fino a che non ne ottengono l'accesso, il quale è garantito in ordinamento FIFO. I job che attendono il rilascio utilizzano il budget del proprio server per effettuare attesa attiva oppure lo possono cedere al possessore della risorsa nel caso in cui esso venga prerilasciato. Ne consegue che, al contrario di SPEEP, il job non prenda in carico l'esecuzione per conto del job prerilasciato, bensì gli ceda l'esecuzione nel proprio processore per una quantità di tempo pari al budget residuo.\\
 
-\subsection{$O(m)$ Independence-preserving Protocol}
+\section{$O(m)$ Independence-preserving Protocol}
 \label{sec:lockProtocols.omip}
 
-OMIP è un protocollo studiato per sistemi con algoritmi clustered ed il suo obiettivo è quello di limitare il tempo di blocco subito dai job in attesa della risorsa e da quelli che ne subiscono interferenza. Brandeburg in ~\cite{6602109} dimostra come non sia possibile ottenere un limitato tempo di blocco e preservare l’indipendenza dei job a priorità superiore senza permettere migrazioni tra cluster. In sintesi, Brandeburg si sofferma sul concetto di \textit{independence-preserving}, secondo il quale i job che non accedono alla risorsa non ne subiscono blocco. Infatti, un job subisce blocco per un tempo pari alla lunghezza della sezione critica solo se la richiede, altrimenti non subisce ritardi.\\
+OMIP è un protocollo studiato per sistemi con algoritmi clustered ed il suo obiettivo è limitare il tempo di blocco subito dai job in attesa della risorsa e da quelli che ne subiscono interferenza. Brandeburg in ~\cite{6602109} dimostra come non sia possibile ottenere un limitato tempo di blocco e preservare l’indipendenza dei job a priorità superiore senza permettere migrazioni tra cluster. In sintesi, Brandeburg si sofferma sul concetto di \textit{independence-preserving}, secondo il quale i job che non accedono alla risorsa non ne subiscono blocco. Infatti, un job subisce blocco per un tempo pari alla lunghezza della sezione critica solo se la richiede, altrimenti non subisce ritardi.\\
 
-Il protocollo utilizza un approccio suspension-based, quindi un job che non riesce ad ottenere la risorsa si accoda e lascia l’esecuzione nel processore ai job a priorità inferiore. Indichiamo con $W_i$ l'insieme di job in attesa che $J_i$ rilasci la risorsa globale. Il meccanismo di \textit{migratory priority inheritance} prevede che ogni qual volta $J_i$ non è in esecuzione, nonostante sia ready, ed esiste un job $J_x \in W_i$ tale che $J_x$ è tra i $c$ job a priorità più alta nel suo cluster, $j_i$ migra nel cluster di $J_x$ ereditandone la priorità e causando prerilascio nel cluster. Dopo il rilascio della risorsa, se necessario, $J_i$ migra al proprio cluster.\\
+Il protocollo utilizza un approccio suspension-based, quindi un job che non riesce ad ottenere la risorsa si accoda e lascia l’esecuzione nel processore ai job a priorità inferiore. Indichiamo con $W_i$ l'insieme di job in attesa che $J_i$ rilasci la risorsa globale. Il meccanismo di \textit{migratory priority inheritance} prevede che ogni qual volta $J_i$ non sia in esecuzione, nonostante sia ready, ed esiste un job $J_x \in W_i$ tale che $J_x$ è tra i $c$ job a priorità più alta nel suo cluster, $j_i$ migra nel cluster di $J_x$ ereditandone la priorità e causando prerilascio nel cluster. Dopo il rilascio della risorsa, se necessario, $J_i$ migra al proprio cluster.\\
 L'intuizione alla base è quella di far migrare il job che detiene la risorsa a ogni prerilascio, scegliendo un cluster tra quelli in cui vi è un job in attesa e potenzialmente in esecuzione.\\
 
 Il protocollo utilizza una serie di accodamenti:
@@ -224,7 +300,7 @@ Il protocollo utilizza una serie di accodamenti:
 \item una coda a priorità apposta a quella del punto precedente.
 \end{itemize}
 
-Il funzionamento alla base (Figura~\ref{fig:locks.omip}) prevede che una richiesta venga accodata nella coda FIFO del proprio processore passando alla coda globale non appena raggiunge la testa. Nel caso in cui la prima coda sia piena, la richiesta viene inserita nella coda a priorità. Questo sistema ad accodamenti preserva l'indipendenza dei job e limita il tempo di blocco.
+Il funzionamento alla base (figura~\ref{fig:locks.omip}) prevede che una richiesta venga accodata nella coda FIFO del proprio processore passando alla coda globale non appena raggiunge la testa. Nel caso in cui la prima coda sia piena, la richiesta viene inserita nella coda a priorità. Questo sistema ad accodamenti preserva l'indipendenza dei job e limita il tempo di blocco.
 
 \begin{figure}
 \centering
@@ -233,12 +309,12 @@ Il funzionamento alla base (Figura~\ref{fig:locks.omip}) prevede che una richies
 \label{fig:locks.omip}
 \end{figure}
 
-\subsection{Multiprocessor Resource Sharing Protocol}
+\section{Multiprocessor Resource Sharing Protocol}
 \label{sec:lockProtocols.mrsp}
 
-Burns e A.J. Wellings in ~\cite{Burns:2013:SCM:2547348.2547350} descrivono le caratteristiche che un protocollo di accesso a risorsa per sistemi multiprocessor dovrebbe avere per gestire le criticità dovute alla sua condivisione in \ref{sec:lockProtocols}. Il loro obiettivo è la creazione di un protocollo che permetta l’utilizzo di tecniche di analisi di schedulabilità tipiche di sistemi singleprocessor, nelle quali si tenga conto della serializzazione delle richieste di accesso alla risorsa globale potenzialmente parallele.\\
+Burns e A.J. Wellings in~\cite{Burns:2013:SCM:2547348.2547350} descrivono le caratteristiche che un protocollo di accesso a risorsa per sistemi multiprocessor dovrebbe avere per gestire le criticità dovute alla sua condivisione viste in \ref{sec:lockProtocols}. Il loro obiettivo è la creazione di un protocollo che permetta l’utilizzo di tecniche di analisi di schedulabilità tipiche di sistemi single processor, nelle quali si tenga conto della serializzazione delle richieste di accesso alla risorsa globale potenzialmente parallele.\\
 
-Il modello adottato è quello a task periodici approfondito in Sezione~\ref{sec:overviewWL}: $n$ task ($\tau_i$), caratterizzati da periodo $T_i$ , deadline $D_i$ e WCET, i quali generano una sequenza potenzialmente infinita di job. Ad ogni task è abbinato un valore di priorità $Pri(\tau_i)$. La piattaforma di esecuzione consiste in $m$ processori identici ($p_1 … p_m$).\\
+Il modello adottato è quello approfondito in Sezione~\ref{sec:overviewWL}: $n$ task ($\tau_i$), caratterizzati da periodo $T_i$ , deadline $D_i$ e WCET, i quali generano una sequenza potenzialmente infinita di job. Ad ogni task è abbinato un valore di priorità $Pri(\tau_i)$. La piattaforma di esecuzione consiste in $m$ processori identici ($p_1 … p_m$).\\
 Una risorsa $r$ è condivisa da un insieme di task: essi devono accedere in mutua esclusione ed il codice corrispondente è definito \textit{sezione critica}. Definiamo la funzione $G(r_j)$, la funzione che ritorna l’insieme di task che utilizzano la risorsa $r_j$, e $F(\tau_i)$, la funzione necessaria per ottenere l’insieme di risorse utilizzate da $\tau_i$. Per semplicità di esposizione, si assume che il tempo di esecuzione di una risorsa sia identico per ogni task e lo si indica con $c_j$. Inoltre, definiamo $map$, la funzione che, dato un insieme di task, ritorna i processori in cui sono allocati.\\
 Infine, indichiamo con $e_j$ il parametro di tempo di esecuzione di $r_j$:\\
 
@@ -248,7 +324,7 @@ Infine, indichiamo con $e_j$ il parametro di tempo di esecuzione di $r_j$:\\
 
 Dalla formula si evince che $e_j$ indica il tempo massimo richiesto da un job per ottenere ed eseguire una risorsa, tempo che tiene conto dello smaltimento delle richieste già in coda e dell’esecuzione da parte del job stesso. Da ciò consegue la necessità che il protocollo permetta solo ad un job per processore di richiedere la risorsa. Questo evita che la coda superi la lunghezza di $| map(G(r_j)) |$.\\
 
-L’approccio di Burns e Wellings è un’estensione di PCP/SRP atta a gestire gli accessi alla risorsa in un sistema partizionato con scheduler fixed priority. Ad ogni risorsa globale è abbinato un insieme di ceiling, uno per ogni processore: ogni valore è pari alla priorità massima tra i job richiedenti e allocati nello stesso processore.\\
+L’approccio di Burns e Wellings è un’estensione di PCP/SRP atta a gestire gli accessi alla risorsa in un sistema partizionato con scheduler P-FP. Ad ogni risorsa globale è abbinato un insieme di ceiling, uno per ogni processore: ogni valore è pari alla priorità massima tra i job richiedenti e allocati nello stesso processore.\\
 MrsP eredita le caratteristiche di SRP (Sezione~\ref{sec:lockProtocols.single}):
 
 \begin{itemize}
@@ -258,37 +334,50 @@ MrsP eredita le caratteristiche di SRP (Sezione~\ref{sec:lockProtocols.single}):
 \item il protocollo impedisce deadlock.
 \end{itemize}
 
-MrsP ha l’obiettivo di riutilizzare la tecnica di analisi di schedulabilità singleprocessor \textit{Response-Time Analysis} (RTA) ~\cite{Audsley93applyingnew} che incorpora PCP/SRP:\\
+MrsP ha l’obiettivo di riutilizzare la tecnica di analisi di schedulabilità single processor \textit{Response-Time Analysis} (RTA) ~\cite{Audsley93applyingnew} che incorpora PCP/SRP:\\
 
-\centerline{$R_i = C_i + max$\{\textcolor{red}{$\hat{c}$}$,\hat{b}\} + \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j$}
-
-\vspace{4 mm}
-
-Il secondo addendo identifica il tempo di blocco subito dal job e causato dalla condivisione di risorse tra job a priorità inferiore con job a priorità superiore dal quale eredita la priorità. Quest'ultimo valore ($\hat{c}$) è messo a confronto con il costo introdotto dall'implementazione del protocollo stesso ($\hat{b}$). $C_i$ rappresenta il WCET con aggiunte delle sezioni critiche corrispondenti alle risorse di cui necessita durante l’esecuzione ($n_i$ indica il numero di volte che $\tau_i$ utilizza $r_j$):\\
-
-\centerline{$C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \textcolor{red}{c^j}$}
+\begin{equation}\label{eq:R1}
+R_i = C_i + max \text{\{\textcolor{red}{$\hat{c}$}},\hat{b}\} + \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j
+\end{equation}
 
 \vspace{4 mm}
 
-Il passaggio di un protocollo di acceso a risorsa da un sistema singleprocessor ad uno multiprocessor comporta un aumento del tempo necessario ai job per accedere alla risorsa e il conseguente ritardo causato ai job a priorità superiore che non la utilizzano. Di conseguenza, è necessario adoperare scelte algoritmiche che permettano di utilizzare le equazioni viste precedentemente aumentando il costo relativo all’accesso alle risorse, garantendo un tempo di attesa limitato per accedere alla risorsa e l'indipendenza dei job a priorità superiore al ceiling di ogni processore. Tale costo, relativo alla risorsa globale, non è pari ad una singola sezione critica $c_j$, come nel caso singleprocessor, bensì incorpora la serializzazione degli accessi paralleli dati dalla presenza di più processori: $e_j$.\\
+Il secondo addendo identifica il tempo di blocco subito dal job e causato dalla condivisione di risorse tra job a priorità inferiore con job a priorità superiore dal quale eredita la priorità. Quest'ultimo valore ($\hat{c}$) è messo a confronto con il costo introdotto dall'implementazione del protocollo stesso ($\hat{b}$). $C_i$ rappresenta il WCET e le sezioni critiche corrispondenti alle risorse di cui necessita durante l’esecuzione ($n_i$ indica il numero di volte che $\tau_i$ utilizza $r_j$):\\
+
+\begin{equation}\label{eq:C1}
+C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \text{\textcolor{red}{$c^j$}}
+\end{equation}
+
+\vspace{4 mm}
+
+Il passaggio di un protocollo di acceso a risorsa da un sistema single processor ad uno multiprocessor comporta un aumento del tempo necessario ai job per accedere alla risorsa e il conseguente ritardo causato ai job a priorità superiore che non la utilizzano. Di conseguenza, è necessario adoperare scelte algoritmiche che permettano di utilizzare le equazioni \ref{eq:R1} e \ref{eq:C1} aumentando il costo relativo all’accesso alle risorse, garantendo un tempo di attesa limitato per accedere alla risorsa e l'indipendenza dei job a priorità superiore al ceiling di ogni processore. Tale costo, relativo alla risorsa globale, non è pari ad una singola sezione critica $c_j$, come nel caso single processor, bensì incorpora la serializzazione degli accessi paralleli dati dalla presenza di più processori: $e_j$.\\
 
 Le equazioni risultano quindi le seguenti:\\
 
-\centerline{$R_i = C_i + max$\{\textcolor{red}{$\hat{e}$}$,\hat{b}\} + \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j$}
+\begin{equation}\label{eq:R2}
+R_i = C_i + max \text{\{\textcolor{red}{$\hat{e}$}},\hat{b}\} + \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j
+\end{equation}
 
-\centerline{$C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \textcolor{red}{e^j}$}
+\begin{equation}\label{eq:C2}
+C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \text{\textcolor{red}{$e^j$}}
+\end{equation}
 
 \vspace{4 mm}
-
-Per ottenere questo, MrsP prevede che quando 
 
 Un job, dopo aver inserito la richiesta di accesso nella FIFO della risorsa, innalza la propria priorità al valore di ceiling del processore in cui è allocato. Se è libera, ne acquisisce il possesso ed esegue la sezione critica. Al contrario, se la risorsa è occupata, il job effettua attesa attiva fintanto che la propria richiesta non raggiunge la testa della coda. Come visto in Sezione~\ref{sec:lockProtocols}, se il job richiedente eseguisse con priorità più alta rispetto a tutti gli altri job con priorità superiore al ceiling, ottenendo quindi un comportamento pari all’inibizione del prerilscio, causerebbe blocco ai job che non richiedono la risorsa. Inoltre, se il job si sospendesse potrebbe subire ulteriori inversioni di priorità, aumentando così il tempo di blocco causato.\\
 
 Il job che detiene la risorsa, nonostante esegua con priorità pari al valore di ceiling, limita il tempo di attesa dei job in coda (e quindi il tempo di blocco degli altri job) ma è ancora soggeto alla possibilità di prerilascio da parte dei job a priorità superiore. Il prerilascio causa l'aumento del tempo di attesa dei job in coda e, conseguentemente, il blocco subito dai job a priorità inferiore al ceiling. Per ovviare a tale problema, entrano in gioco meccanismi che permettano ai job in attesa di prendersi carico dell’esecuzione della sezione critica per conto del suo possessore (Sezione~\ref{sec:lockProtocols.help}).\\
 
-L'aspetto innovativo del protocollo MrsP sta nel prevedere che, in caso di prerilascio del possessore della risorsa, venga scorsa la coda delle richieste (in ordine di arrivo) e venga permesso al primo job che sta effettuando attesa attiva (quindi che non ha subito a sua volta prerilascio nel proprio processore) di eseguire la sezione critica per suo conto.\\
+L'aspetto innovativo del protocollo MrsP sta nel prevedere che, in caso di prerilascio del possessore della risorsa, venga scorsa la coda delle richieste (in ordine di arrivo) e venga permesso al primo job che sta effettuando attesa attiva (quindi che non ha subito a sua volta prerilascio nel proprio processore) di eseguire la sezione critica per suo conto (figura~\ref{fig:MrsPProtocols}).\\
 
-Il funzionamento descritto è rappresentato graficamente in Figura~\ref{fig:locks.mrsp}: in ogni processore le richieste sono gestite tramite un approccio simile al protocollo SRP che poi vengono accodate nella coda FIFO della risorsa ed effettuano attesa attiva fino all'acquisizione.\\
+\begin{figure}
+\centering
+\MrsPProtocols
+\caption{MrsP - Al prerilascio da parte di $J_2$ al tempo $t$, il job $J_3$, che sta eseguendo attesa attiva per ottenere l'accesso alla risorsa, prosegue l'esecuzione della sezione critica per conto di $J_1$.}
+\label{fig:MrsPProtocols}
+\end{figure}
+
+Il funzionamento descritto è rappresentato graficamente in figura~\ref{fig:locks.mrsp}: in ogni processore le richieste sono gestite tramite un approccio simile al protocollo SRP che poi vengono accodate nella coda FIFO della risorsa ed effettuano attesa attiva fino all'acquisizione.\\
 
 \begin{figure}
 \centering
@@ -297,7 +386,7 @@ Il funzionamento descritto è rappresentato graficamente in Figura~\ref{fig:lock
 \label{fig:locks.mrsp}
 \end{figure}
 
-Le considerazioni fatte finora ci permettono di affermare che:
+Le considerazioni fatte finora permettono di affermare che:
 
 \begin{itemize}
 \item al massimo un job per processore richiede la risorsa in un determinato istante;
@@ -306,73 +395,65 @@ Le considerazioni fatte finora ci permettono di affermare che:
 \item il tempo di attesa delle richieste in coda e il tempo di blocco subito dai job a priorità inferiore al ceiling  è pari al massimo a $e_j$.
 \end{itemize}
 
-Le proprietà elencate permettono di utillizzare le equazioni descritte per verificare la schedulabilità di un taskset che utilizza MrsP come protocollo di accesso a risorsa.\\
+Le proprietà elencate rendono possibile utillizzare le equazioni \ref{eq:R2} e \ref{eq:C2} per verificare la schedulabilità di un taskset che utilizza MrsP come protocollo di accesso a risorsa.\\
 
+\section{Ambiente LITMUS\textsuperscript{RT}}
+\label{sec:intro.litmus}
 
+LITMUS\textsuperscript{RT} (\textbf{LI}nux \textbf{T}estbed for \textbf{MU}ltiprocessor \textbf{S}cheduling in \textbf{R}eal-\textbf{T}ime systems) è un'estensione del kernel Linux, sviluppato dall'università della North Carolina a Chapel Hill, con lo scopo di creare e valutare algoritmi di scheduling e di accesso a risorsa per sitemi multiprocessor. Per facilitare la creziazione di plugin per l'implementazione di specifiche politiche di scheduling, LITMUS\textsuperscript{RT} fornisce un insieme di componenti (code, timer, ...), system call per i task real-time e una semplice interfaccia. Diversi plugin sono già sviluppati e messi a disposizione da LITMUS\textsuperscript{RT} dalla release del 2013: EDF per sistemi partizionati, globali ed a cluster, partitioned fixed-priority ed algoritmi P-Fair. Inoltre, il sistema mette a disposizione un framework per il tracciamento di eventi, la fase di debugging e la valutazione delle primitive di scheduling e i costi del sistema.
 
+\subsection{Lo scheduler Linux}
+\label{sec:intro.linuxSched}
 
+Il kernel Linux ha alcune limitazioni che non gli permettono di essere appropriato per applicazioni hard-real time, per esempio, è chiamato alla gestione di interrupt, potenzialmente di durata indeterminata, o di sezioni critiche non prerilasciabili. Ciò nonostante, esso è in grado di gestire un ampio sottoinsieme di applicazioni real time e permette di scalare senza particolari restrizioni su piattaforme multicore.\\
 
+Lo scheduler di Linux è organizzato come una gerarchia di classi di scheduling. Ogni classe definisce una politica di scheduling e fornisce una serie di funzionalità: aggiungere un task alla classe, recuperare il prossimo task da eseguire, richiamare lo scheduler, e così via. Ogni classe è legata ad un'altra creando una lista. Ogni processo può essere eseguito in accordo con gli scheduler di differenti classi, ma deve appartenere ad una unica. Ogni qual volta sia necessaria una decisione di scheduling, viene percorsa la lista di classi sino a trovarne una con almeno un processo pendente. Di conseguenza, un processo di una classe a bassa priorità è eseguito solamente se i processi delle classi superiori sono inattivi.\\
 
+Da un punto di vista implementativo, lo scheduler Linux è fondamentalmente partizionato, favorendo l'esecuzione di processi locali. Una coda di esecuzione è associata ad ogni processore e contiene lo stato di ogni classe di scheduling, il quale include, tra le altre cose, una coda dei processi ready, il tempo corrente e le statistiche di scheduling. Per lo più, la coda di esecuzione è protetta tramite lock contro gli accessi concorrenti. Dato che un processo appartiene a un solo processore, una migrazione richiede il lock di entrambe le code, di conseguenza, gli scheduler globali sono supportati con non poche difficoltà.\\
 
-LITMUS RT (LInux Testbed for MUltiprocessor Scheduling in Real-Time systems) è un'estensione del kernel Linux sviluppato dall'università della Nord Carolina a Chapel Hill per la creazione e la valutazione di algoritmi di scheduling e e protocolli di accesso a risorsa per sitemi multiprocessor. Esso propone un insieme di componenti (code, timer, ...), system call per i task real-time e una semplice interfaccia per la creziazione di plugin per l'implementazione di specifiche politiche di scheduling. Diversi plugin sono già stati sviluppati e messi a disposizione con LITMUS dalla release del 2013: EDF per sistemi partizionati, globali ed a cluster, partitioned fixed-priority ed algoritmi P-Fair. Inoltre, il sistema mette a disposizione un framework per il tracciamento di eventi, la fase di debugging e per la valutazione delle primitive di scheduling ed i costi del sistema.
+\`E importante osservere come i modelli teorici e i test di schedulabilità non tengano conto dei costi dovuti dallo scheduler stesso. Inoltre, gli eventi di scheduling non sono atomici e vi sono diverse situazioni in cui lo scheduler può cambiare di stato. Di conseguenza, tale problematica rende critica la gestione degli eventi in quanto si possono prendere decisioni erronee a causa di cambiamenti di stato durante la loro gestione.
 
-the linux scheduling framework
+\subsection{Panoramica dell'architettura}
+\label{sec:intro.arch}
 
-Il kernel Linux ha alcune limitazione che non gli permettono di essere appropriato per applicazioni hard-real time, per esempio, è chiamato alla gestione di interrupt,ì di durata indeterminata o di sezioni critiche non prerilasciabili. Ciò nonostante, esso è in grado di gestire un ampio sottoinsieme di applicazioni real time ed è in grado di scalare senza particolari restrizioni su piattaforme multicore.
-
-Lo scheduler di Linux è organizzato come una gerarchia di classi di scheduling. Ogni classe definisce una politica di scheduling e fornisce una serie di funzionalità: aggiungere un task alla classe, recuperare il prossimo task da eseguire, richiamare lo scheduler, e così via. Ogni classe è legata ad un'altra creando una lista. Ogni processo può essere eseguito in accordo con gli scheduler di differenti classi, ma deve appartenere ad una unica. Ogni qual folta sia necessaria una decisione di scheduling, viene percorsa la lista di classi sino a trovarne una con almeno un processo pendente. Di conseguenza, un processo di una classe a bassa priorità è eseguito solamente se i processi delle classi superiori sono inattivi.
-
-"A runqueue is associated with each processor and contains
-the state of each scheduling class, which, among other, includes
- a processor-local ready queue, the current time, scheduling statistics."
-
-Da un punto di vista implementativo, lo scheduler Linux è fondamentalmente partizionato, favorendo l'esecuzione di processi locali. Una coda di esecuzione è associata ad ogni processore e contiene lo stato di ogni classe di scheduling, il quale include, tra le altre cose, una coda dei processi ready, il tempo corrente e le statistiche di scheduling. Inoltre, la coda di esecuzione è protetta tramite lock contro gli accessi concorrenti. Dato che un processo appartiene ad un solo processore, una migrazione richiede il lock di entrambe le code, di conseguenza, gli scheduler globali sono supportati con non poche difficoltà.
-
-E' importante osservere come i motelli teorici ed i test di schedulabilità non tengano conto dei costi dovuti dallo scheduler stesso. In pratica, gli eventi di scheduling non sono atomici e vi sono diverse situazioni in cui lo scheduler può cambiare di stato. Di conseguenza, tale problematica rende critica la gestione degli eventi in quanto si possono prendere decisioni erronee a causa di cambiamenti di stato durante la loro gestione.
-
-Architectural overview
-
-L'infrastruttura di LITMUS consiste in quattro componenti (figura XXX):
+L'infrastruttura di LITMUS\textsuperscript{RT} consiste di quattro componenti (figura~\ref{fig:litmus_arch}):
 
 \begin{itemize}
-\item il core dell'infrastruttura
-\item un numero di plugin, cioè gli scheduler a disposizione
-\item un'interfaccia user-space
-\item librerie e strumenti user-space
+\item il core dell'infrastruttura;
+\item un numero di plugin, cioè gli scheduler a disposizione;
+\item un'interfaccia user-space;
+\item librerie e strumenti user-space.
 \end{itemize}
 
+\begin{figure}
+\includegraphics[width=\linewidth]{images/litmus_arch.jpeg}
+\caption{Illustrazione dell'architettura di LITMUS\textsuperscript{RT}.}
+\label{fig:litmus_arch}
+\end{figure}
 
-Questa sezione descrive il core dell'infrastruttura e l'astrazione del dominio real-time ad alto livello. Per altri dettagli, come le interfacce del plug-in e delle componenti user-space, si veda l'appendice XXX.
+Questa sezione descrive il core dell'infrastruttura e l'astrazione del dominio real-time ad alto livello. Per altri dettagli, come le interfacce del plug-in e delle componenti user-space, si vedano l'appendice~\ref{sec:liblitmus} e \ref{sec:litmus}.\\
 
-Gli obiettivi del core sono quelli di (i) semplificare lo sviluppo ed il mantenimento dei plugin e la loro correttezza nascondendo dietro l'interfaccia la complessità del framework di scheduling di Linux e (ii) fornendo strutture dati e meccanismi facili da riutilizzare. Dato che LITMUS è un'estensione di Linux, i task real-time sono implementati tramite dei processi standard: ogni ciclo di esecuzione del processo corrisponde ad un rilascio di un job. 
-Riguardo al punto (i), LITMUS aggiunge una nuova classe di scheduling in testa alla gerarchia, abbassando quindi di un livello la priorità della classe di LINUX. Di conseguenza, le altre classi della gerarchia eseguono solamente quando non vi sono processi di LITMUS in attesa. Un processo cambia di livello (da LITMUS a LINUX e viceversa) tramite system call.
-La classe di scheduling di LITMUS non implementa nessun algoritmo di scheduling, invece, astraendo tramite l'interfaccia del plugin, permette di integrare la logica di uno scheduler, cioè demanda le decisioni di scheduling e la gestione degli eventi al plugins.
-L'utilizzo di un layer intermedio come LITMUS porta numerosi vantaggi, per esempio, l'astrazione dal sistema sottostante protegge dai cambi di versione del kernel LINUX. Inoltre, fornisce un solido supporto per la migrazione per gli algoritmi globali ed a cluster.
-Riguardo a (ii), nella prossima sezione sono discussi l'interfaccia del plugin ed il dominio real-time che fornisce code ready e code di release.
+Gli obiettivi del core sono (i) semplificare lo sviluppo e il mantenimento dei plugin e la loro correttezza, tutto ciò nascondendo dietro l'interfaccia la complessità del framework di scheduling di Linux, e (ii) fornire strutture dati e meccanismi facili da riutilizzare. Dato che LITMUS\textsuperscript{RT} è un'estensione di Linux, i task real-time sono implementati tramite dei processi standard: ogni ciclo di esecuzione del processo corrisponde a un rilascio di un job.\\
+Riguardo al punto (i), LITMUS\textsuperscript{RT} aggiunge una nuova classe di scheduling in testa alla gerarchia, abbassando quindi di un livello la priorità della classe di Linux. Di conseguenza, le altre classi della gerarchia eseguono solamente quando non vi sono processi di LITMUS\textsuperscript{RT} in attesa. Un processo cambia di livello (da LITMUS\textsuperscript{RT} a Linux e viceversa) tramite system call.\\
+La classe di scheduling di LITMUS\textsuperscript{RT} non implementa nessun algoritmo di scheduling, invece, astraendo tramite l'interfaccia del plugin, permette di integrare la logica di uno scheduler, cioè demanda le decisioni di scheduling e la gestione degli eventi al plugins.
+L'utilizzo di un layer intermedio come LITMUS\textsuperscript{RT} porta numerosi vantaggi, per esempio, l'astrazione dal sistema sottostante protegge dai cambi di versione del kernel Linux. Inoltre, fornisce un solido supporto per la migrazione per gli algoritmi globali ed a cluster.
+Riguardo a (ii), la sezione seguente discute l'interfaccia del plugin e il dominio real-time che fornisce code ready e code di release.
 
-The real-time domain abstraction
+\subsection{Astrazione del dominio real-time}
+\label{sec:intro.rt_domain}
 
-Ogni scheduler richiede meccanismi che permettano di ordinare i job nella coda ready ed accodarli per futuri rilasci. LITMUS integra due strutture dati per soddisfare tali necessità: la coda ready e la coda di release. Quando un job viene rilasciato, viene trasferito dalla coda di release alla corrispondente coda ready, e lo scheduler viene invocato per controllora se è necessario un prerilascio. Tutti questi meccanismi sono forniti da una componente chiamata real-time domain (\texttt{rt\_domain} nel codice). La sua implementazione utilizza il sistema di \textit{hrtimers}, cioè timer hardware ad alta risoluzione (??), i quali sono fondamentali in quanto permettono di rispondere al rilascio di eventi e, quindi, di implementare algoritmi di scheduling basati su eventi.
-Per una questione di ottimizzazione, la coda di release utilizza timer per ogni tempo di release, piuttosto che un timer per ogni job. I job che condividono lo stesso tempo di rilascio sono organizzati in un albero binomiale, il quale permette di spostare i job dalla coda di release a quella ready in modo efficiente. I timer sono associati ad ogni release heap (??) e programmati per scadere al momento del rilascio. I riferimenti ad ogni release heap sono memorizzati in una hash table per minimizzare il tempo di interazione. Infine, le due code sono protette da spinlock che ne gestisce gli accessi e, inoltre, serializza le decisioni di scheduling.
+Ogni scheduler richiede meccanismi che permettano di ordinare i job nella coda ready e accodarli per futuri rilasci. LITMUS\textsuperscript{RT} integra due strutture dati per soddisfare tali necessità: la coda ready e la coda di release. Quando un job viene rilasciato, viene trasferito dalla coda di release alla corrispondente coda ready, e lo scheduler viene invocato per controllora se è necessario un prerilascio. Tutti questi meccanismi sono forniti da una componente chiamata real-time domain (\texttt{rt\_domain} nel codice). La sua implementazione utilizza il sistema di \textit{hrtimers}, cioè timer hardware ad alta risoluzione, i quali sono fondamentali in quanto permettono di rispondere al rilascio di eventi e, quindi, di implementare algoritmi di scheduling basati su eventi.\\
+
+Per una questione di ottimizzazione, la coda di release utilizza un timer per ogni tempo di release, piuttosto che un timer per ogni job. I job che condividono lo stesso tempo di rilascio sono organizzati in un albero binomiale, il quale permette di spostare i job dalla coda di release a quella ready in modo efficiente. I timer sono associati ad ogni albero e programmati per scadere al momento del rilascio. I riferimenti ad ogni insieme di job che condividono la release sono memorizzati in una hash table per minimizzare il tempo di interazione. Infine, le due code sono protette da spinlock (~\cite{spinlock:linus}) che ne gestisce gli accessi e, inoltre, serializza le decisioni di scheduling.\\
 
 La struttura rt\_domain permette principalmente quattro operazioni:
 
-• add\_release() aggiunge un job al release heap
-• add\_ready() aggiunge un job alla coda ready
-• take\_ready() rimuove il job con la priorità più alta dalla coda ready. 
-• peek\_ready() ritorna il job con la priorità più alta dalla coda ready senza rimuoverlo. Utilizzato per controllare se è necessario un prerilascio.
+\begin{itemize}
+\item \texttt{add\_release()} aggiunge un job al release heap
+\item \texttt{add\_ready()} aggiunge un job alla coda ready
+\item \texttt{take\_ready()} rimuove il job con la priorità più alta dalla coda ready. 
+\item \texttt{peek\_ready()} ritorna il job con la priorità più alta dalla coda ready senza rimuoverlo. Utilizzato per controllare se è necessario un prerilascio.
+\end{itemize}
 
 Per ordinare la coda ready deve essere definita un'operazione di confronto dato che la priorità di un job dipende dall'algoritmo di scheduling.
-Scheduler globali e partizionati si differenziano principalmente nell'uso della struttura rt\_domain. Nel primo caso è definito un unico rt\_domain ed è condiviso nello spazio globale. Al contrario, scheduler partizionati definiscono un rt\_domain per ogni partizione (o cluster).
-
-Contributo
-
-Il lavoro di tesi è focalizzato sull'implementazione di Multiprocessor Resource Sharing Protocol a partire dalla versione di Partitioned-Fixed Priority fornita con la versione 1.2.3 di LITMUS e sulla sua valutazione empirica in termini di schedulabilità e i costi che l'implementazione stessa e i meccanismi utilizzati causano al sistema.
-
-Struttura
-
-...
-
-
-
-
+Scheduler globali e partizionati si differenziano principalmente nell'uso della struttura rt\_domain. Nel primo caso è definito un unico rt\_domain ed è condiviso nello spazio globale. Al contrario, scheduler partizionati definiscono un rt\_domain per ogni partizione (o cluster).\\
