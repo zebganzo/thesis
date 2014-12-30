@@ -1,0 +1,177 @@
+% % 50
+
+% SCHED 10132 1646 37787
+% RELEASE 5751 1895 23551
+% CXS 4233 1283 25619
+
+% % 60
+
+% SCHED 14135 1760 51018
+% RELEASE 8980 2036 22429
+% CXS 8522 1427 42270
+
+
+% % 70
+
+% SCHED 12070 1703 48526
+% RELEASE 7791 1804 23804
+% CXS 6677 1552 37190
+
+% % 75
+
+% SCHED 9362 1454 31108
+% RELEASE 6390 1722 22704
+% CXS 4931 1323 31229
+
+% % 80
+
+% SCHED 10353 1691 42522
+% RELEASE 6634 1867 23694
+% CXS 5067 1213 30994
+
+% % 85
+
+% SCHED 8302 1616 29623
+% RELEASE 5420 1675 24035
+% CXS 3870 1182 27984
+
+% % 90
+
+% SCHED 10132 1646 37787
+% RELEASE 5751 1895 23551
+% CXS 4233 1283 25619
+
+% % 100
+
+% SCHED 7746 1637 28438
+% RELEASE 4366 1870 18062
+% CXS 3219 1279 10890
+%
+
+
+
+\newcommand{\graficoCxsMIN}{
+\begin{tikzpicture}[y=.2cm, x=.7cm,font=\sffamily, yscale=1, xscale=1.5]
+  %axis
+  \draw (0,0) -- coordinate (x axis mid) (7,0);
+      \draw (0,0) -- coordinate (y axis mid) (0,20);
+      %ticks
+  
+  \draw (1,1pt) -- (1,-3pt) node[anchor=north] {\scriptsize 50};
+  \draw (2,1pt) -- (2,-3pt) node[anchor=north] {\scriptsize 60};
+  \draw (3,1pt) -- (3,-3pt) node[anchor=north] {\scriptsize 70};
+  \draw (3.5,1pt) -- (3.5,-5pt) node[anchor=north] {\scriptsize 75};
+  \draw (4,1pt) -- (4,-3pt) node[anchor=north] {\scriptsize 80};
+  \draw (4.5,1pt) -- (4.5,-5pt) node[anchor=north] {\scriptsize 85};
+  \draw (5,1pt) -- (5,-3pt) node[anchor=north] {\scriptsize 90};
+  \draw (6,1pt) -- (6,-3pt) node[anchor=north] {\scriptsize 100};
+
+  \foreach \y in {0,5,...,20}
+    \draw (1pt,\y) -- (-3pt,\y) 
+      node[anchor=east] {\scriptsize \y};
+
+  %labels      
+  \node[below=0.8cm] at (x axis mid) {\scriptsize Utilization \%};
+  \node[rotate=90, above=0.8cm] at (y axis mid) {\scriptsize Times $10^{-1}$ * $\mu$s};
+
+  %plots
+  \draw[color=red, thick] plot[mark=x, mark options={fill=red, xscale=0.75}] 
+    file {PFPcxsMIN.data};
+
+  \draw[color=green, thick] plot[mark=x, mark options={fill=green, xscale=0.75}] 
+    file {MRSPcxsMIN.data};
+
+  %legend
+  \begin{scope}[shift={(5,3)}] 
+  \draw[color=red, thick] (0,0) -- plot[mark=x, mark options={fill=red, xscale=0.75}] (0.25,0) -- (0.5,0) 
+    node[right, color=black]{\scriptsize P-FP};
+  \draw[color=green, thick, yshift=0.3cm] (0,0) -- 
+    plot[mark=x, mark options={fill=green, xscale=0.75}] (0.25,0) -- (0.5,0)
+    node[right, color=black]{\scriptsize P-FP + MrsP};
+  \end{scope}
+
+\end{tikzpicture}}
+
+\newcommand{\graficoCxsMAX}{
+\begin{tikzpicture}[y=.2cm, x=.7cm,font=\sffamily, yscale=2, xscale=1.5]
+  %axis
+  \draw (0,0) -- coordinate (x axis mid) (7,0);
+      \draw (0,0) -- coordinate (y axis mid) (0,10);
+
+  \draw (1,1pt) -- (1,-3pt) node[anchor=north] {\scriptsize 50};
+  \draw (2,1pt) -- (2,-3pt) node[anchor=north] {\scriptsize 60};
+  \draw (3,1pt) -- (3,-3pt) node[anchor=north] {\scriptsize 70};
+  \draw (3.5,1pt) -- (3.5,-5pt) node[anchor=north] {\scriptsize 75};
+  \draw (4,1pt) -- (4,-3pt) node[anchor=north] {\scriptsize 80};
+  \draw (4.5,1pt) -- (4.5,-5pt) node[anchor=north] {\scriptsize 85};
+  \draw (5,1pt) -- (5,-3pt) node[anchor=north] {\scriptsize 90};
+  \draw (6,1pt) -- (6,-3pt) node[anchor=north] {\scriptsize 100};
+
+  \foreach \y in {0,2,...,10}
+    \draw (1pt,\y) -- (-3pt,\y) 
+      node[anchor=east] {\scriptsize \y}; 
+      
+  %labels      
+  \node[below=0.8cm] at (x axis mid) {\scriptsize Utilization \%};
+  \node[rotate=90, above=0.8cm] at (y axis mid) {\scriptsize Times 10 * $\mu$s};
+
+  %plots
+  \draw[color=red, thick] plot[mark=x, mark options={fill=red, yscale=0.5, xscale=0.75}] 
+    file {PFPcxsMAX.data};
+
+  \draw[color=green, thick] plot[mark=x, mark options={fill=green, yscale=0.5, xscale=0.75}] 
+    file {MRSPcxsMAX.data};
+
+    %legend
+  \begin{scope}[shift={(5,9)}] 
+  \draw[color=red, thick] (0,0) -- plot[mark=x, mark options={fill=red, xscale=0.75}] (0.25,0) -- (0.5,0) 
+    node[right, color=black]{\scriptsize P-FP};
+  \draw[color=green, thick, yshift=0.15cm] (0,0) -- 
+    plot[mark=x, mark options={fill=green, xscale=0.75}] (0.25,0) -- (0.5,0)
+    node[right, color=black]{\scriptsize P-FP + MrsP};
+  \end{scope}
+
+\end{tikzpicture}}
+
+\newcommand{\graficoCxsAVG}{
+\begin{tikzpicture}[y=.2cm, x=.7cm,font=\sffamily, xscale=1.5]
+  %axis
+
+  \draw (0,0) -- coordinate (x axis mid) (7,0);
+  \draw (0,0) -- coordinate (y axis mid) (0,20);
+
+
+  \draw (1,1pt) -- (1,-3pt) node[anchor=north] {\scriptsize 50};
+  \draw (2,1pt) -- (2,-3pt) node[anchor=north] {\scriptsize 60};
+  \draw (3,1pt) -- (3,-3pt) node[anchor=north] {\scriptsize 70};
+  \draw (3.5,1pt) -- (3.5,-5pt) node[anchor=north] {\scriptsize 75};
+  \draw (4,1pt) -- (4,-3pt) node[anchor=north] {\scriptsize 80};
+  \draw (4.5,1pt) -- (4.5,-5pt) node[anchor=north] {\scriptsize 85};
+  \draw (5,1pt) -- (5,-3pt) node[anchor=north] {\scriptsize 90};
+  \draw (6,1pt) -- (6,-3pt) node[anchor=north] {\scriptsize 100};
+
+  \foreach \y in {0,5,...,20}
+    \draw (1pt,\y) -- (-3pt,\y) 
+      node[anchor=east] {\scriptsize \y};
+      
+  %labels      
+  \node[below=0.8cm] at (x axis mid) {\scriptsize Utilization \%};
+  \node[rotate=90, above=0.8cm] at (y axis mid) {\scriptsize Times $\mu$s};
+
+  %plots
+  \draw[color=red, thick] plot[mark=x, mark options={fill=red, xscale=0.75}] 
+    file {PFPcxsAVG.data};
+
+  \draw[color=green, thick] plot[mark=x, mark options={fill=green, xscale=0.75}] 
+    file {MRSPcxsAVG.data};
+
+  %legend
+  \begin{scope}[shift={(5,17)}] 
+  \draw[color=red, thick] (0,0) -- plot[mark=x, mark options={fill=red, xscale=0.75}] (0.25,0) -- (0.5,0) 
+    node[right, color=black]{\scriptsize P-FP};
+  \draw[color=green, thick, yshift=0.3cm] (0,0) -- 
+    plot[mark=x, mark options={fill=green, xscale=0.75}] (0.25,0) -- (0.5,0)
+    node[right, color=black]{\scriptsize P-FP + MrsP};
+  \end{scope}
+
+\end{tikzpicture}}

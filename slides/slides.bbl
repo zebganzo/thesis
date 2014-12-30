@@ -1,0 +1,35 @@
+\begin{thebibliography}{1}
+
+\bibitem{Baker:1991:SSR:113595.113601}
+T.~P. Baker.
+\newblock Stack-based scheduling for realtime processes.
+\newblock {\em Real-Time Syst.}, 3(1):67--99, April 1991.
+
+\bibitem{Block:2007:FRL:1306877.1307316}
+Aaron Block, Hennadiy Leontyev, Bjorn~B. Brandenburg, and James~H. Anderson.
+\newblock A flexible real-time locking protocol for multiprocessors.
+\newblock In {\em Proceedings of the 13th IEEE International Conference on
+  Embedded and Real-Time Computing Systems and Applications}, RTCSA '07, pages
+  47--56, Washington, DC, USA, 2007. IEEE Computer Society.
+
+\bibitem{6602109}
+B.B. Brandenburg.
+\newblock A fully preemptive multiprocessor semaphore protocol for
+  latency-sensitive real-time applications.
+\newblock In {\em Real-Time Systems (ECRTS), 2013 25th Euromicro Conference
+  on}, pages 292--302, July 2013.
+
+\bibitem{Burns:2013:SCM:2547348.2547350}
+A.~Burns and A.~J. Wellings.
+\newblock A schedulability compatible multiprocessor resource sharing protocol
+  -- mrsp.
+\newblock In {\em Proceedings of the 2013 25th Euromicro Conference on
+  Real-Time Systems}, ECRTS '13, pages 282--291, Washington, DC, USA, 2013.
+  IEEE Computer Society.
+
+\bibitem{DBLP:dblp_conf/ecrts/WardA12}
+Bryan~C. Ward and James~H. Anderson.
+\newblock Supporting nested locking in multiprocessor real-time systems.
+\newblock In {\em ECRTS}, pages 223--232, 2012.
+
+\end{thebibliography}

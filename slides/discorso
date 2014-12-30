@@ -1,0 +1,97 @@
+3/22
+
+Il protocollo opera in presenza di scheduler partizionato a priorita' fissa su piattaforma a M processori su cui sono allocati N task. Alcuni di essi necessitano di una risorsa globale.
+
+4/22
+
+B e W propongono un'estensione multiprocessor di PCP/SRP con l'obiettivo di ottenere un protocollo in cui ogni partizione puo' essere considerata come un sistema singleprocessor e che permetta quindi l'adattamento di tecniche di analisi tipiche di sistemi singleprocessor.
+
+Nella fattispecie, la response time analysis che incorpora PCP/SRP modificata per tenere in considerazione la contesa tra task allocati in proessori differenti, qundi parallela. 
+
+// A tal fine e' introdotto un paramentro E, utilizzato per tenere conto della contesa per accedere la risorsa tra job in esecuzione in parallelo su processori differenti.
+
+5/22
+
+Il protocollo prevede che ogni richiesta venga gestita il locale in modo simile a PCP/SRP. Questo permette di ereditarne le proprieta'. Il job, in caso di risorsa occupata, effettua attesa attiva fino a ottenere la risorsa.
+Le richieste vengono accodate in una FIFO in cui il job in testa detiene la risorsa e, in caso di prerilascio, l'esecuzione della sezione critica e' portata a termine da parte di uno dei job in attesa.
+
+Questo garantisce che solamente un job per processore possa richiedere la risorsa, la coda ha lunghezza massima pari al numero di processori, e che un job deve attendere al massimo il tempo di smaltimento delle richieste precedenti.
+
+6/22
+
+L'algoritmo alla base dell'implementazione prevede che:
+1 - a ogni processore sia abbinato un ceiling
+2 - una richiesta innesca un'innalzalmento di priorita' del job e l'attivazione del ceiling locale.
+3 - le richieste sono accodate e servite in ordine FIFO
+4 - il job esegue a priorita' innalzata fiqno al rilascio della risorsa
+5 - se il job che possiede la risorsa viene prerilasciato migra nel primo processore disponibile. Processore disponibile significa che in esso esegue un job in attesa della risorsa.
+
+Il protocollo cosi' definito preserva l'indipendenza temporale dei job a priorita' superiore al ceiling, limita il tempo di attesa dei job che contendono per la risorsa e limita il tempo di blocco subito dai job a priorita' inferiore al ceinling.
+
+7/22
+
+L'implementazione e' stata realizzata su kernel linux reso real-time dalla patch LITMUS. Le strutture dati rappresentano le informazioni utili per gestire ogni partizione e la risorsa globale.
+
+8/22
+
+In particolare l'implementazione si concentra sulla gestione della coda di richieste. Il meccanismo base prevede, in caso di prerilascio, che il job erediti il livello di priorita' superiore al ceiling, migri nel processori e prerilasci il job in attesa.
+
+9/22
+
+Ma questo meccanismo non e' efficace in situazioni in cui non vi sono processori disponibili. L'implementazione mira quindi a gestire quelle operazioni che vanno a modificare lo stato della coda, cioe' l'accodamento di una nuova richiesta o un job che torna in esecuzione.
+
+10/22
+
+La prima primitiva presa in considerazione e' quella di lock, nella quale, dopo l'esecuzione delle operazioni che inerenti a PCP, viene controllato lo stato del detentore della risorsa e, se necessario, gli cede il processore. Infine, se necessario, effettua attesa attiva.
+
+11/22
+
+nell'operazione di release dopo aver rilasciato la risorsa il job migra nella propria cpu di partenza. Inoltre, se il nuovo job in testa alla coda non sta eseguendo, il protocollo predispone la sua migrazione.
+
+12/22
+
+Un esempio per mostrare l'integrazione del protocollo con lo scheduler nelle primitive di scheduling e finish_switch. 4 job su due processori, l'indice piu' basso indica una priorita' maggiore, j_2 e j_3 condividono una risorsa globale.
+
+Al tempo t_1, J_2 viene prerilasciato e marcato per la migrazione che viene gestita dopo il context switch
+Al tempo t_2, la primitiva di scheduling non e' permette di eseguire a J_4 in quanto ha priorita' inferiore al ceiling.
+Al tempo t_3, J_2 migra al proprio processore di origine
+
+13/22
+
+Esecuzione leggermente differente. Dopo aver migrato, J_2 viene prerilasciato da J_0 ma non vi e' nessun processore disponibile fino al tempo t. Dopo il context switch il protocollo rileva che il processore e' nuovamente disponibile per l'esecuzione del detentore della risorsa.
+
+14/22
+
+Sono stati effettuati 3 esperimenti:
+Il primo ha messo a confronto MrsP con due protocolli basati su attesa attiva, uno che prevede l'utilizzo di ceiling e uno che prevede l'inibizione del prerilascio.
+
+Con il secondo sono stati effettuati dei campionamenti dei tempi di esecuzione dell'implementazione.
+
+Nel terzo viene studiato il comportamente dello scheduler in assenza di risorsa con e senza l'integrazione del protocollo.
+
+15/22
+
+Nel primo esperimento sono stati studiati i response time di 3 job: L_1 che acquisisce la risorsa, L_3 che la richiede ed effettua attesa attiva e H_2 che tenta di prerilasciare L_1. I tempi sono stati campionati al variare della lunghezza della sezione critica e del tempo di esecuzione di H_2.
+
+16/22
+
+L_1 subisce ritardi con l'approccio simple ceiling in quanto deve attendere l'esecuzione di H_2. Mentre con MrsP e inibizione del prerilascio si hanno tempi simili, salvo l'overhead dato dalla migrazione.
+
+17/22
+
+MrsP e simple ceiling non causano ritardi a H_2, al contrario dell'inibizione del prerilascio. In tal caso deve attendere il rilascio della risorsa.
+
+18/22
+
+Esso ha un comportamento simile a L_1 in quanto deve attendere il rilascio della risorsa, e se L_1 subisce ritardi il tempo di attesa aumenta.
+
+19/22
+
+Il costo principale del protocollo e' rappresentato dalle migrazioni, ma esse sono un caso particolare di esecuzione. In particolare, le primitive di lock e release hanno un costo base complessivo di 2k nanosecondi, di cui solamente 600/700 ns riportabili al protocollo.
+
+20/22
+
+Nel terzo esperimento sono messe a confronto le due versione del protocollo in assenza di risorsa.
+Nel primo grafico si nota come al variare dell'utilizzo del sistema abbiano lo stesso numero di deadline.
+
+Successivamente sono stati confrontati le prestazioni delle principali primitive di relase, schedule e job release. Prendendo la primitiva di schduling come esempio, i grafici mostrano come le due versioni abbiano il medesimo comportamento.

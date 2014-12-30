@@ -1,0 +1,128 @@
+\relax 
+\citation{Burns:2013:SCM:2547348.2547350}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Implementazione proposta}{41}{chapter.2}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{sec:implementazione}{{2}{41}{Implementazione proposta\relax }{chapter.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Problematiche di progettazione}{42}{section.2.1}}
+\newlabel{sec:impl.design}{{2.1}{42}{Problematiche di progettazione\relax }{section.2.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Limitato tempo di attesa.}{43}{section*.26}}
+\@writefile{toc}{\contentsline {paragraph}{Independence-preserving.}{43}{section*.27}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Strutture dati}{44}{section.2.2}}
+\newlabel{sec:impl.struct}{{2.2}{44}{Strutture dati\relax }{section.2.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{\texttt  {pfp\_domain}.}{44}{section*.28}}
+\newlabel{lst:pfp_domain}{{2.2}{44}{\relax }{lstlisting.2.-1}{}}
+\newlabel{lst:domain.spinlock}{{8}{44}{\relax }{lstnumber.-1.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{\texttt  {mrsp\_state}.}{44}{section*.29}}
+\@writefile{toc}{\contentsline {paragraph}{\texttt  {mrsp\_semaphore}.}{45}{section*.30}}
+\newlabel{lst:mrsp_semaphore}{{2.2}{45}{\relax }{lstlisting.2.-4}{}}
+\@writefile{toc}{\contentsline {paragraph}{\texttt  {task\_struct} e \texttt  {rt\_task}.}{46}{section*.31}}
+\@writefile{toc}{\contentsline {paragraph}{\texttt  {sched\_plugin}.}{46}{section*.32}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Algoritmo e implementazione}{46}{section.2.3}}
+\newlabel{sec:impl.alg}{{2.3}{46}{Algoritmo e implementazione\relax }{section.2.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Organizzazione delle strutture dati in una piattaforma con 4 partizioni.\relax }}{47}{figure.caption.33}}
+\newlabel{fig:impl.system}{{2.1}{47}{Organizzazione delle strutture dati in una piattaforma con 4 partizioni.\relax \relax }{figure.caption.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Inizializzazione}{48}{subsection.2.3.1}}
+\newlabel{sec:imp.init}{{2.3.1}{48}{Inizializzazione\relax }{subsection.2.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Gestione della coda}{48}{subsection.2.3.2}}
+\newlabel{sec:impl.queue}{{2.3.2}{48}{Gestione della coda\relax }{subsection.2.3.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Coda delle richieste, esempio \#1.\relax }}{49}{figure.caption.34}}
+\newlabel{fig:impl.queue1}{{2.2}{49}{Coda delle richieste, esempio \#1.\relax \relax }{figure.caption.34}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Coda delle richieste, esempio \#2.\relax }}{49}{figure.caption.35}}
+\newlabel{fig:impl.queue2}{{2.3}{49}{Coda delle richieste, esempio \#2.\relax \relax }{figure.caption.35}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Coda delle richieste, esempio \#3.\relax }}{50}{figure.caption.36}}
+\newlabel{fig:impl.queue3}{{2.4}{50}{Coda delle richieste, esempio \#3.\relax \relax }{figure.caption.36}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Coda delle richieste, esempio \#4.\relax }}{50}{figure.caption.37}}
+\newlabel{fig:impl.queue4}{{2.5}{50}{Coda delle richieste, esempio \#4.\relax \relax }{figure.caption.37}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Richiesta di accesso}{50}{subsection.2.3.3}}
+\newlabel{sec:impl.lock}{{2.3.3}{50}{Richiesta di accesso\relax }{subsection.2.3.3}{}}
+\newlabel{lst:lock.preempt_disable}{{4}{52}{Richiesta di accesso\relax }{lstnumber.-5.4}{}}
+\newlabel{lst:lock.spinlock}{{5}{52}{Richiesta di accesso\relax }{lstnumber.-5.5}{}}
+\newlabel{lst:lock.ipcp_start}{{7}{52}{Richiesta di accesso\relax }{lstnumber.-5.7}{}}
+\newlabel{lst:lock.ipcp_stop}{{25}{52}{Richiesta di accesso\relax }{lstnumber.-5.25}{}}
+\newlabel{lst:lock.spinunlock}{{27}{52}{Richiesta di accesso\relax }{lstnumber.-5.27}{}}
+\newlabel{lst:lock.remote_lock}{{32}{52}{Richiesta di accesso\relax }{lstnumber.-5.32}{}}
+\newlabel{lst:lock.remote_unlock}{{42}{52}{Richiesta di accesso\relax }{lstnumber.-5.42}{}}
+\newlabel{lst:lock.local_lock}{{45}{52}{Richiesta di accesso\relax }{lstnumber.-5.45}{}}
+\newlabel{lst:lock.local_unlock}{{51}{52}{Richiesta di accesso\relax }{lstnumber.-5.51}{}}
+\newlabel{lst:lock.schedule}{{56}{53}{Richiesta di accesso\relax }{lstnumber.-5.56}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Rilascio della risorsa}{53}{subsection.2.3.4}}
+\newlabel{sec:impl.unlock}{{2.3.4}{53}{Rilascio della risorsa\relax }{subsection.2.3.4}{}}
+\newlabel{lst:unlock.state}{{9}{54}{Rilascio della risorsa\relax }{lstnumber.-6.9}{}}
+\newlabel{lst:unlock.check_start}{{15}{54}{Rilascio della risorsa\relax }{lstnumber.-6.15}{}}
+\newlabel{lst:unlock.check_stop}{{33}{54}{Rilascio della risorsa\relax }{lstnumber.-6.33}{}}
+\newlabel{lst:unlock.back1}{{64}{55}{Rilascio della risorsa\relax }{lstnumber.-6.64}{}}
+\newlabel{lst:unlock.back2}{{74}{55}{Rilascio della risorsa\relax }{lstnumber.-6.74}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Scheduling}{55}{subsection.2.3.5}}
+\newlabel{sec:impl.schedule}{{2.3.5}{55}{Scheduling\relax }{subsection.2.3.5}{}}
+\citation{Burns:2013:SCM:2547348.2547350}
+\@writefile{toc}{\contentsline {paragraph}{Lock holder prerilasciato.}{56}{section*.38}}
+\@writefile{toc}{\contentsline {paragraph}{Placeholder.}{56}{section*.39}}
+\newlabel{fig:agent_solution}{{2.6a}{58}{Attivazione di un agente.\relax \relax }{figure.caption.40}{}}
+\newlabel{sub@fig:agent_solution}{{a}{58}{Attivazione di un agente.\relax \relax }{figure.caption.40}{}}
+\newlabel{fig:migration_solution}{{2.6b}{58}{Migrazione nel processore di origine.\relax \relax }{figure.caption.40}{}}
+\newlabel{sub@fig:migration_solution}{{b}{58}{Migrazione nel processore di origine.\relax \relax }{figure.caption.40}{}}
+\newlabel{fig:ceilin_solution}{{2.6c}{58}{Utilizzo del ceiling.\relax \relax }{figure.caption.40}{}}
+\newlabel{sub@fig:ceilin_solution}{{c}{58}{Utilizzo del ceiling.\relax \relax }{figure.caption.40}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Possibili soluzioni alla gestione del caso particolare.\relax }}{58}{figure.caption.40}}
+\newlabel{fig:solutions}{{2.6}{58}{Possibili soluzioni alla gestione del caso particolare.\relax \relax }{figure.caption.40}{}}
+\newlabel{lst:sched.1}{{9}{59}{Placeholder}{lstnumber.-7.9}{}}
+\newlabel{lst:sched.3}{{12}{59}{Placeholder}{lstnumber.-7.12}{}}
+\newlabel{lst:sched.2}{{18}{59}{Placeholder}{lstnumber.-7.18}{}}
+\newlabel{lst:sched.3}{{25}{60}{Placeholder}{lstnumber.-7.25}{}}
+\newlabel{lst:sched.4}{{41}{60}{Placeholder}{lstnumber.-7.41}{}}
+\newlabel{lst:sched.4}{{45}{60}{Placeholder}{lstnumber.-7.45}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.6}Context switch}{60}{subsection.2.3.6}}
+\newlabel{sec:impl.c_s}{{2.3.6}{60}{Context switch\relax }{subsection.2.3.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{MIGRATION.}{60}{section*.41}}
+\@writefile{toc}{\contentsline {paragraph}{Meccanismo di base.}{61}{section*.42}}
+\@writefile{toc}{\contentsline {paragraph}{Job resume.}{61}{section*.43}}
+\newlabel{lst:sched.9}{{9}{61}{Job resume}{lstnumber.-8.9}{}}
+\newlabel{lst:sched.11}{{15}{62}{Job resume}{lstnumber.-8.15}{}}
+\newlabel{lst:sched.10}{{24}{62}{Job resume}{lstnumber.-8.24}{}}
+\newlabel{lst:sched.12}{{26}{62}{Job resume}{lstnumber.-8.26}{}}
+\newlabel{lst:sched.5}{{48}{62}{Job resume}{lstnumber.-8.48}{}}
+\newlabel{lst:sched.6}{{50}{62}{Job resume}{lstnumber.-8.50}{}}
+\newlabel{lst:sched.7}{{55}{62}{Job resume}{lstnumber.-8.55}{}}
+\newlabel{lst:sched.8}{{82}{63}{Job resume}{lstnumber.-8.82}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.7}Esempio di esecuzione}{63}{subsection.2.3.7}}
+\newlabel{sec:mrsp_exe}{{2.3.7}{63}{Esempio di esecuzione\relax }{subsection.2.3.7}{}}
+\newlabel{RF1}{65}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces Attivazione di un agente.\relax }}{65}{figure.caption.44}}
+\newlabel{fig:mrsp_exe}{{2.7}{65}{Attivazione di un agente.\relax \relax }{figure.caption.44}{}}
+\@setckpt{2_implementazione}{
+\setcounter{page}{67}
+\setcounter{equation}{0}
+\setcounter{enumi}{3}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{1}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{2}
+\setcounter{section}{3}
+\setcounter{subsection}{7}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{7}
+\setcounter{table}{0}
+\setcounter{lofdepth}{1}
+\setcounter{lotdepth}{1}
+\setcounter{r@tfl@t}{1}
+\setcounter{lstnumber}{94}
+\setcounter{Item}{3}
+\setcounter{Hfootnote}{1}
+\setcounter{bookmark@seq@number}{32}
+\setcounter{@pps}{0}
+\setcounter{@ppsavesec}{0}
+\setcounter{@ppsaveapp}{0}
+\setcounter{parentequation}{0}
+\setcounter{ContinuedFloat}{0}
+\setcounter{subfigure}{3}
+\setcounter{subtable}{0}
+\setcounter{AM@survey}{0}
+\setcounter{lstlisting}{0}
+\setcounter{section@level}{2}
+}

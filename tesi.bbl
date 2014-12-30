@@ -1,0 +1,139 @@
+\begin{thebibliography}{10}
+
+\bibitem{Audsley93applyingnew}
+N.~Audsley, A.~Burns, M.~Richardson, K.~Tindell, and A.~J. Wellings.
+\newblock Applying new scheduling theory to static priority pre-emptive
+  scheduling.
+\newblock {\em Software Engineering Journal}, 8:284--292, 1993.
+
+\bibitem{Baker:1991:SSR:113595.113601}
+T.~P. Baker.
+\newblock Stack-based scheduling for realtime processes.
+\newblock {\em Real-Time Syst.}, 3(1):67--99, April 1991.
+
+\bibitem{Block:2007:FRL:1306877.1307316}
+Aaron Block, Hennadiy Leontyev, Bjorn~B. Brandenburg, and James~H. Anderson.
+\newblock A flexible real-time locking protocol for multiprocessors.
+\newblock In {\em Proceedings of the 13th IEEE International Conference on
+  Embedded and Real-Time Computing Systems and Applications}, RTCSA '07, pages
+  47--56, Washington, DC, USA, 2007. IEEE Computer Society.
+
+\bibitem{6602109}
+B.B. Brandenburg.
+\newblock A fully preemptive multiprocessor semaphore protocol for
+  latency-sensitive real-time applications.
+\newblock In {\em Real-Time Systems (ECRTS), 2013 25th Euromicro Conference
+  on}, pages 292--302, July 2013.
+
+\bibitem{Brandenburg:2008:RSM:1440456.1440601}
+Bj\"{o}rn~B. Brandenburg, John~M. Calandrino, Aaron Block, Hennadiy Leontyev,
+  and James~H. Anderson.
+\newblock Real-time synchronization on multiprocessors: To block or not to
+  block, to suspend or spin?
+\newblock In {\em Proceedings of the 2008 IEEE Real-Time and Embedded
+  Technology and Applications Symposium}, RTAS '08, pages 342--353, Washington,
+  DC, USA, 2008. IEEE Computer Society.
+
+\bibitem{BBBThesis}
+Björn~B. Brandenburg.
+\newblock {\em Scheduling and Locking in Multiprocessor Real-Time Operating
+  Systems}.
+\newblock PhD thesis, The University of North Carolina at Chapel Hill, 2011.
+
+\bibitem{Brandenburg07feather-trace:a}
+Björn~B. Brandenburg and James H.
+\newblock Feather-trace: A light-weight event tracing toolkit.
+\newblock In {\em In Proceedings of the Third International Workshop on
+  Operating Systems Platformsfor Embedded Real-Time Applications (OSPERT'07},
+  pages 61--70, 2007.
+
+\bibitem{Burns:2013:SCM:2547348.2547350}
+A.~Burns and A.~J. Wellings.
+\newblock A schedulability compatible multiprocessor resource sharing protocol
+  -- mrsp.
+\newblock In {\em Proceedings of the 2013 25th Euromicro Conference on
+  Real-Time Systems}, ECRTS '13, pages 282--291, Washington, DC, USA, 2013.
+  IEEE Computer Society.
+
+\bibitem{Burns:2009:RSP:1643588}
+Alan Burns and Andy Wellings.
+\newblock {\em Real-Time Systems and Programming Languages: Ada, Real-Time Java
+  and C/Real-Time POSIX}.
+\newblock Addison-Wesley Educational Publishers Inc, USA, 4th edition, 2009.
+
+\bibitem{Davis:2011:SHR:1978802.1978814}
+Robert~I. Davis and Alan Burns.
+\newblock A survey of hard real-time scheduling for multiprocessor systems.
+\newblock {\em ACM Comput. Surv.}, 43(4):35:1--35:44, October 2011.
+
+\bibitem{5562902}
+D.~Faggioli, G.~Lipari, and T.~Cucinotta.
+\newblock The multiprocessor bandwidth inheritance protocol.
+\newblock In {\em Real-Time Systems (ECRTS), 2010 22nd Euromicro Conference
+  on}, pages 90--99, July 2010.
+
+\bibitem{Gai:2003:CMM:827266.828537}
+Paolo Gai, Marco~Di Natale, Giuseppe Lipari, Alberto Ferrari, Claudio
+  Gabellini, and Paolo Marceca.
+\newblock A comparison of mpcp and msrp when sharing resources in the janus
+  multiple-processor on a chip platform.
+\newblock In {\em Proceedings of the The 9th IEEE Real-Time and Embedded
+  Technology and Applications Symposium}, RTAS '03, pages 189--, Washington,
+  DC, USA, 2003. IEEE Computer Society.
+
+\bibitem{Garey:1979:CIG:578533}
+Michael~R. Garey and David~S. Johnson.
+\newblock {\em Computers and Intractability: A Guide to the Theory of
+  NP-Completeness}.
+\newblock W. H. Freeman \& Co., New York, NY, USA, 1979.
+
+\bibitem{5368127}
+K.~Lakshmanan, D.~De~Niz, and R.~Rajkumar.
+\newblock Coordinated task scheduling, allocation and synchronization on
+  multiprocessors.
+\newblock In {\em Real-Time Systems Symposium, 2009, RTSS 2009. 30th IEEE},
+  pages 469--478, Dec 2009.
+
+\bibitem{Liu:1973:SAM:321738.321743}
+C.~L. Liu and James~W. Layland.
+\newblock Scheduling algorithms for multiprogramming in a hard-real-time
+  environment.
+\newblock {\em J. ACM}, 20(1):46--61, January 1973.
+
+\bibitem{Rajkumar:1991:SRS:532621}
+Ragunathan Rajkumar.
+\newblock {\em Synchronization in Real-Time Systems: A Priority Inheritance
+  Approach}.
+\newblock Kluwer Academic Publishers, Norwell, MA, USA, 1991.
+
+\bibitem{Sha:1990:PIP:102822.626613}
+L.~Sha, R.~Rajkumar, and J.~P. Lehoczky.
+\newblock Priority inheritance protocols: An approach to real-time
+  synchronization.
+\newblock {\em IEEE Trans. Comput.}, 39(9):1175--1185, September 1990.
+
+\bibitem{Sha:2004:RTS:1028913.1028959}
+Lui Sha, Tarek Abdelzaher, Karl-Erik AArzen, Anton Cervin, Theodore Baker, Alan
+  Burns, Giorgio Buttazzo, Marco Caccamo, John Lehoczky, and Aloysius~K. Mok.
+\newblock Real time scheduling theory: A historical perspective.
+\newblock {\em Real-Time Syst.}, 28(2-3):101--155, November 2004.
+
+\bibitem{641276}
+H.~Takada and K.~Sakamura.
+\newblock A novel approach to multiprogrammed multiprocessor synchronization
+  for real-time kernels.
+\newblock In {\em Real-Time Systems Symposium, 1997. Proceedings., The 18th
+  IEEE}, pages 134--143, Dec 1997.
+
+\bibitem{spinlock:linus}
+Linus Torvalds.
+\newblock Spin locks.
+\newblock
+  \url{http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/spinlocks.txt}.
+
+\bibitem{DBLP:dblp_conf/ecrts/WardA12}
+Bryan~C. Ward and James~H. Anderson.
+\newblock Supporting nested locking in multiprocessor real-time systems.
+\newblock In {\em ECRTS}, pages 223--232, 2012.
+
+\end{thebibliography}

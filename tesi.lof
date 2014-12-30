@@ -1,0 +1,44 @@
+\select@language {italian}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Job del modello.\relax }}{16}{figure.caption.4}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Illustrazione di architetture con memoria condivisa e distribuita.\relax }}{18}{figure.caption.7}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Gestione delle risorse in ambito single processor e multiprocessor. Per ogni job $prio(J_i) = i$ e $i < j \DOTSB \tmspace +\thickmuskip {.2777em}\DOTSB \Relbar \joinrel \Rightarrow \tmspace +\thickmuskip {.2777em}prio(J_i) < prio(J_j)$.\relax }}{22}{figure.caption.8}
+\contentsline {figure}{\numberline {1.4}{\ignorespaces NPC - Gestione della risorsa tramite inibizione del prerilascio: $J_1$ non permette di eseguire ai job a priorit\IeC {\`a} superiore fino a che non rilascia la risorsa.\relax }}{23}{figure.caption.10}
+\contentsline {figure}{\numberline {1.5}{\ignorespaces PIP - $J_1$ eredita la priorit\IeC {\`a} di $J_3$ solamente al momento della sua richiesta di accesso alla risorsa ($t$).\relax }}{24}{figure.caption.12}
+\contentsline {figure}{\numberline {1.6}{\ignorespaces PCP - $\tau _1$ e $\tau _2$ condividono le risorse innestate $r_1$ e $r_2$; $\tau _3$ accede alla risorsa $r_3$. La richiesta di accesso alla risorsa al tempo $t_1$ viene concessa in quanto $j_3$ ha priorit\IeC {\`a} superiore rispetto al ceiling attuale, rispettivamente 3 e 2. Di conseguenza, il ceiling viene innalzato a 3. Al contrario, la richiesta di accesso al tempo $t_2$ viene ritardata in quanto il job ha priorit\IeC {\`a} pari al ceiling, pertanto, deve attendere il rilascio delle risorse da parte di $J_1$ e il conseguente abbassamento del ceiling.\relax }}{25}{figure.caption.14}
+\contentsline {figure}{\numberline {1.7}{\ignorespaces SRP - $\tau _1$ e $\tau _2$ condividono le risorse innestate $r_1$ e $r_2$; $\tau _3$ accede alla risorsa $r_3$. Al tempo $t_1$, viene concesso di eseguire a $j_3$ in quanto ha priorit\IeC {\`a} superiore rispetto al ceiling attuale, rispettivamente 3 e 2. Al contrario, l'esecuzione di $j_2$, rilasciato al tempo $t_2$, \IeC {\`e} ritardata in quanto ha priorit\IeC {\`a} pari al ceiling, pertanto, deve attendere il rilascio delle risorse da parte di $J_1$ e il conseguente abbassamento del ceiling.\relax }}{26}{figure.caption.16}
+\contentsline {figure}{\numberline {1.8}{\ignorespaces MSRP - $\tau _1$, $\tau _2$, $\tau _3$ e $\tau _4$ assegnati a 2 processori e 2 risorse.\relax }}{28}{figure.caption.19}
+\contentsline {figure}{\numberline {1.9}{\ignorespaces O(m) Independence-preserving Protocol.\relax }}{31}{figure.caption.22}
+\contentsline {figure}{\numberline {1.10}{\ignorespaces MrsP - Al prerilascio da parte di $J_2$ al tempo $t$, il job $J_3$, che sta eseguendo attesa attiva per ottenere l'accesso alla risorsa, prosegue l'esecuzione della sezione critica per conto di $J_1$.\relax }}{34}{figure.caption.23}
+\contentsline {figure}{\numberline {1.11}{\ignorespaces Multiprocessor Resource Sharing Protocol.\relax }}{35}{figure.caption.24}
+\contentsline {figure}{\numberline {1.12}{\ignorespaces Illustrazione dell'architettura di LITMUS\textsuperscript {RT}.\relax }}{37}{figure.caption.25}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Organizzazione delle strutture dati in una piattaforma con 4 partizioni.\relax }}{47}{figure.caption.33}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Coda delle richieste, esempio \#1.\relax }}{49}{figure.caption.34}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Coda delle richieste, esempio \#2.\relax }}{49}{figure.caption.35}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Coda delle richieste, esempio \#3.\relax }}{50}{figure.caption.36}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Coda delle richieste, esempio \#4.\relax }}{50}{figure.caption.37}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Possibili soluzioni alla gestione del caso particolare.\relax }}{58}{figure.caption.40}
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Attivazione di un agente.\relax }}{65}{figure.caption.44}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Configurazione del test tra protocolli.\relax }}{72}{figure.caption.46}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces \textit {MrsP}.\relax }}{74}{figure.caption.49}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces \textit {Simple ceiling}.\relax }}{74}{figure.caption.50}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces \textit {non preemption}.\relax }}{74}{figure.caption.51}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Response time di $L_1$\relax }}{78}{figure.caption.58}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Response time di $H_2$\relax }}{79}{figure.caption.59}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Response time di $L_3$\relax }}{79}{figure.caption.60}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Overhead e relativa influenza sul sistema.\relax }}{82}{figure.caption.61}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Strutture dati.\relax }}{83}{figure.caption.62}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Lock: diagramma di flusso.\relax }}{84}{figure.caption.64}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Lock: diagramma di flusso.\relax }}{87}{figure.caption.66}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Overhead di sistema delle primitive.\relax }}{90}{figure.caption.68}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Numero di \textit {deadline miss}.\relax }}{93}{figure.caption.70}
+\contentsline {figure}{\numberline {3.14}{\ignorespaces Confronto tra implementazioni: \textit {schedule}.\relax }}{94}{figure.caption.71}
+\contentsline {figure}{\numberline {3.15}{\ignorespaces Confronto tra implementazioni: \textit {job release}.\relax }}{95}{figure.caption.72}
+\contentsline {figure}{\numberline {3.16}{\ignorespaces Confronto tra implementazioni: \textit {context switch}.\relax }}{96}{figure.caption.73}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

@@ -1,0 +1,136 @@
+\subsection{Multiprocessor Protocols}
+\label{sec:lockProtocols.multi}
+
+In sistemi multiprocessor le risorse sono distinte in due categore: locali e globali. Nel primo caso i task che la richiedono sono tutti allocati nel medesimo processore, quindi possono essere utilizzati protocolli di accesso tipici di sistemi singleprocessor. Al contrario, nel secondo caso la risorsa e' richiesta da job che eseguono su differenti processori.\\
+
+I primi protocolli per sistemi multiprocessor sono il frutto di un riadattamento di protocolli singleprocessor. Se in presenza di un unico processore la serializzazione degli accessi e' intrinseca del fatto che esista un unico luogo di esecuzione, con un maggior numero di processori gli accessi sono potenzialmente paralleli, di conseguenza sono necessari meccanismi che permettano ai vari riadattamenti di soddisfare questa necessita'.\\
+
+\paragraph{Distribuited priority-ceiling protocol (DPCP).} (Rajkumar, 1991) 
+
+
+
+Non ha senso comparare le priorita' tra processori differenti. -> boosting (come Non-preemtpin ma con la differenza che tra boosted si prerilasciano).
+Le richieste simultanee vengono gestite in base alla priorita' di base. La differenza tra i due e' dove avviene l'esecuzione della sezione critica.
+
+distributed-memory multiprocessors -> ogni risorsa e' accessibile solamente da un determinato processore.
+In a shared-memory system, la risorsa deve essere allocata ad un processore arbitrario a priori per poter effettuare le analisi.
+DPCP implementa remote procedure call (RPC), quando un job effettua una richiesta di accesso essa viene presa in carico da parte di un agente locale al processore della risorsa, esso esegue in modo sincrono. J_i si sospende fino a che la richiesta non viene portata a termine. La priorita' J_i resta invariata mentre viene aumentata quella dell'agente (i (indice del job) - n), esso accedera' la risorsa secondo le regole di PCP. Multiple richiste vengono elaborate in ordine in base alla priorita' del job richiedente e secondo le regole di PCP.
+
+DPCP prevede che la risorsa globale sia allocata in unico processore, e che ad ogni task che la richede corrisponda un agente che prende in carico tale richiesta e la sua esecuzione. Una volta attivato l'agente il job si sospende in attesa del completamento della sezione critica. L'agente innalza la propria priorita' al valore i (l'indice del job) - n (il numero di job totali), in questo modo si assicura che l'agente subisca un innalzamento di priorita' che permette solamente agli altri agenti in possesso di una risorsa di prerilasciarlo. L'indice i e' assegnato ai job in ordine di priorita' effettiva, in questo modo i prerilasci tra gli agenti rispecchiano le priorita' dei task che li attivano. Gli agenti locali sono gestiti in base al protocollo PCP.
+Questo tipo di approccio causa diversi tipi di blocco in cui incorrono i job nei vari processori e gli agenti nel processore di sincronizzazione rendendo cosi' i test di schedulabilita' particolarmente pessimistici.
+
+MPCP e' un'evoluzione del precedente protocollo, progettato per sistemi con memoria condivisa. Le risorse globali possono essere accedute da ogni processore, pertanto non vi e' piu' bisogno dell'utilizzo di agenti. Una volta ottenuto l'accesso ad una risorsa il job innalza la propria priorita' a quella piu' alta tra tutti i task che al richiedono. Questo tipo di priority boosting velocizza l'esecuzione della sezione critica diminuendo l'ammontare di inversione di priorita' subita dai job che condividono la risorsa o a priorita' inferiore al "ceiling", tuttavia senza creare blocco ai job con priorita' superiore al ceiling globale. Dato che le priorita' non sono uniche, a parita' di valore non viene permesso il prerilascio, in questo modo non si ritarda l'esecuzione della sezione critica.
+Anhce in questo caso i job che richiedono una risorsa occupata incorrono in diversi tipi di blocco in quanto l'accesso e' garantito in base alla priorita', permettendo quindi ad altri job di accedere prima anche se l'hanno richiesta piu' tardi. Inoltre il blocco generato da altri job che non richiedono la risorsa potenzialmente possono ritardare l'esecuzione da parte del job in testa alla coda, causando cosi' ulteriori ritardi al job stesso ed agli altri in attesa.
+MPCP, come DPCP, soffre di ritardi aggiuntivi derivanti dall'auto sospensione da parte dei job in attesa della risorsa. Lakshmanan  in et al. (2009) propone una versione di MPCP che prevede "virtual spinning", da cui MPCP-VS. Il protocollo rivisitato dispone che il job si auto sospenda, ma che nessun altro job del medesimo processore con priorita' inferiore possa accedere ad una risorsa globale.
+
+MSRP deriva dal protocollo per singleprocessor SRP, anche se quest'ultimo non e' utilizzato per le risorse globali, bensi' per quelle locali. La gestione dell'accesso alle risorse globali e' gestito tramite inizibizione del prerilascio: un job quando effettua la richiesta inibisce il prerilascio e, se la risorsa e' occupata, si accoda nella coda FIFO della risorsa corrispondente effettuando attesa attiva sino al raggiungimento della testa; una volta acquisita esegue la sezione critica senza permettere ai job a priorita' piu' alta del medesimo processore di eseguire. Nella Sezione~\ref{sec:lockProtocols.single} e' stato discusso come un approccio di questo tipo abbia vantaggi e svantaggi: l'attesa attiva comporta spreco di esecuzione del processore e causa blocco ai job a priorita' piu' alta che non condividono la risorsa, d'altro canto limita tale tempo di blocco al massimo alla lunghezza di un'unica sezione critica; l'attesa da parte dei job in coda per la risorsa e' delimitata alla lunghezza della FIFO, cioe' all'esecuzione dei job che lo precedono. Inoltre, dato che solamente un job alla volta per ogni processore puo' effettare una richiesta la lunghezza di coda FIFO e' al massimo pari al numero di processori. Le dinamiche appena descritte si rispecchiano nei test di schedulabilita' del protocollo, i quali permettono di limitare con precisione i costi aggiuntivi indotti dalla risorsa globale, per approfondimenti si veda lo studio di Gai et al. (2003).
+
+FMLP combina i due differenti approcci suspensione-based e spin-based: le risorse sono suddivise tra "brevi" e "lunghe" in relazione alla durata della sezione critica, le prime sono gestite tramite accodamento FIFO ed inibizione di prerilascio mentre nel secondo caso tramite protocollo che prevede sospensione. Le risorse definite "brevi" si presuppone abbiano una durata tale per cui l'utilizzo di altri meccanismi diversi dall'inibizione del prerilascio, che a livello kernel e' implementato in modo molto efficiente, comportino un overhead superiore rispetto al beneficio apportato. Al contrario per le risorse "lunghe" i job in attesa del suo rilascio si sospendono in modo tale da non creare ritardi agli altri job, in particolare quelli a priorita' superiore che non la accedono. Oltre ad essere utilizzabile sia in con scheduler globali che partizionati, questo protocollo permette accumulo di risorse tramile l'utilizzo di "Group locks": risorse innestate creano un unico gruppo al quale i job accedono in mutua esclusione, in tal modo una volta ottenuto il lock sull'intero gruppo e' garantito che le altre risorse di cui necessita sono libere.  Block et al. [4]
+
+Con \textit{Helping protocol} si identifica quell'insieme di protocolli in cui un job puo' prendersi carico dell'esecuzione della sezione critica, corrispondente ad una risorsa, per conto di un altro job. Nei protocolli discussi nei paragrafi precedenti e' emerso che l'aspetto cruciale sia come gestire l'esecuzione delle sezione critica: inibendo il prerilascio si va a danneggiare i job a priorita' superiore che non la accedono, ma in questo modo il tempo di blocco e' limitato al tempo di utilizzo della risorsa; al contrario un innalzamento di priorita' ad un valore precalcolato comporta la possibilita' di essere prerilasciati, di conseguenza il blocco subito dagli altri job in attesa o a priorita' inferiore a tale valore aumenta. Questa categoria di protocolli prevede che l'avanzamento della sezione critica possa essere presa in carico da parte di uno dei job accodati qualora il suo detentore venga prerilasciato, pertanto l'esecuzione della risorsa viene portata a termine da un altro job ed il relativo risultato viene messo a disposizione del detentore al momento del suo risveglio. Tramite questo meccanismo il tempo di blocco e' al massimo pari alla lunghezza della sezione critica senza intaccare l'esecuzione dei job a priorita' superiore.
+SPEEP Spinning Processor Executes for Pre-empted Processor (was proposed by Takada and Sakamura in 1997 [19]) si basa sull'assunzione che l'operazione corrispondente alla risorsa sia atomica: i job che la necessitano accodano la propria richiesta nella corrispondente FIFO ed essa viene presa in carica dal primo job nella coda che non e' stato prerilasciato. Il limite di tale protocollo e' appunto l'assunzione di partenza, cioe' che la sezione critica sia atomica e quindi facilmente eseguibile da ogni job in coda.
+MBWI [10] propone un approccio differente e maggiormente complesso: i task eseguono all'interno di server, ad essi e' abbinato una quantita' di tempo per eseguire i job ed una volta esaurito si sospende fino al rinnovo di tale budget. I job che richiedono la risorsa effettuano busy-wait, senza inibire il prerilascio, fino a che non ne ottengono l'accesso, il quale e' garantito in ordinamento FIFO. I job che attendono il rilascio utilizzano il budget del proprio server per effettuare attesa attiva oppure lo possono cedere al detentore della risorsa nel caso in cui esso venga prerilasciato. Ne consegue che, al contrario di SPEEP, il job non prende in carico l'esecuzione per conto del job prerilasciato, bensi' gli cede l'esecuzione nel proprio processore per una quantita' di tempo pari al budget residuo.
+
+OMIP è un protocollo studiato per sistemi con algoritmi clustered ed il suo obiettivo è quello di limitare il tempo di blocco subito dai job in attesa della risorsa e quelli che ne subiscono interferenza.  Brandeburg[] dimostra come non sia possibile ottenere un limitato tempo di blocco e preservare l’indipendenza dei job a priorità superiore senza permttere migrazioni tra cluster. Brevemente, Brandeburg si sofferma sul concetto di independence-preserving secondo il quale i job che non accedono la risorsa non ne subiscono blocco, di conseguenza si ha che un job subisce blocco per un tempo pari alla lunghezza della sezione critica, zero altrimenti. 
+OMIP propone un approccio suspension-based, pertanto un job che non riesce ad ottenere la risorsa si accoda e lascia l’esecuzione nel processore ai job a priorità inferiore. Indichiamo con W_i l'insieme di job in attesa che J_i rilasci la risorsa globale. Permettendo migratory priority inheritance, ogni qual volta che J_i non è in esecuzione nonostante sia ready ed esiste un J_x \in W_i tale che J_x è tra i c job a priorità più alta nel suo cluster, j_i migra nel cluster di J_x e ne eredità la priorità, causando prerilascio al job con la priorità più bassa tra quelli in esecuzione. Dopo il rilascio della risorsa, se necessario, J_i migra al proprio cluster.
+L'idea alla base è quella di far migrare il job che detiene la risorsa ogni qual volta che viene prerilasciato scegliendo un cluster tra quelli in cui vi è un job in attesa e potenzialmente in esecuzione.
+Il protocollo utilizza una serie di accodamenti:
+- una coda ad ordinamento FIFO abbinata alla risorsa globale, essa ha lunghezza massima pari al numero di cluster del sistema ed il job in testa alla coda ha accesso alla risorsa;
+- una coda FIFO per ogni cluster per ogni risorsa di lunghezza limitata pari al numero di processori nel cluster; il job in testa alla coda viene inserito nella coda globale;
+- una coda a priorità è apposta a quella del punto precedente.
+Il funzionamento alla base prevede che una richiesta venga accodata nella coda FIFO del proprio processore e non appena raggiunge la testa passa alla coda globale. Nel caso in cui la prima coda sia piena, la richiesta viene accodata nella coda a priorità. Questo sistemi ad accodamenti preserva l'indipendenza dei job e limita il tempo di blocco, si veda [X] per la dimostrazione.
+
+
+MRSP
+
+Burns and A.J. Wellings in [] delineano delle caratteristiche che un protocollo di accesso a risorsa per sistemi multiprocessor dovrebbe avere. I meccanismi che combinano hanno come obiettivo quello di creare un protocollo che permetta l’utilizzo di tecniche di analisi di schedulabilita’ tipiche di sistemi singleprocessor nelle quali si rifletta la necessita’ di serializzare le richieste di accesso alla risorsa globale, le quali sono potenzialmente parallele.
+
+Il modello adottato e’ quello a task periodici approfondito in Sezione~\ref[]:
+n task  (τi ) caratterizzati da periodo Ti , deadline Di e WCET Ci che generano una sequenza potenzialmente infinita di job. Ad ogni task e’ abbinato un valore di priorita’ P ri(τi ). La piattaforma di esecuzione consiste in m processori identici ( p1 … pm).
+Una risorsa r e’ condivisa da un insieme di task. Essi devono accedere in mutua esclusione ed il codice corrispondente e’ definito sezione critica.
+Definiamo la funzione G(rj ), la quale ritorna l’insieme di task che utilizzano la risorsa rj, e F (τi ), per ottenere l’insieme di risorse utilizzate da τi . Per semplicita’ di esposizione, si assume che il tempo di esecuzione di una risorsa sia identico per ogni task ed e’ indicato da cj. Inoltre, la funziona map dato un insieme di task ritorna i processori in cui sono allocati.
+Infine, definiamo e_j come un parametro di tempo di esecuzione di r_j:
+ej = |map(G(rj ))|cj.
+Intuitivamente, e_j indica il tempo massimo richiesto da un job per ottenere ed eseguire una risorsa, il quale tiene conto dello smaltimento delle richieste gia’ in coda e l’esecuzione da parte del job stesso.
+
+L’approccio proposto e’ un’estensione di PCP/SRP atta a gestire gli accessi alla risorsa in un sistema partizionato con scheduler fixed priority. Ad ogni risorsa sono abbinati dei ceiling, uno per ogni processore, ed ogni valore e’ pari alla priorita’ massima tra i job che la richiedono e sono allocati nel medesimo processore. MrsP eredita le caratteristiche viste in []:
+- un job e’ bloccato al massimo una volta durante la sua esecuzione
+- tale blocco avviene prima dell’inizio dell’effettiva esecuzione
+- quando il job inizia ad eseguire, tutte le risorse di cui necessita sono libere o non sono in uso nel processore corrente
+- impedisce deadlock.
+Pertanto, il protocollo ha l’obiettivo di riutilizzare Response-Time Analysis (RTA) [1] incorporates PCP/SRP con equazione:
+
+Ri = C i + B i + τj ∈hp(i) Ri Cj
+
+nella quale B_i identifica il tempo di blocco subito dal job causato dalla condivisione di risorse tra job a priorita’ inferiore con job a priorita’ superiore dal quale eredita la priorita’.  C_i rappresenta il WCET piu’ le sezioni critiche corrispondenti alle risorse di cui necessita durante l’esecuzione: 
+
+	Ci = W CET i + r j ∈F(τi )
+and ni is the number of times τi uses rj .
+
+Il passaggio da un protocollo di acceso a risorsa da un sistema singleprocessor ad uno multiprocessor comporta una scelta tra limitare il tempo di interferenza agli altri job causato dalle richieste parallele ed un aumento nel tempo richiesto per accedere la risorsa. Di conseguenza si necessita di fare delle scelte algoritmiche che permettano di utilizzare le equazioni viste precedentemente aumentando il costo relativo all’accesso alle risorse. 
+
+MrsP incorpora la proprieta’ fondamentale di PCP/SPR, cioe’ che le risorse di un job quando inizia ad eseguire sono logicamente libere, ma l’esecuzione della risorsa non e’ pari ad una singola sezione critica c_j, bensi’ e_j.
+Le equanzioni risultano quindi le seguenti:
+
+_______________
+_______________
+
+Per ottenere questo, MrsP prevede che una volta che un job effettua una richiesta esso continui la propria esecuzione, cioe’ fino all’acquisizione della risorsa e la sua esecuzione, con priorita’ pari al ceiling della risorsa del processore corrispondente. Se al contrario si fosse scelto di far eseguire con priorita’ piu’ alta rispetto a tutti gli altri job, quindi ottenendo un comportamento pari all’inibizione di prerilscio, si causerebbe blocco ai job che non richiedono la risorsa. Situazione ancora peggiore se il job decidesse di sospendersi in caso di risorsa occupata, il job subirebbe ulteriori inversioni di priorita’, aumentando il tempo di blocco. Eseguendo al valore di ceiling di risorsa si limita il tempo di attesa ma il job puo’ ancora essere prerilasciato, di conseguenza il tempo di blocco e’ potenzialmente illimitato. Per ovviare a tale problema, in caso di prerilascio entrano in gioco meccanismi che permettano ai job in attesa di prendersi carico di portare a termine l’esecuzione della sezione critica per conto del suo possessore (Sezione~\ref[help])].
+Pertanto, MrsP dispone che un job effettui attesa attiva con priorita’ pari al ceiling locale se richiede una risorsa non disponibile e che la relativa richiesta venga accodata in una coda FIFO abbinata alla risorsa. Una volta ottenuta la risorsa esso continua ad eseguire con la priorita’ innalzata ed in caso di prerilascio il primo job della coda che sta effettuando attesa attiva (quindi non e’ stato prerilasciato a sua volta nel proprio processore) esegue la sezione critica per suo conto.
+
+Questi meccanismi rendono possibile affermare che:
+- al massimo un job per processore richiede la risorsa in un determinato istante
+- la lunghezza massima della coda FIFO di una risorsa r_k e’ pari a |map(G(rk ))|
+- ogni job subisce blocco solamente una volta e prima della sua effettiva esecuzione
+- il tempo di blocco subito e’ pari al massimo a e_j.
+
+Le proprieta’ elencate permettono di utillizzare le equazioni [1e2] per verificare la schedulabilita’ di un taskset utilizzando MrsP come protocollo di accesso a risorsa.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MPCP, DPCP, ECC
+MSRP poco sopra
+OMIP
+MRSP++
+
+- LITMUS
+
+cos'e'
+linux
+architettura litmusSchedulability Analysis Concepts
+domain (code ecc.)
+migrazioni
+
+- CONTRIBUTO
+
+- STRUTTURA
+
+
+1.4.5
+Spin-Based Locking Protocols PAG14 bbb
+
+DONE process symmetri, multicore-processors PAG23 bbb
+
+DONE Temporal Correctness (hard, soft, ecc) PAG45 bbb
+
+DONE Schedulability Analysis Concepts PAG52 bbb
+
+2.3.2 Partitioned Multiprocessor Real-Time Scheduling 64
+bin packing ed euristiche
+
+2.4 Real-Time Locking Protocols 101

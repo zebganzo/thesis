@@ -1,0 +1,166 @@
+\input{../figure/slides/problems.tex}
+\input{../figure/slides/mrsp_first_example.tex}
+\input{../figure/slides/spin_or_susp.tex}
+% \input{../figure/slides/model_job.tex}
+\input{../figure/slides/smp.tex}
+
+\section{MrsP}
+
+	\begin{frame}
+	\frametitle{MrsP}
+	\framesubtitle{Platform}	
+
+		\begin{figure}
+			\centering
+			\scalebox{.8}{\mrspSlideBis}
+			\caption{Partitioned Fixed-Priority scheduler on a platform with $m$ processors ($P_1$, \dots, $P_m$) and a global resource}
+		\end{figure}
+
+	\end{frame}
+
+% \begin{frame}
+
+% 	\frametitle{MrsP}
+% 	\framesubtitle{Sharing resource in multiprocessor systems - 1}
+
+% 	\begin{block}{Multiprocessor locking protocol}
+% 		The serialization of access on parallel contention must guarantee:\\
+% 		\begin{itemize}
+% 			\item [(a)] bounded \alert{waiting time} to acquire the resource;
+% 			\item [(b)] freedom from delaying repercussions for the jobs that don't require it (known as \alert{"independence preservation"}).
+% 		\end{itemize}
+% 	\end{block}
+
+% 	\vspace{0.3cm}
+
+% 	Furthermore \dots
+
+% 	\vspace{0.3cm}
+
+% 	\centerline{Unbounded waiting time $\rightarrow$ unbounded \alert{blocking time}}
+	
+% 	% An unbounded waiting time raises the \alert{blocking time} suffered by the jobs when a lower priority job will execute with an inherited ceiling priority equal or higher than its priority.\\
+
+% \end{frame}
+
+% \begin{frame}
+
+% 	\frametitle{MrsP}
+% 	\framesubtitle{Sharing resource in multiprocessor systems - 1}
+
+% 	\begin{figure}
+% 		\centering
+% 		\scalebox{1}{\waitingtime}
+% 	\end{figure}
+
+% 	\begin{itemize}
+% 		\item 2 processors and 3 tasks, $prio(J_i) > prio(J_y) \iff i > y$
+% 		\item $J_1$ and $J_2$ share a global resource
+% 		\item \textcolor{red}{(1)} $J_1$ remains preemptable
+% 		\item \textcolor{red}{(2)} $J_1$ inhibits preemption
+% 	\end{itemize}
+
+% \end{frame}
+
+
+% \begin{frame}
+
+% 	\frametitle{MrsP}
+% 	\framesubtitle{Sharing resource in multiprocessor systems - 2}
+
+% 	\begin{block}{\emph{Suspension-based} or \emph{spin-based} protocol}
+% 		A job, attempting to access a busy resource, will self-suspend ($J_2$) or will perform busy-wait ($J_3$)
+% 	\end{block}
+
+% 	\begin{figure}
+% 		\centering
+% 		\scalebox{0.9}{\SuspOrSpin}
+% 	\end{figure}
+
+% \end{frame}
+
+\begin{frame}
+	\frametitle{MrsP}
+	\framesubtitle{Multiprocessor resource sharing Protocol - 1}
+
+%\cite{Burns:2013:SCM:2547348.2547350}
+%\cite{Baker:1991:SSR:113595.113601}
+
+	Burns and Wellings design a multiprocessor extension of PCP/SRP with the aim of adapt a schedulability analysis to the protocol
+
+	%in \emph{"A Schedulability Compatible Multiprocessor Resource Sharing Protocol"}
+
+	\vspace{0.2cm}
+
+	\begin{block}{Response Time Analysis incorporating PCP/SRP}
+		The parameter \textcolor{red}{$e_j$} reflects the \textbf{contention} for the resource ($r$):
+
+		\vspace{0.2cm}
+		\centerline{$\textcolor{red}{e_j} = | map(G(r)) | \times \textcolor{blue}{c_j}$}
+		\vspace{0.2cm}
+		\centerline{$R_i = C_i + max \text{\{\textcolor{red}{$e_j$}},\hat{b}\} + \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j$}
+		\vspace{0.2cm}
+		\centerline{$C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \text{\textcolor{red}{$e_j$}}$}
+
+	\end{block}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{MrsP}
+	\framesubtitle{Multiprocessor resource sharing Protocol - 2}
+
+	\centerline{\MrsP{1.1}{1.1}}
+
+	\begingroup
+ 	  \fontsize{9pt}{8pt}\selectfont
+	\begin{block}{Protocol's properties}
+		\begin{itemize}
+			\item It inherits the properties of PCP/SRP
+			\item At most one job per processor requires the resource
+			\item The length of the requests queue is at most $| map(G(r_j)) |$
+			\item At most $e_j$ to gain the resource and to execute the critical section
+		\end{itemize}
+	\end{block}
+	\endgroup
+
+
+	% \begingroup
+ 	%   \fontsize{9pt}{8pt}\selectfont
+	% 	\begin{enumerate}
+	% 	\item access to global resources through local PCP/SRP;
+	% 	\item \emph{spin at local ceiling} (remaining preemptable);
+	% 	\item requests queued in a global FIFO;
+	% 	\item assuming availability of a helping mechanism.
+	% 	\end{enumerate}
+	% \endgroup
+
+\end{frame}
+
+% \begin{frame}
+% 	\frametitle{MrsP}
+% 	\framesubtitle{Multiprocessor resource sharing Protocol - 3}	
+
+% 	\begin{block}{Protocol's properties}
+% 		\begin{itemize}
+% 			\item it inherits the properties of PCP/SRP;
+% 			\item at most one job per processor requires the resource;
+% 			\item the length of the requests queue is at most $| map(G(r_j)) |$;
+% 			\item a job requires at most $e_j$ to gain the resource and to execute the critical section.
+% 		\end{itemize}
+% 	\end{block}
+
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{MrsP}
+% 	\framesubtitle{Runtime example}
+
+% 	\centerline{\MrsPProtocols}
+
+% 	\begin{itemize}
+% 	\item $t_1$: $J_1$'s priority is raised: it gains access to $r$
+% 	\item $t_2$: $J_3$'s priority is raised: it starts spinning
+% 	\item $t_3$: $J_2$ is released and $J_3$ "helps" $J_1$
+% 	\end{itemize}
+% \end{frame}

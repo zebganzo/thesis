@@ -1,0 +1,80 @@
+\newcommand{\smallqueue}[2]{%
+\draw[queuesty] (#1)node[right,xshift=.1cm,yshift=.-0.5cm]{\sffamily #2}-- ++(.2,.15)-- ++(.9,0)-- ++(0,-.3)-- ++(-.9,0)-- cycle;
+\draw[fill=green!80] (#1) ++ (.3,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$L_1$};
+\draw[fill=orange!80] (#1) ++ (.7,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$L_3$};}
+\newcommand{\bigqueue}[2]{%
+\draw[queuesty] (#1)node[right,xshift=.2cm]{\sffamily #2}-- ++(.3,.3)-- ++(.8,0)-- ++(0,-.6)-- ++(-.8,0)-- cycle;}
+
+\newcommand{\MrsP}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  cpusty/.style={fill=gray!40, draw, circle, minimum width=1cm},
+  srpsty/.style={fill=white, draw, circle, text width=.17cm, font=\tiny, very thick},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  arrow/.style={->,>=stealth},
+  littletextB/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  emptytask/.style={rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA/.style={fill=green!30, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB/.style={fill=orange!30!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskC/.style={fill=blue!30, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA_H/.style={fill=green!80, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB_H/.style={fill=orange!80!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskC_H/.style={fill=blue!80, draw, rectangle, minimum width=.7cm,font=\footnotesize}]
+
+\begin{scope}[xshift=4cm, yshift=3.3cm]
+\coordinate (SRP1node) at (0,0);
+\node[cpusty] (P1) at (2.5,0) {$P_1$};
+\node[taskA_H] (T1) at (1.3,.4) {$\tau_1$};
+\node[emptytask]  at (1.3,0) {$\cdots$};
+\node[taskA] (T2) at (1.3,-.4) {$\tau_2$};
+\draw[arrow] (T1.east) -- (P1.west);
+\draw[arrow] (T2.east) -- (P1.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]T1.north-|SRP1node) node[right,xshift=.3cm,littletext]{partition$_1$} rectangle ([shift={(.1,-.1)}]T2.south-|P1.east);
+\node[srpsty] (SRP1) at (SRP1node) {}; \node[font=\sffamily\tiny] at(SRP1node.east){SRP};
+\draw[arrow] (T1.west) to[out=180,in=0] ([yshift=.1cm]SRP1.east);
+\end{scope}
+
+\node[emptytask] at (5,2.2) {$\cdots$};
+
+\begin{scope}[xshift=4cm, yshift=1.1cm]
+\coordinate (SRP2node) at (0,0);
+\node[cpusty] (P2) at (2.5,0) {$P_2$};
+\node[taskB_H] (T3) at (1.3,.4) {$\tau_3$};
+\node[emptytask]  at (1.3,0) {$\cdots$};
+\node[taskB] (T4) at (1.3,-.4) {$\tau_4$};
+\draw[arrow] (T3.east) -- (P2.west);
+\draw[arrow] (T4.east) -- (P2.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]T3.north-|SRP2node) node[right,xshift=.3cm,littletext]{partition$_2$} rectangle ([shift={(.1,-.1)}]T4.south-|P2.east);
+\node[srpsty] (SRP2) at (SRP2node) {}; \node[font=\sffamily\tiny] at(SRP2node.east){SRP};
+\draw[arrow] (T3.west) to[out=180,in=0] ([yshift=.1cm]SRP2.east);
+\end{scope}
+\node[emptytask] at (5,0) {$\cdots$};
+
+\begin{scope}[xshift=4cm, yshift=-1.1cm]
+\coordinate (SRPmnode) at (0,0);
+\node[cpusty] (Pm) at (2.5,0) {\!$P_3$};
+\node[taskC] (Ty) at (1.3,.4) {$\tau_5$};
+\node[emptytask]  at (1.3,0) {$\cdots$};
+\node[taskC_H] (Tn) at (1.3,-.4) {$\tau_6$};
+\draw[arrow] (Ty.east) -- (Pm.west);
+\draw[arrow] (Tn.east) -- (Pm.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]Ty.north-|SRPmnode) node[right,xshift=.3cm,littletext]{partition$_3$} rectangle ([shift={(.1,-.1)}]Tn.south-|Pm.east);
+\node[srpsty] (SRPm) at (SRPmnode) {}; \node[font=\sffamily\tiny] at(SRPmnode.east){SRP};
+\draw[arrow] (Tn.west) to[out=180,in=0] ([yshift=-.1cm]SRPm.east);
+\end{scope}
+
+\begin{scope}
+\draw[ressty] (-1.5,1) rectangle +(1.5,.5) node[midway]{res$_k$};
+\smallqueue{-.2,1.25}{FIFO}
+\draw[|-|] (0, 1.75) -- ++(.9,0)node[midway,fill=white,font=\tiny]{$m$};
+\end{scope}
+
+\draw[arrow] (SRP1.west) to[out=180,in=0] (1.5,1.4);
+\draw[arrow] (SRP2.west)node[anchor=east,yshift=-.2cm,,font=\tiny\sffamily]{ \begin{tabular}{c} spinning at\\own ceiling\end{tabular}} to[out=180,in=0] (1.5,1.2);
+\draw[arrow] (SRPm.west)node[anchor=north east,yshift=.2cm,font=\tiny\sffamily]{ \begin{tabular}{c} spinning at\\own ceiling\end{tabular}} to[out=180,in=0] (1.5,1.0);
+
+\end{tikzpicture}}

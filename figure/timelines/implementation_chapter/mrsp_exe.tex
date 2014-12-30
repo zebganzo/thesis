@@ -1,0 +1,270 @@
+\newcommand{\mrspExe}{
+\begin{tikzpicture}[
+  xscale=1.5,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  waiting/.style={fill=white},
+  busywait/.style={fill=black!10,postaction={pattern=north east lines, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  unlock/.style={-*},
+  complet/.style={-|},
+  important/.style={color=red,thick,-,dashed},
+  every text node part/.style={align=center},
+  queuesty/.style={fill=white, font=\footnotesize},
+  queuestyRed/.style={fill=red!40, font=\footnotesize},
+  queuestyGreen/.style={fill=green!40, font=\footnotesize},
+  queuestyLockRunning/.style={fill=green!80, font=\footnotesize},
+  queuestyLockQueued/.style={fill=red!80, font=\footnotesize},
+  arrow/.style={->}
+]
+%general params
+\def\th{.5} %task height
+\def\tyFour{0} %task a asse y
+\def\tyThree{1.5}
+\def\tyTwo{3}
+\def\tyOne{4.5}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (0,6);
+
+\draw[important] (0.5,5.5) -- (0.5,-1.3) node[above,fill=white]{\footnotesize $t_1$};
+\draw[important] (1.5,5.5) -- (1.5,-1.3) node[above,fill=white]{\footnotesize $t_2$};
+\draw[important] (2.0,5.5) -- (2.0,-1.3) node[above,fill=white]{\footnotesize $t_3$};
+\draw[important] (3.5,5.5) -- (3.5,-1.3) node[above,fill=white]{\footnotesize $t_4$};
+\draw[important] (4.5,5.5) -- (4.5,-1.3) node[above,fill=white]{\footnotesize $t_5$};
+\draw[important] (5.0,5.5) -- (5.0,-1.3) node[above,fill=white]{\footnotesize $t_6$};
+\draw[important] (6.0,5.5) -- (6.0,-1.3) node[above,fill=white]{\footnotesize $t_7$};
+\draw[important] (6.6,5.5) -- (6.6,-1.3) node[above,fill=white]{\footnotesize $t_8$};
+\draw[important] (8.0,5.5) -- (8.0,-1.3) node[above,fill=white]{\footnotesize $t_9$};
+\draw[important] (9.0,5.5) -- (9.0,-1.3) node[above,fill=white]{\footnotesize $t_{10}$};
+\draw[important] (10.0,5.5) -- (10.0,-1.3) node[above,fill=white]{\footnotesize $t_{11}$};
+
+%tasklines
+\def\tasklinelength{(11.2,0)}
+\draw[very thin, gray] (-.3,\tyOne)node[above,left,black]{$P_1$} -- +\tasklinelength;
+\draw[very thin, gray] (-.3,\tyTwo)node[above,left,black]{$P_2$} -- +\tasklinelength;
+\draw[very thin, gray] (-.3,\tyThree)node[above,left,black]{$P_3$} -- +\tasklinelength;
+\draw[very thin, gray] (-.3,\tyFour)node[above,left,black]{$P_4$} -- +\tasklinelength;
+
+%axes
+\draw[thick, black, -] (-.2,-1) -- (-.2, 5.3);
+\draw[thick, black, ->] (-0.5,-.5) -- (11.5, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,9}\draw[thin, black] (\x, -.6) -- (\x, -.4);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Processor 1 ==> \tyOne
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\draw[release]  (0.0, \tyOne) -- +(0,.8)            node[above]  {{\footnotesize $J_2$}};
+\draw[normal]   (0.0, \tyOne) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[request]  (0.5, \tyOne) -- +(0,.8);
+\fill[busywait] (0.5, \tyOne) rectangle +(1, \th)   node[midway] {{\footnotesize $J_2$}};
+\draw[release]  (1.3, \tyOne) -- +(0,.8)            node[above]  {{\footnotesize $J_1$}};
+\draw[resource] (1.5, \tyOne) rectangle +(0.5, \th)   node[color=white,midway] {{\footnotesize  $J_2$}};
+
+\draw[release]  (2.0, \tyOne) -- +(0,.8)            node[above]   {{\footnotesize $J_3$}};
+\draw[normal]   (2.0, \tyOne) rectangle +(0.75, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[complet]  (2.75, \tyOne) -- +(0,.8);
+
+\draw[normal]   (3.5, \tyOne) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[complet]  (4.0, \tyOne) -- +(0,.8);
+
+\draw[normal]   (4.0, \tyOne) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[complet]  (5.0, \tyOne) -- +(0,.8);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Processor 2 ==> \tyTwo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\draw[release]  (0.0, \tyTwo) -- +(0,.8)            node[above]  {{\footnotesize $J_4$}};
+\draw[normal]   (0.0, \tyTwo) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_4$}};
+\draw[request]  (0.5, \tyTwo) -- +(0,.8);
+\fill[busywait] (0.5, \tyTwo) rectangle +(1.5, \th)   node[midway] {{\footnotesize $J_4$}};
+\draw[release]  (2.0, \tyTwo) -- +(0,.8)            node[above]  {{\footnotesize $J_5$}};
+
+\draw[resource] (2.0, \tyTwo) rectangle +(1.5, \th)   node[color=white,midway] {{\footnotesize  $J_2$}};
+\draw[unlock]   (3.5, \tyTwo) -- +(0,.8);
+
+\draw[resource] (3.5, \tyTwo) rectangle +(1.0, \th)   node[color=white,midway] {{\footnotesize  $J_4$}};
+\draw[unlock]   (4.5, \tyTwo) -- +(0,.8);
+
+\draw[normal]   (4.5, \tyTwo) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_5$}};
+\draw[request]  (5.0, \tyTwo) -- +(0,.8);
+
+\draw[resource] (5.0, \tyTwo) rectangle +(1.0, \th)   node[color=white,midway] {{\footnotesize  $J_7$}}; %%%%%%%%%%%%%% migrazione
+
+\draw[release]  (6.0, \tyTwo) -- +(0,.8)            node[above]  {{\footnotesize $J_6$}};
+\draw[normal]   (6.0, \tyTwo) rectangle +(1.0, \th) node[midway] {{\footnotesize $J_6$}};
+\draw[complet]  (7.0, \tyTwo) -- +(0,.8);
+
+\fill[busywait] (7.0, \tyTwo) rectangle +(1, \th)   node[midway] {{\footnotesize $J_5$}};
+\draw[resource] (8.0, \tyTwo) rectangle +(1, \th)   node[color=white,midway] {{\footnotesize  $J_5$}};
+\draw[unlock]   (9.0, \tyTwo) -- +(0,.8);
+\draw[normal]   (9.0, \tyTwo) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_5$}};
+\draw[complet]  (9.5, \tyTwo) -- +(0,.8);
+\draw[normal]   (9.5, \tyTwo) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_4$}};
+\draw[complet]  (10,  \tyTwo) -- +(0,.8);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Processor 3 ==> \tyThree
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\fill[busywait] (0.5, \tyTwo) rectangle +(1.5, \th)   node[midway] {{\footnotesize $J_4$}};
+
+\draw[release]  (1.0, \tyThree) -- +(0,.8)            node[above]  {{\footnotesize $J_7$}};
+\draw[normal]   (1.0, \tyThree) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_7$}};
+\draw[request]  (1.5, \tyThree) -- +(0,.8);
+\fill[busywait] (1.5, \tyThree) rectangle +(3.0, \th)   node[midway] {{\footnotesize $J_7$}};
+
+\draw[release]  (4.5, \tyThree) -- +(0,.8)            node[above]  {{\footnotesize $J_8$}};
+\draw[normal]   (4.5, \tyThree) rectangle +(3.0, \th) node[midway] {{\footnotesize $J_8$}};
+\draw[complet]  (7.5, \tyThree) -- +(0,.8);
+
+\draw[normal]   (8.0, \tyThree) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_7$}};
+\draw[complet]  (8.5, \tyThree) -- +(0,.8);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Processor 4 ==> \tyFour
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\draw[release]  (0.0, \tyFour) -- +(0,.8)            node[above]  {{\footnotesize $J_9$}};
+\draw[normal]   (0.0, \tyFour) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_9$}};
+\draw[request]  (0.5, \tyFour) -- +(0,.8);
+\draw[resource] (0.5, \tyFour) rectangle +(1, \th)   node[color=white,midway] {{\footnotesize  $J_9$}};
+\draw[unlock]   (1.5, \tyFour) -- +(0,.8);
+\draw[normal]   (1.5, \tyFour) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_9$}};
+\draw[complet]  (2.0, \tyFour) -- +(0,.8);
+
+\draw[release]  (4.5, \tyFour) -- +(0,.8)            node[above]  {{\footnotesize $J_9$}};
+\draw[normal]   (4.5, \tyFour) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_9$}};
+\draw[request]  (5.0, \tyFour) -- +(0,.8);
+\fill[busywait] (5.0, \tyFour) rectangle +(1.0, \th)   node[midway] {{\footnotesize $J_9$}};
+
+\draw[release]  (6.0, \tyFour) -- +(0,.8)            node[above]  {{\footnotesize $J_{10}$}};
+\draw[normal]   (6.0, \tyFour) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_{10}$}};
+\draw[complet]  (6.5, \tyFour) -- +(0,.8);
+
+\fill[busywait] (6.5, \tyFour) rectangle +(0.1, \th);
+
+\draw[resource] (6.6, \tyFour) rectangle +(1.4, \th)   node[color=white,midway] {{\footnotesize  $J_7$}};
+\draw[unlock]   (8.0, \tyFour) -- +(0,.8);
+
+\fill[busywait] (8.0, \tyFour) rectangle +(1.0, \th)   node[midway] {{\footnotesize $J_9$}};
+\draw[resource] (9.0, \tyFour) rectangle +(1, \th)   node[color=white,midway] {{\footnotesize  $J_9$}};
+\draw[unlock]   (10.0, \tyFour) -- +(0,.8);
+\draw[normal]   (10.0, \tyFour) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_9$}};
+\draw[complet]  (10.5, \tyFour) -- +(0,.8);
+
+\draw[normal]   ($(   0,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize executing} rectangle +\blockdim;
+\draw[resource] ($(1.75,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize resource} rectangle +\blockdim;
+\fill[busywait] ($( 3.5,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize busy wait} rectangle +\blockdim;
+\draw[release]  ($(5.25,0.5) + (legend)$) node[below]{\scriptsize job release}      -- +\arrowdim;
+\draw[complet]  ($(   7,0.5) + (legend)$) node[below]{\scriptsize completion}   -- +\arrowdim;
+\draw[request]  ($(8.75,0.5) + (legend)$) node[below]{\scriptsize request}     -- +\arrowdim;
+\draw[unlock]   ($(  10.5,0.5) + (legend)$) node[below]{\scriptsize resource release}     -- +\arrowdim;
+
+
+% \draw[important] (0.5,5.5) -- (0.5,-1.3) node[above,fill=white]{\footnotesize $t_1$};
+% t_1: J_9, J_2 e J_2 richiedono la risorsa
+\begin{scope}[shift={(0.5,-2)}]
+  \draw[queuestyLockRunning] (-0.3,0)    node[right,yshift=0.3cm]{$J_9$  $P_4$} rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_2$  $P_1$}  rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-1.2) node[right,yshift=0.3cm]{$J_4$  $P_2$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (1.5,5.5) -- (1.5,-1.3) node[above,fill=white]{\footnotesize $t_2$};
+% t_2: j_9 rilascia, j_2 entra in possesso e j_7 richiede
+\begin{scope}[shift={(1.25,-2)}]
+  \draw[queuestyLockRunning] (-0.3,0)    node[right,yshift=0.3cm]{$J_2$  $P_1$} rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_4$  $P_2$}  rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-1.2) node[right,yshift=0.3cm]{$J_7$  $P_3$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (2.0,5.5) -- (2.0,-1.3) node[above,fill=white]{\footnotesize $t_3$};
+% t_3: j_2 prerilasciato e migra in P_2
+\begin{scope}[shift={(2.0,-2)}]
+  \draw[queuestyRed] (-0.3,0)    node[right,yshift=0.3cm,xshift=0.2cm]{$P_1$} rectangle +(0.6,0.6);
+  \draw[queuestyLockRunning] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_2$  $P_2$}  rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-1.2) node[right,yshift=0.3cm]{$J_7$  $P_3$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (3.5,5.5) -- (3.5,-1.3) node[above,fill=white]{\footnotesize $t_4$};
+% t_4: j_2 rilascia la risorsa e migra in P_1, J_4 acquisisce la risorsa (lock holder accodato ma a causa mia)
+\begin{scope}[shift={(3.5,-2)}]
+  \draw[queuestyLockRunning] (-0.3,0)    node[right,yshift=0.3cm]{$J_4$  $P_2$} rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_7$  $P_3$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (4.5,5.5) -- (4.5,-1.3) node[above,fill=white]{\footnotesize $t_5$};
+% t_5: j_4 rilascia la risorsa, J_7 e' il prossimo lock holder ma e' prerilasciato e non vi e' nessun processore in cui migrare
+% KEEP RUN!!
+\begin{scope}[shift={(4.25,-2)}]
+  \draw[queuestyLockQueued] (-0.3,0)    node[right,yshift=0.3cm]{$J_7$  $P_3$} rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (5.0,5.5) -- (5.0,-1.3) node[above,fill=white]{\footnotesize $t_6$};
+% t_6: j_5 e j_9 richiedono la risorsa, j_5 cede l'esecuzione a J_7 che e' accodato 
+\begin{scope}[shift={(5.0,-2)}]
+  \draw[queuestyRed] (-0.3,0)    node[right,yshift=0.3cm,xshift=0.2cm]{$P_3$} rectangle +(0.6,0.6);
+  \draw[queuestyLockRunning] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_7$  $P_2$}  rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-1.2) node[right,yshift=0.3cm]{$J_9$  $P_4$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (6.0,5.5) -- (6.0,-1.3) node[above,fill=white]{\footnotesize $t_7$};
+% t_7: j_7 (Lock) e j_9 sono prerilasciati e non vi e' nessun processore disponibile per la migrazione
+\begin{scope}[shift={(5.85,-2)}]
+  \draw[queuestyRed] (-0.3,0)    node[right,yshift=0.3cm,xshift=0.2cm]{$P_3$} rectangle +(0.6,0.6);
+  \draw[queuestyLockQueued] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_7$  $P_2$}  rectangle +(0.6,0.6);
+  \draw[queuestyRed] (-0.3,-1.2) node[right,yshift=0.3cm,xshift=0.2cm]{$P_4$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (6.6,5.5) -- (6.6,-1.3) node[above,fill=white]{\footnotesize $t_8$};
+% t_8: la schedule in P_4 porta in esecuzione j_9, ma la context switch si accorge che j_7 e' accodato, quindi gli cede il processore
+% (poco dopo j_5 torna in esecuzione ma il lock holder sta eseguendo!) <------------------
+\begin{scope}[shift={(6.6,-2)}]
+  \draw[queuestyRed] (-0.3,0)    node[right,yshift=0.3cm,xshift=0.2cm]{$P_3$} rectangle +(0.6,0.6);
+  \draw[queuestyRed] (-0.3,-0.6) node[right,yshift=0.3cm,xshift=0.2cm]{$P_2$}  rectangle +(0.6,0.6);
+  \draw[queuestyLockRunning] (-0.3,-1.2) node[right,yshift=0.3cm]{$J_7$  $P_4$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (8.0,5.5) -- (8.0,-1.3) node[above,fill=white]{\footnotesize $t_9$};
+% t_9: J_7 rilascia la risorsa, ne entra in possesso j_5, j_9 torna ad eseguire e busy wait
+\begin{scope}[shift={(8.0,-2)}]
+  \draw[queuestyLockRunning] (-0.3,0)    node[right,yshift=0.3cm]{$J_5$  $P_2$} rectangle +(0.6,0.6);
+  \draw[queuestyGreen] (-0.3,-0.6) node[right,yshift=0.3cm]{$J_9$  $P_4$}  rectangle +(0.6,0.6);
+\end{scope}
+
+% \draw[important] (9.0,5.5) -- (9.0,-1.3) node[above,fill=white]{\footnotesize $t_{10}$};
+% t_10: J_5 rilascia la risorsa, ne entra in possesso j_9
+\begin{scope}[shift={(9.0,-2)}]
+  \draw[queuestyLockRunning] (-0.3,0)    node[right,yshift=0.3cm]{$J_9$  $P_4$} rectangle +(0.6,0.6);
+\end{scope}
+
+\draw[queuestyLockRunning]  (1,-4.5)    node[right,yshift=0.3cm]{$J_x$  $P_y$}        rectangle +(0.6,0.6) 
+node[right,yshift=-0.3cm,xshift=0.4cm]{Lock holder ($J_x$) is running in $P_y$.};
+
+\draw[queuestyLockQueued]   (1,-5.5)    node[right,yshift=0.3cm]{$J_x$  $P_y$}        rectangle +(0.6,0.6)
+node[right,yshift=-0.3cm,xshift=0.4cm]{Lock holder ($J_x$) is queued in $P_y$.};
+
+\draw[queuestyGreen]        (6,-4.5)    node[right,yshift=0.3cm]{$J_x$  $P_y$}        rectangle +(0.6,0.6)
+node[right,yshift=-0.3cm,xshift=0.4cm]{$J_x$ is busy waiting in $P_y$.};
+
+\draw[queuestyRed]          (6,-5.5)    node[right,yshift=0.3cm,xshift=0.2cm]{$P_y$}  rectangle +(0.6,0.6)
+node[right,yshift=-0.3cm,xshift=0.4cm]{$P_y$ is not available for migration.};
+
+% \draw[normal]   ($(   0,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize executing} rectangle +\blockdim;
+% \draw[resource] ($(1.75,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize resource} rectangle +\blockdim;
+% \fill[busywait] ($( 3.5,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize busy wait} rectangle +\blockdim;
+% \draw[release]  ($(5.25,0.5) + (legend)$) node[below]{\scriptsize job release}      -- +\arrowdim;
+% \draw[complet]  ($(   7,0.5) + (legend)$) node[below]{\scriptsize completion}   -- +\arrowdim;
+% \draw[request]  ($(8.75,0.5) + (legend)$) node[below]{\scriptsize request}     -- +\arrowdim;
+% \draw[unlock]   ($(  10.5,0.5) + (legend)$) node[below]{\scriptsize resource release}     -- +\arrowdim;
+
+
+% \draw[important] (10.0,5.5) -- (10.0,-1.3) node[above,fill=white]{\footnotesize $t_{11}$};
+% t_11: J_9 rilascia la risorsa
+
+\end{tikzpicture}
+}

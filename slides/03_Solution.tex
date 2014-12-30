@@ -1,0 +1,23 @@
+\section{Proposed solution}
+
+\begin{frame}
+
+	\frametitle{Proposed solution}
+	\framesubtitle{Algorithm}
+
+	\begin{enumerate}
+		\item [1)] Each resource has a set of ceilings, one for each processor
+		\item [2)] An access request causes the rise of the job's priority and activates a local ceiling
+		\item [3)] The requests are queued and served in arrival order
+		\item [4)] A job executes, until resource's release, at the inherited priority
+		\item [5)] If preempted, the lock holder migrates to the first processor available
+	\end{enumerate}
+
+	\begin{alertblock}{Key features}
+		\begin{itemize}
+			\item Points \textcolor{blue}{2} and \textcolor{blue}{4} make MrsP \alert{independence-preserving}
+			\item Point \textcolor{blue}{5} guarantees a \alert{limited waiting and blocking time}
+		\end{itemize}
+	\end{alertblock}
+
+\end{frame}

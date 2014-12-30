@@ -1,0 +1,191 @@
+\documentclass{beamer}
+%\documentclass[tikz,border=10pt]{standalone}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usetikzlibrary{arrows, patterns, calc, decorations.pathreplacing, shapes}
+\usefonttheme[onlymath]{serif}
+
+\usetheme[secheader]{Boadilla}
+\usecolortheme{beaver}
+
+
+\input{figures.tex}
+
+\begin{document}
+
+\begin{frame}
+\frametitle{blocking}
+\begin{block}{uniprocessor blocking}
+When a task of lower base-priority is executing instead of a higher priority one.
+\end{block}
+How blocking impacts schedulability?
+\begin{itemize}
+  \item s-oblivious: blocking counts as execution. Safe but unnecessarily pessimistic. Most schedulability test can use this technique. Example:
+  \[\sum_{\tau_i} \frac{\textcolor{red}{e_i + B_i}}{p_i} \leq 1\]
+  \item s-aware: blocking does not count as execution. Safe and tight. Few schedulability test can use this technique.  Example:
+  \[\textcolor{red}{B_j +} \sum_{\tau_i} \frac{e_i}{p_i} \leq 1 \qquad \forall\tau_j\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{blocking in multiprocessor}
+
+uniprocessor blocking $\neq$ multiprocessor blocking
+\begin{itemize}
+\item processors \emph{can idle}
+\item access to resources is \emph{parallel}
+\end{itemize}
+What to do while waiting for a locked resource?
+  \begin{itemize}
+  \item suspend: let other tasks execute
+  \item spin: waiting and holding cpu
+  \end{itemize}
+Not obvious which is best in multiprocessor
+\begin{itemize}
+  \item changing priority or suspending blocked tasks \emph{does not speed up} the release of resources (priorities \emph{might not} have the same meaning across processors)
+  \item spinning \emph{does waste} cpu without letting any task progress
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMLP}
+\emph{$\mathcal{O}(m)$ Locking Protocol}
+\begin{itemize}
+\item suspension-based protocol for global and partitioned algorithms
+\item using queues to achieve optimal $\mathcal{O}(m)$ blocking
+  \begin{itemize}
+  \item FIFO queue: serializing access to shared resource, preventing starvation
+  \item PRIO queue: speeding up higher priority tasks (lower prio tasks are not blocked if higher prio tasks are suspended)
+  \end{itemize}
+\item blocking term usable inside s-oblivious schedulability test
+\item nested resources only with group locks
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMLP - global}
+%\OMLPglob{1.4}{1}{1}
+\centerline{\OMLPglob{1.2}{1.2}}
+\begin{itemize}
+\item blocking suffered only by tasks using resources
+\item per-request blocking is $b_k=2(m-1)\omega_k$, $\omega_k$ length of max critical section for res$_k$
+\item all resources are global resources
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMLP - partitioned}
+%\OMLPpart{1.4}{1}{1}
+\centerline{\OMLPpart{1.2}{1.2}}
+\begin{itemize}
+\item limiting access to global resources: per-partition \emph{contention token}. Must be acquired before requesting \emph{any} global resource (token + PRIO queue shared for all global resources)
+\item releasing resources as soon as possible: \emph{priority boosting} for tasks queued in global resources (at most 1 per partition)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMLP - partitioned}
+\begin{itemize}
+\item three kinds of blocking:
+  \begin{enumerate}
+  \item $b^{prio}$: caused by priority boosting (\textcolor{red}{\textbf{any} task}) \[b^{prio}=\textcolor{red}{\max_k}\{\omega_k\}\]
+  \item $b_k^{fifo}$: caused by waiting in FIFO queue (only if using res$_k$) \[b_k^{fifo}=(m-1)\omega_k\]
+  \item $b^{trans}$: caused by the contention token (if using any global res) \[b^{trans}=(m-1)\textcolor{red}{\max_k}\{\omega_k\}\]
+  \end{enumerate}
+\item tasks suffer (extensively) from unrelated critical sections
+\item some resources can be local (using ICPP/SRP)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMIP}
+\emph{$\mathcal{O}(m)$ Independence-preservation Protocol}
+\begin{itemize}
+\item for clustered algorithms
+\item suspension-based protocol
+\item generalizes OMLP-glob and OMLP-part (as clustered for global and partitioned schedulers)
+\item avoids shortcomings from OMLP-part by requiring \emph{intra-cluster migration}
+  \begin{itemize}
+  \item theorem: intra-cluster migrations are necessary to not suffer from unrelated critical sections
+  \end{itemize}
+\item blocking term usable inside s-oblivious schedulability tests
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMIP}
+%\OMIP{1.2}{1}{1}
+\centerline{\OMIP{1.2}{1.2}}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMIP}
+\begin{itemize}
+\item head of per-cluster FIFO queue participates in global FIFO queue
+\item each global resource has a private per-cluster FIFO+PRIO queues
+\item head of global FIFO queue can migrate and inherit priority of other tasks queued in global FIFO queue
+%\centerline{\includegraphics[width=7cm]{OMIPruntime.png}}
+\item per-request blocking $b_k$ (only if using res$_k$) \[b_k = (2m-1)\omega_k\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{OMIP - runtime example}
+\centerline{\chartLegend{.6}{.6}}
+\centerline{\MigrationOMIP{.6}{.6}}
+\begin{itemize}
+\item $t=3$: task $\tau_2$ suspends and task $\tau_1$ resumes execution
+\item $t=4$: task $\tau_3$ migrates to $\text{cluster}_1$ and preempts task $\tau_1$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{MrsP}
+\emph{Multiprocessor resource sharing Protocol}
+\begin{itemize}
+\item for partitioned algorithms
+\item spinning-based protocol
+\item generalizes uniprocessor RTA
+\item assumes availability of helping mechanism
+  \begin{itemize}
+  \item \emph{task migration approach}: task migrates and executes in place of the ``helper''
+  \item \emph{duplicated execution approach}: assuming resources have internal status and their use does not produce side effects
+  \end{itemize}
+\item nesting by:
+  \begin{itemize}
+  \item using resources always in the same order (avoid circular wait) and ad-hoc analysis
+  \item group locks
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{MrsP}
+%\MrsP{1.5}{1.1}{1.1}
+\centerline{\MrsP{1.5}{1.5}}
+\end{frame}
+
+\begin{frame}
+\frametitle{MrsP}
+\begin{itemize}
+\item worst-case resource usage must consider parallelism \[\hat{\omega}_k=m\omega_k \Rightarrow \hat{e_i}=e_i+\sum_{\text{res}_k\in\tau_i}(m-1)\omega_k\]
+\item access to global resources through local SRP
+\item waiting for locked global resources by \emph{spinning at local ceiling} (remaining preemptable)
+\item head of global FIFO queue, if preempted, executes in place of other queued spinning tasks
+\item per-partition RTA equation
+\[R_i = \hat{e}_i + \textcolor{red}{B_i +} \sum_{hp(\tau_i)}\left\lceil\frac{R_i}{p_j}\right\rceil\hat{e}_j,\]
+\[B_i = \text{uniprocessor SRP-like blocking term using }\hat{\omega}_k\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{MrsP - runtime example}
+\centerline{\chartLegend{.6}{.6}}
+\centerline{\MigrationMrsP{.6}{.6}}
+\begin{itemize}
+\item $t=3$: task $\tau_2$ start spinning at ceiling priority
+\item $t=4$: task $\tau_3$ migrates to $P_1$ and executes in place of $\tau_2$ 
+\end{itemize}
+\end{frame}
+
+\end{document}

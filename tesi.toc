@@ -1,0 +1,96 @@
+\select@language {italian}
+\contentsline {chapter}{\numberline {1}Introduzione}{13}{chapter.1}
+\contentsline {section}{\numberline {1.1}Contributo}{14}{section.1.1}
+\contentsline {section}{\numberline {1.2}Struttura}{14}{section.1.2}
+\contentsline {section}{\numberline {1.3}Introduzione ai Sistemi Real-Time}{14}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Workload}{15}{subsection.1.3.1}
+\contentsline {paragraph}{Tasks.}{15}{section*.1}
+\contentsline {paragraph}{Jobs.}{15}{section*.2}
+\contentsline {paragraph}{Deadline.}{16}{section*.3}
+\contentsline {paragraph}{Processor demand.}{16}{section*.5}
+\contentsline {paragraph}{Vincoli temporali.}{17}{section*.6}
+\contentsline {subsection}{\numberline {1.3.2}Le risorse}{17}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}Scheduler}{18}{subsection.1.3.3}
+\contentsline {section}{\numberline {1.4}Real-time scheduling in sistemi multiprocessor}{19}{section.1.4}
+\contentsline {section}{\numberline {1.5}Real-Time Locking Protocols}{20}{section.1.5}
+\contentsline {section}{\numberline {1.6}Single processor Protocols}{23}{section.1.6}
+\contentsline {paragraph}{Non-preemptive critical section protocol (NPC).}{23}{section*.9}
+\contentsline {paragraph}{Priority inheritance protocol (PIP).}{23}{section*.11}
+\contentsline {paragraph}{Priority-ceiling protocol (PCP).}{24}{section*.13}
+\contentsline {paragraph}{Stack resource policy (SRP).}{24}{section*.15}
+\contentsline {section}{\numberline {1.7}Multiprocessor Locking Protocols}{25}{section.1.7}
+\contentsline {subsection}{\numberline {1.7.1}DPCP e MPCP}{26}{subsection.1.7.1}
+\contentsline {paragraph}{Distributed priority-ceiling protocol (DPCP).}{26}{section*.17}
+\contentsline {paragraph}{Multiprocessor priority-ceiling protocol (MPCP).}{27}{section*.18}
+\contentsline {subsection}{\numberline {1.7.2}MSRP}{27}{subsection.1.7.2}
+\contentsline {subsection}{\numberline {1.7.3}FMLP}{28}{subsection.1.7.3}
+\contentsline {subsection}{\numberline {1.7.4}Helping protocol}{29}{subsection.1.7.4}
+\contentsline {paragraph}{SPEEP.}{29}{section*.20}
+\contentsline {paragraph}{M-BWI.}{29}{section*.21}
+\contentsline {section}{\numberline {1.8}$O(m)$ Independence-preserving Protocol}{30}{section.1.8}
+\contentsline {section}{\numberline {1.9}Multiprocessor Resource Sharing Protocol}{31}{section.1.9}
+\contentsline {section}{\numberline {1.10}Ambiente LITMUS\textsuperscript {RT}}{35}{section.1.10}
+\contentsline {subsection}{\numberline {1.10.1}Lo scheduler Linux}{36}{subsection.1.10.1}
+\contentsline {subsection}{\numberline {1.10.2}Panoramica dell'architettura}{37}{subsection.1.10.2}
+\contentsline {subsection}{\numberline {1.10.3}Astrazione del dominio real-time}{38}{subsection.1.10.3}
+\contentsline {chapter}{\numberline {2}Implementazione proposta}{41}{chapter.2}
+\contentsline {section}{\numberline {2.1}Problematiche di progettazione}{42}{section.2.1}
+\contentsline {paragraph}{Limitato tempo di attesa.}{43}{section*.26}
+\contentsline {paragraph}{Independence-preserving.}{43}{section*.27}
+\contentsline {section}{\numberline {2.2}Strutture dati}{44}{section.2.2}
+\contentsline {paragraph}{\texttt {pfp\_domain}.}{44}{section*.28}
+\contentsline {paragraph}{\texttt {mrsp\_state}.}{44}{section*.29}
+\contentsline {paragraph}{\texttt {mrsp\_semaphore}.}{45}{section*.30}
+\contentsline {paragraph}{\texttt {task\_struct} e \texttt {rt\_task}.}{46}{section*.31}
+\contentsline {paragraph}{\texttt {sched\_plugin}.}{46}{section*.32}
+\contentsline {section}{\numberline {2.3}Algoritmo e implementazione}{46}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Inizializzazione}{48}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}Gestione della coda}{48}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Richiesta di accesso}{50}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}Rilascio della risorsa}{53}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.5}Scheduling}{55}{subsection.2.3.5}
+\contentsline {paragraph}{Lock holder prerilasciato.}{56}{section*.38}
+\contentsline {paragraph}{Placeholder.}{56}{section*.39}
+\contentsline {subsection}{\numberline {2.3.6}Context switch}{60}{subsection.2.3.6}
+\contentsline {paragraph}{MIGRATION.}{60}{section*.41}
+\contentsline {paragraph}{Meccanismo di base.}{61}{section*.42}
+\contentsline {paragraph}{Job resume.}{61}{section*.43}
+\contentsline {subsection}{\numberline {2.3.7}Esempio di esecuzione}{63}{subsection.2.3.7}
+\contentsline {chapter}{\numberline {3}Esperimenti e valutazioni}{67}{chapter.3}
+\contentsline {section}{\numberline {3.1}Ambiente di esecuzione}{68}{section.3.1}
+\contentsline {paragraph}{Sandy Bridge}{68}{section*.45}
+\contentsline {subsection}{\numberline {3.1.1}Generazione ed esecuzione degli esperimenti}{69}{subsection.3.1.1}
+\contentsline {section}{\numberline {3.2}Confronto tra protocolli}{70}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Esperimento \#1}{70}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Configurazione}{71}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Obiettivo}{72}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Risultati esperimento \#1}{73}{subsection.3.2.4}
+\contentsline {subsection}{\numberline {3.2.5}Considerazioni}{77}{subsection.3.2.5}
+\contentsline {section}{\numberline {3.3}Calcolo degli overhead}{80}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Esperimento \#2}{80}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Configurazione}{80}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Obiettivo}{81}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.4}Risultati esperimento \#2}{82}{subsection.3.3.4}
+\contentsline {paragraph}{Lock}{83}{section*.63}
+\contentsline {paragraph}{Relsease}{86}{section*.65}
+\contentsline {paragraph}{Finish-switch}{88}{section*.67}
+\contentsline {subsection}{\numberline {3.3.5}Considerazioni}{89}{subsection.3.3.5}
+\contentsline {section}{\numberline {3.4}Impatto in assenza di risorsa globale}{91}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Esperimento \#3}{91}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Configurazione}{91}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Obiettivo}{92}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}Risultati esperimento \#3}{92}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.5}Considerazioni}{94}{subsection.3.4.5}
+\contentsline {chapter}{\numberline {4}Conclusioni}{97}{chapter.4}
+\contentsline {section}{\numberline {4.1}Sviluppi futuri}{98}{section.4.1}
+\contentsline {paragraph}{Limitazione delle migrazioni}{98}{section*.74}
+\contentsline {paragraph}{Confronto con OMIP}{99}{section*.75}
+\contentsline {paragraph}{Risorse innestate}{99}{section*.76}
+\contentsline {chapter}{Appendices}{101}{section*.77}
+\contentsline {chapter}{\numberline {A}LITMUS\textsuperscript {RT}}{103}{Appendice.1.A}
+\contentsline {chapter}{\numberline {B}Librerie user-space}{107}{Appendice.1.B}
+\contentsline {chapter}{\numberline {C}\texttt {TRACE()} e \textit {Feather-Trace}}{111}{Appendice.1.C}
+\contentsline {section}{\numberline {C.1}\texttt {TRACE()}}{111}{section.1.C.1}
+\contentsline {section}{\numberline {C.2}\textit {Feather-Trace}}{111}{section.1.C.2}
+\contentsline {chapter}{\numberline {D}\textit {experiment-scripts}}{113}{Appendice.1.D}
+\contentsline {chapter}{Bibliography}{116}{lstnumber.-11.12}

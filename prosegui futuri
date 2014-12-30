@@ -1,0 +1,42 @@
+prosegui futuri
+VEDERE CORREZIONE TULLIO. "QUESTO ANDREBBE STUDIATO CON UN ESPERIMENTO APPOSITO!"
+
+
+
+
+
+
+\usepackage[ruled,linesnumbered,algo2e]{algorithm2e}
+
+
+
+\begin{algorithm2e}
+   \caption{Training set construction\label{alg:training-construction-2}}
+   \SetKwComment{tcp}{$\triangleright\ $}
+\DontPrintSemicolon
+\KwIn{$L$: event log, $\textit{TS}$: transition system, $f^{\textit{state}}$: state representation function}
+\KwOut{$\textit{Tr}$: training set}
+\DontPrintSemicolon
+\BlankLine
+$\textit{Tr} \gets \varnothing$ \;
+   \ForEach{$\sigma \in L$} {
+\For{$k  \gets 1\ \mbox{\bf to}\ |\sigma|$} { 
+$s \gets f^\textit{state}(\sigma^k)$ \; \label{alg-line:state}
+$\vec{x} \gets \mathds{1}(s)$ \tcp*[r]{one-hot encoding for the state} \label{alg-line:vec}
+   	 \For{$i \gets 1\ \mbox{\bf to}\ |\mathcal{D}|$} {
+   	 $v = \textit{last}(\sigma^k, i)$\;
+   	 \eIf{$v \in \mathbb{R}$} {
+   	 $\vec{x} \gets \vec{x} \: || \: v$\;
+   	 } {
+   	 $\vec{x} \gets \vec{x} \: || \: \mathds{1}(v)$\; 
+   	 }
+   	 }
+   	 $y = \textit{rem}(\sigma, k)$\;
+   	 $\textit{Tr} \gets \textit{Tr} \cup (\vec{x}, y)$\;
+   	}
+   }
+\BlankLine
+   \KwRet{TS}
+\end{algorithm2e}
+devi aggiungere il package algorithm2e
+

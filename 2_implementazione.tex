@@ -1,0 +1,628 @@
+\input{figure/struct_system.tex}
+\input{figure/timelines/implementation_chapter/ceiling_or_migration.tex}
+\input{figure/timelines/implementation_chapter/mrsp_exe.tex}
+
+\chapter{Implementazione proposta}
+\label{sec:implementazione}
+
+La Sezione~\ref{sec:lockProtocols.mrsp} discute il funzionamento di MrsP. Burns e Wellings in ~\cite{Burns:2013:SCM:2547348.2547350} riassumono le caratteristiche che l'algoritmo di scheduling deve avere:
+
+\begin{itemize}
+\item a ogni risorsa deve essere abbinato un insieme di ceiling, uno per ogni processore in cui è allocato almeno un job che la richiede;
+\item una richiesta di accesso a una risorsa deve innescare un innalzamento della priorità del job al \textit{ceiling locale}, cioè il ceiling della risorsa corrispondente al processore in cui è stata effettuata;
+\item le richieste devono essere servite in ordine di arrivo;
+\item mentre il job attende di accedere alla risorsa e mentre esegue la sezione critica, deve eseguire con priorità pari al ceiling locale;
+\item ogni job che attende di accedere alla risorsa deve essere in grado di proseguire l'esecuzione della sezione critica per conto di ognuno degli altri job in attesa;
+\item il job incaricato per proseguire la sezione critica viene selezionato in ordine FIFO dalla coda delle richieste. 
+\end{itemize}
+
+Inoltre, gli autori propongono due possibili soluzioni per realizzare il meccanismo tipico degli \textit{helping protocol} (sezione~\ref{sec:lockProtocols.help}), i protocolli che permettono a un job di riprendere l'esecuzione della sezione critica per conto del job che detiene la risorsa. Una soluzione deriva dal protocollo SPEEP, ma, come discusso in precedenza, è difficilmente applicabile perché presuppone che le azioni corrispondenti alla risorse siano atomiche. L'altra soluzione proposta, invece, prevede che un job in attesa ceda l'utilizzo del proprio processore al job che detiene la risorsa ed è stato prerilasciato, il quale potrà portare a termine la sezione critica.\\
+
+Nella seconda soluzione, se un job viene prerilasciato da un job a priorità superiore mentre è in possesso di una risorsa, MrsP dispone che il lock holder possa migrare in uno dei processori in cui vi è un job in attesa attiva. Inoltre, il job acquisisce il valore di priorità direttamente superiore del ceiling del processore in cui migra, in tal modo ne causa il prerilascio ottenendo il possesso del processore. Questo meccanismo richiede che il valore di priorità indicato sia libero, cioè non assegnato a nessun task allocato nel processore. Una volta conclusa la sezione critica, il job, se necessario, migra al processore a cui è allocato.\\
+
+Questo capitolo analizza l'implementazione proposta di MrsP: l'algoritmo alla base si ispira alla seconda soluzione proposta da Burns e Wellings. La sezione~\ref{sec:impl.design} fornisce un'analisi di dettaglio delle problematiche di implementazione concreta dell'algoritmo mentre, la sezione~\ref{sec:impl.struct}presenta le strutture dati necessarie per il suo funzionamento e, successivamente, espone in dettaglio l'implementazione dell'algoritmo.
+
+\section{Problematiche di progettazione}
+\label{sec:impl.design}
+
+La progettazione deve mantenere le caratteristiche che rendono MrsP un protocollo innovativo, quindi (i) garantire un limitato tempo di attesa per accedere alla risorsa e (ii) preservare l'indipendenza dei job a priorità superiore. Come visto nella sezione~\ref{sec:lockProtocols.multi}, queste sono le problematiche principali che un protocollo di accesso a risorsa deve gestire in ambito multiprocessor. Un limitato tempo di attesa significa che un job che effettua una richiesta di accesso a una risorsa deve attendere, o effettuando attesa attiva o sospendendosi, per una quantità di tempo che sia limitata e che rifletta la contesa tra i job in esecuzione parallela in processori diffferenti. Con un approccio basato su attesa attiva, il tempo di attesa danneggia ogni processore in cui vi è un job interessato, in quanto quest'ultimo sta eseguendo a una priorità superiore rispetto a quella di base, ritardando, di conseguenza, l'esecuzione degli altri job.\\
+Molti dei protocolli visti nel capitolo~\ref{sec:introduzione} soddisfano tale necessità tramite l'innalzamento della priorità del job al di sopra di tutti i job del processore oppure inibiendo il prerilascio. Questo fa si che essi adempiono al punto (i) a scapito del punto (ii), in quanto anche i job a priorità superiore che non richiedono la risorsa subiscono blocco.\\
+Altri protocolli, al contrario, innalzano la priorità a un livello precalcolato senza interferire con i job a priorità superiore. Un esempio è MPCP (sezione~\ref{sec:lockProtocols.dpcp.mpcp}), protocollo che però non soddisfa il punto (i): un job in coda per accedere alla risorsa deve attendere lo smaltimo delle richieste che lo precedono, ma se il job in possesso della risorsa viene prerilasciato da un job a priorità superiore al ceiling, esso deve attendere, oltre alle singole sezioni critiche eseguite da parte di ogni job in coda, anche il loro completamento. Pertanto, per garantire indipendenza ai job più urgenti, il tempo di attesa e il blocco subito in ogni processore non è limitato.
+
+\paragraph{Limitato tempo di attesa.} Il punto (i) è soddisfatto tramite l'integrazione di diverse scelte implementative:
+
+\begin{itemize}
+\item usare a livello locale, cioè in ogni processore, \textit{Immediate Priority Ceiling Protocol} (IPCP), il quale ha un comportamento simile a PCP/SRP in presenza di scheduler P-FP;
+\item porre il valore del ceiling locale pari alla priorità maggiore tra tutti i task che richiedono la risorsa nel processore;
+\item accodare la richiesta in una FIFO globale abbinata alla risorsa;
+\item se la risorsa è occupata, far effettuare attesa attiva al job che l'ha richiesta, cioè controllare ciclicamente la coda fintantoché la sua richiesta non ha raggiunto la testa della FIFO.
+\end{itemize}
+
+Queste operazioni garantiscono un limitato tempo di attesa per accedere alla risorsa in quanto: al più un job per processore contende per ottenere la risorsa in un determianto istante e le richieste sono servite in ordine di arrivo, evitando quindi situazioni di \textit{starvation}. Di conseguenza, un job deve attendere, al massimo, il tempo di smaltimento delle richieste che sono state accodate prima della propria. 
+
+\paragraph{Independence-preserving.} La modalità di calcolo del ceiling per ogni processore assicura l'indipendenza dei job a priorità superiore che non richiedono la risorsa (ii). Quest'ultimi, eseguendo, ritardano lo smaltimento della coda di richieste associata alla risorsa; pertanto, il job che detiene la risorsa deve migrare quando prerilasciato a condizione che vi sia un processore disponibile. Dato che non sempre è possibile migrare al momento del prerilascio, il meccanismo di base deve essere arricchito con un insieme di controlli che garantiscano che il job prosegua l'esecuzione ogni qual volta sia possibile. L'algoritmo prevede quindi di effettuare una migrazione, se necessaria, quando: o una nuova richiesta viene aggiunta alla coda o uno dei job in attesa torna a eseguire nel proprio processore. Inoltre, al momento del rilascio della risorsa, deve essere controllato lo stato del nuovo job in testa alla coda: se è stato prerilasciato, deve migrare in una delle CPU disponibili in modo da poter entrare in possesso della risorsa.
+
+\section{Strutture dati}
+\label{sec:impl.struct}
+
+La soluzione proposta fa uso di diverse strutture dati. Alcune messe a disposizione dall'implementazione dello scheduler P-FP e modificate per integrare MrsP, altre sviluppate appositamente per il protocollo. Di seguito, è fornita un'illustrazione delle principali strutture dati utilizzate, che rende più semplice l'esposizione e, di conseguenza, la comprensione delle sezioni di approfondimento dell'algoritmo implementato.
+
+\paragraph{\texttt{pfp\_domain}.} \`E la struttura alla base dello scheduler P-FP. Incorpora la struttura \texttt{rt\_domain} discussa nella sezione~\ref{sec:intro.rt_domain} e aggiunge le componenti necessarie per la realizzazione dello scheduling. In particolare, la coda dei job ready è implementata con una coda ordinata in base alla priorità (\texttt{fp\_prio\_queue}). Su di essa agiscono le primitive per la sua gestione (\texttt{fp\_common.h}), mentre in riga~\ref{lst:domain.spinlock} è definito uno spinlock, che previene stati inconsistenti e serializza le decisioni di scheduling. \texttt{pfp\_domain} dispone di un puntatore alla struttura che gestisce la risorsa globale \texttt{mrsp\_semaphore}, la quale è condivisa tra tutti i processori, e un puntatore a uno stato locale \texttt{mrsp\_state}, instanziato per ogni processore.\\
+
+\begin{lstlisting}[label={lst:pfp_domain}] %@\label{lst:domain.spinlock}@
+
+typedef struct {
+	rt_domain_t 					domain;
+	struct fp_prio_queue			ready_queue;
+	int 								cpu;
+	struct task_struct* 			scheduled;
+	struct mrsp_semaphore* 		sem;		
+	struct mrsp_state*			mrsp_ceiling;
+#define slock domain.ready_lock @\label{lst:domain.spinlock}@
+} pfp_domain_t;
+\end{lstlisting}
+
+La struttura \texttt{pfp\_domain}, essendo in presenza di uno scheduler partizionato, è istanziata per ogni processore tramite la macro \texttt{DEFINE\_PER\_CPU}. Durante il prosieguo del capitolo, in alcuni spezzoni di codice si useranno le variabili \texttt{local\_domain} e \texttt{remote\_domain}, essi fanno riferimento, rispettivamente, all'instanza locale del dominio di P-FP e a quella remota di un'altra partizione.
+
+\paragraph{\texttt{mrsp\_state}.} Tiene traccia del livello di ceiling del processore in cui è istanziata. L'unica informazione che contiene è quindi un numero intero corrispondente al valore in vigore, il quale può essere pari o a \texttt{LITMUS\_LOWEST\_PRIORITY} (costante definita da LITMUS\textsuperscript{RT} che sta a inidicare il livello di priorità più basso ammesso nel sistema) o al ceiling della risorsa per quel determinato processore. \texttt{mrsp\_state} è istanziato in ogni CPU tramite la macro \texttt{DEFINE\_PER\_CPU}. Esso non prevede alcun spinlock per la gestione degli accessi in quanto, come si vede nella sezione~\ref{sec:impl.lock}, tale valore è modificabile solamente dopo aver ottenuto lo spinlock della risorsa.\\
+
+\begin{lstlisting}
+struct mrsp_state {
+	int cpu_ceiling;
+};
+\end{lstlisting}
+
+\paragraph{\texttt{mrsp\_semaphore}.} \`E la strutta dati che fornisce le informazioni utili per la gestione della risorsa globale secondo il protocollo MrsP:
+
+\begin{itemize}
+\item \texttt{litmus\_lock}, struttura che permette di accedere all'interfaccia per la gestione delle risorse nell'ambiente LITMUS\textsuperscript{RT} (Appendice~\ref{sec:litmus});
+\item \texttt{lock}, spinlock che garantisce mutua esclusione nell'accesso alle informazioni della risorsa;
+\item \texttt{task\_queue}, lista dei job che contendono per la risorsa; ogni nodo è un'istanza della struttura \texttt{queue\_t} che contiene un puntatore al nodo successivo e uno al task (job) in attesa:
+
+\begin{lstlisting}
+typedef struct queue_s {
+  struct list_head 		next;
+  struct task_struct* 	task;
+} queue_t;
+\end{lstlisting}
+
+\item \texttt{owner}, attuale possessore della risorsa, che, una volta acquisita, coincide con il task in testa alla \texttt{task\_queue};
+\item \texttt{prio\_ceiling}, array che raccoglie i ceiling della risorsa, uno per ogni processore (\texttt{NR\_CPUS}).
+\end{itemize}
+
+\begin{lstlisting}[label={lst:mrsp_semaphore}] %@\label{lst:domain.spinlock}@
+
+struct mrsp_semaphore {
+	struct litmus_lock 	litmus_lock;
+	spinlock_t 				lock;
+	struct list_head 		task_queue;
+	struct task_struct 	*owner;
+	int 						prio_ceiling[NR_CPUS];
+};
+\end{lstlisting}
+
+L'istanza di \texttt{mrsp\_semaphore} è condivisa tra i processori tramite la struttura \texttt{pfp\_domain}.
+
+\paragraph{\texttt{task\_struct} e \texttt{rt\_task}.} Il task è l'entità di esecuzione principale nel sistema. Linux (linux/sched.h) fornisce una struttura di base che lo rappresenta e LITMUS\textsuperscript{RT} ne arricchisce l'espressività con delle componenti che ne permettono l'utilizzo in un sistema real-time. Alla sottostruttura \texttt{rt\_task}, che contiene diverse informazioni tipiche di un task real-time, sono stati aggiunti i campi \texttt{home} e \texttt{priority\_for\_restore}: il primo indica la CPU in cui è allocato, utile in caso di migrazioni, mentre il secondo la priorità originaria, necessaria per il suo ripristino dopo il rilascio della risorsa.
+
+\paragraph{\texttt{sched\_plugin}.} Infine, la struttura \texttt{sched\_plugin} mette a disposizione l'interfaccia per la gestione degli eventi di scheduling. L'integrazione di MrsP necessita di operare al momento della decisione di schedule, scegliendo quale job far eseguire in un determinato istante, e dopo un \texttt{context switch}, cioè quando un job lascia l'esecuzione nel processore a un altro. Per maggiori informazioni riguardo l'interfaccia per lo sviluppo di un algoritmo di scheduling si veda l'appendice~\ref{sec:litmus}.\\
+
+Il sistema così configurato è illustrato in figura~\ref{fig:impl.system}: a ogni processore sono abbinate informazioni riguardanti il dominio, necessarie allo scheduler, e allo stato locale della risorsa, quindi se è in uso e a che livello di ceiling. Inoltre, in ogni CPU è attivo il plugin per l'implementazione della logica dell'algoritmo di scheduling. I dati relativi alla risorsa globale, invece, sono unici e condivisi tra tutte le partizioni e il loro accesso è gestisto tramite l'interfaccia fornita da \texttt{litmus\_lock}.
+
+\begin{figure}
+\centering
+\system{1.3}{1.3}
+\caption{Organizzazione delle strutture dati in una piattaforma con 4 partizioni.}
+\label{fig:impl.system}
+\end{figure}
+
+\section{Algoritmo e implementazione}
+\label{sec:impl.alg}
+
+I paragrafi successivi descrivono le scelte algoritmiche effettuate in fase di progettazione con particolare attenzione all'implementazione. Una delle difficoltà incontrate durante lo sviluppo è stata quella di trovarsi in un ambiente a livello kernel. Si deve, quindi, tenere conto di diverse problematiche che nella teoria e nella progettazione ad alto livello non sono considerate. Tali informazioni sono integrate in questo capitolo in modo tale da giustificare alcuni campionamenti che vengono esposti nel capitolo~\ref{sec:esperimenti}, cioè operazioni che dal punto di vista algoritmico richiedono poche instruzioni, ma che, dovendosi calare negli interleaving di un kernel (esecuzioni in parallelo, interrupt, vincoli sui lock, ...), richiedono maggior attenzione.\\
+
+Per ogni primitiva discussa si riporta il relativo codice in forma ridotta in modo tale da renderlo, con l'ausilio dei commenti, maggiormente leggibile. \`E messo in risalto l'uso degli spinlock, necessari per garantire mutua esclusione, e l'inibizione del prerilascio, per rendere minimo il tempo richiesto per effettuare un'operazione. Tuttavia, entrambi i meccanismi richiedono un attento utilizzo soggetto a diversi vincoli; per esempio, uno spinlock deve essere acquisito e rilasciato nella medesima primitiva; quando una primitiva è in possesso di uno spinlock non può effettuare operazioni bloccanti; un job può possedere solamente uno spinlock alla volta per evitare situazioni di deadlock. Il prerilascio, invece, è gestito tramite chiamate che vanno a operare su un contatore (\texttt{preempt\_disable()} (+1) e \texttt{preempt\_enable()} (-1)) e solamente a determinati valori possono essere effettuate alcune operazioni, come, per esempio, richiamare la funzione di scheduler.
+
+\subsection{Inizializzazione}
+\label{sec:imp.init}
+
+In fase di inizializzazione, il protocollo richiede che siano predisposte le varie strutture dati necessarie al suo funzionamento: il plugin è "registrato", i singoli domini in ogni processore e la struttura che rappresenta e gestisce la risorsa globale sono inizializzati. Inoltre, all'atto dell'accettazione dei nuovi task nel sistema, è calcolato il ceiling della risorsa per ogni processore aggiornando il valore di \texttt{mrsp\_state}.
+
+\subsection{Gestione della coda}
+\label{sec:impl.queue}
+
+Le scelte algoritmiche sono incentrare sulla gestione della FIFO corrispondente alla risorsa in cui sono accodate le richieste di accesso. L'implementazione mira a gestire gli eventi che ne modificano lo stato, inteso come il numero di possibili processori in cui il job che detiene la risorsa può migrare. Perciò, risultano rilevanti le operazioni che aumentano tale numero: o l'inserimento di una nuova richiesta o una richiesta che ritorna "attiva". In particolare, quando questo numero da zero, cioè il job possessore della risorsa non sta eseguendo, aumenta a uno, quindi vi e' un processore che può farlo proseguire. Per richiesta "attiva" si intende una richiesta il cui job corrispondente sta effettuando attesa attiva, "inattiva" in caso contrario.\\
+
+Se la coda si trova nello stato descritto in figura~\ref{fig:impl.queue1}, significa che il job, che detiene la risorsa, sta eseguendo nel proprio processore e che vi sono dei job in attesa. Di questi, alcuni stanno effettuando attesa attiva (contrassegnati dal colore verde) mentre altri sono stati prerilasciati da job a priorità superiore rispetto al ceiling del processore corrispondente (colore rosso). Per ogni richiesta, è necessario conoscere il job che l'ha effettuata, la partizione in cui è allocato e il relativo ceiling locale.  In questa situazione (figura~\ref{fig:impl.queue1}), il meccanismo di base di MrsP è sufficiente per garantire al lock holder di proseguire l'esecuzione in caso di prerilascio effettuando una migrazione nel primo processore disponibile in base all'ordine della coda ($P_3$ in questo esempio). L'implementazione di questo meccanismo è approfondito nelle sezioni \ref{sec:impl.schedule} e \ref{sec:impl.c_s}.\\
+
+\begin{figure}
+\centering
+\queueFirst{1.2}{1.2}
+\caption{Coda delle richieste, esempio \#1.}
+\label{fig:impl.queue1}
+\end{figure}
+
+Nel caso in cui non vi siano processori disponibili alla migrazione (figura~\ref{fig:impl.queue2}), il job è inserito nella coda ready del processore in cui si trova, che potrebbe essere il processore in cui è allocato o uno in cui è migrato in precedenza. Anche se il job che detiene la risorsa non riesce a progredire nell'esecuzione della sezione critica, questo non comporta un allungamento del tempo di attesa delle richieste in coda e, conseguentemente, del tempo di blocco subito in ogni processore (sezione~\ref{sec:lockProtocols.mrsp}). Questo significa che in ogni processore, infatti, vi è un job a priorità superiore al ceiling che sta eseguendo e, tale ritardo, è inevitabile se si vuole garantire la loro indipendenza. Inoltre, tale \textit{interferenza} è prevista nell'equazione~\ref{eq:R2}.\\
+
+\begin{figure}
+\centering
+\queueSecond{1.2}{1.2}
+\caption{Coda delle richieste, esempio \#2.}
+\label{fig:impl.queue2}
+\end{figure}
+
+In queste circostanze, l'algoritmo è chiamato a gestire quegli eventi in cui un processore o diviene o ritorna disponibile per la migrazione. Il primo caso (figura~\ref{fig:impl.queue3}) avviene quando un job effettua la richiesta per accedere alla risorsa (sezione~\ref{sec:impl.lock}), mentre il secondo (figura~\ref{fig:impl.queue4}) quando un job che stava effettuando attesa attiva ri-torna in esecuzione (sezione~\ref{sec:impl.c_s}).\\
+
+\begin{figure}
+\centering
+\queueThird{1.2}{1.2}
+\caption{Coda delle richieste, esempio \#3.}
+\label{fig:impl.queue3}
+\end{figure}
+
+\begin{figure}
+\centering
+\queueFourth{1.2}{1.2}
+\caption{Coda delle richieste, esempio \#4.}
+\label{fig:impl.queue4}
+\end{figure}
+
+Infine, al momento del rilascio della risorsa, deve essere controllato lo stato del prossimo lock holder, cioè il job che ha raggiunto la testa della coda. Esso può trovarsi in due stati: in esecuzione, effettuando attesa attiva, oppure accodato nella \texttt{ready\_queue} del proprio processore. Nel primo caso, il job entra in possesso della risorsa autonomamente (sezione~\ref{sec:impl.lock}). Se invece è stato prerilasciato, deve essere il protocollo a far migrare il job in modo tale da fargli acquisire la risorsa (sezione~\ref{sec:impl.unlock}).\\
+
+L'algoritmo così delineato soddisfa i requisiti di cui il protocollo MrsP necessita. Le prossime sezioni trattano le singole primitive in modo da dare risalto agli accorgimenti che rendono possibile il funzionamento dell'algoritmo nel suo complesso e la gestione degli interleaving e dei cambi di stato tipici di un software che opera in parallelo.
+
+\subsection{Richiesta di accesso}
+\label{sec:impl.lock}
+
+La primitiva \texttt{pfp\_mrsp\_lock} è eseguita in risposta alla richiesta di accesso effettuata da parte di un job. Essa può essere suddivisa in tre fasi definite: IPCP, migrazione e attesa attiva. La prima e la seconda fase operano sulla risorsa e sullo stato del processore corrente, di conseguenza, necessitano di essere eseguite con accesso esclusivo ai dati sensibili e senza subire prerilascio (righe~\ref{lst:lock.preempt_disable} e ~\ref{lst:lock.spinlock}): questo tipo approccio è ricorrente nell'implementazione in quanto assicura mutua esclusione nell'accesso ai dati, non permettendo quindi stati incosistenti, e non limita i ritardi rendendo le operazioni fondamentali non prerilasciabili.\\
+
+L'implementazione di \textbf{IPCP} è compresa tra le righe~\ref{lst:lock.ipcp_start} e ~\ref{lst:lock.ipcp_stop}: prevede l'innalzamento del ceiling locale e della priorità del job stesso e il controllo dello stato del possessore della risorsa. Il job che ha effettuato la richiesta eredita il valore di ceiling +1 se non ne ottiene subito il controllo, +2, invece, se la coda era vuota e quindi immediatamente disponibile. Questo accorgimento è necessario in quanto:
+
+\begin{itemize}
+\item il valore di ceiling è posseduto da uno dei task del processore (quello a priorità superiore tra tutti i task che la richiedono) e, in presenza di uno scheduler P-FP, potrebbe causare prerilascio \footnote{L'implementazione di P-FP fornita da LITMUS\textsuperscript{RT} dispone che, a parità di priorità, vengano confrontati gli id dei due job.};
+\item la priorità direttamente superiore al ceiling (+1) è assegnata ai job che effettuano attesa attiva;
+\item il valore di ceiling "aumentato" (+2) è assegnato al job che detiene la risorsa in modo tale da prerilasciare il i job del punto precedente.
+\end{itemize}
+
+Se necessario, il job cede l'esecuzione al possessore della risorsa tramite una \textbf{migrazione}. Questa operazione necessita dei lock dei due processori per trasferire il job da una coda ready all'altra. A livello di implementazione, questo comporta il rilascio del lock della risorsa (riga`\ref{lst:lock.spinunlock}), l'acquisizione e il rilascio del lock del processore in cui è stato prerilasciato il job (righe~\ref{lst:lock.remote_lock} - \ref{lst:lock.remote_unlock}) e di quello locale (righe ~\ref{lst:lock.local_lock} - \ref{lst:lock.local_unlock}). Il meccanismo appena descritto, serve a evitare che la primitiva accumuli più di un lock causando il deadlock dell'intero sistema. Infine, il protocollo forza un'operazione di schedule nel processore locale per permette l'effettiva migrazione (riga~\ref{lst:lock.schedule}).\\
+
+La terza e ultima fase dispone l'\textbf{attesa attiva} da parte del job. Essa prevede che il job ciclicamente acquisisca il lock della risorsa, controlli se la sua richiesta ha raggiunto la testa della coda (in tal caso acquiscisce la risorsa ed esce dal loop) e rilasci il lock.\\
+
+\begin{lstlisting}
+void pfp_mrsp_lock() {
+	bool migration = false;
+
+	preempt_disable(); @\label{lst:lock.preempt_disable}@
+		spin_lock(mrsp->lock); @\label{lst:lock.spinlock}@
+		
+			// Attivazione ceiling locale @\label{lst:lock.ipcp_start}@
+			mrsp_state.cpu_ceiling = (mrsp->ceilings[get_partition(task)]); 
+			// Accodamento della la richiesta alla coda
+			task_queue_add(mrsp, task);
+			// Riferimento al task in testa alla coda
+			next = get_head(mrsp->task_queue);
+
+			// Risorsa libera e richiesta in testa?
+			if(sem->owner == NULL && next == t) {
+				// Il job entra in possesso della risorsa e innalza la priorita'
+				mrsp->owner = task;
+				task->priority = (mrsp->ceilings[get_partition(local_domain)] + 2);
+			} else {
+				// Il job innalza la priorita'
+				task->priority = (mrsp->ceilings[get_partition(local_domain)] + 1);
+				// L'attuale possessore della risorsa sta eseguendo?
+				if(is_queued(mrsp->owner))
+					migration = true;
+			} @\label{lst:lock.ipcp_stop}@
+
+		spin_unlock(mrsp->lock); @\label{lst:lock.spinunlock}@
+
+		if(migration) {
+			bool still_queued = true;
+
+			spin_lock(remote_domain->lock);@\label{lst:lock.remote_lock}@
+				
+				// Il job e' ancora accodato?
+				if(is_queued(mrsp->owner)) {
+					// Rimozione del job dalla ready_queue in cui e' accodato
+					task.cpu = target_cpu;
+					fp_dequeue(remote_domain, mrsp->owner);
+				} else {
+					still_queued = false;
+				}
+			spin_unlock(remote_domain->lock);@\label{lst:lock.remote_unlock}@
+
+			if(still_queued) {
+				spin_lock(local_domain->lock); @\label{lst:lock.local_lock}@
+
+					// Il job acquisisce il ceiling locale ed e' aggiunto alla ready_queue
+					mrsp->owner->priority = (mrsp->ceilings[local_domain] + 2);
+					requeue(mrsp->owner, local_domain);
+
+				spin_unlock(local_domain->lock); @\label{lst:lock.local_unlock}@
+			}
+
+			if(still_queued) {
+				// Il protocollo forza l'operazione di schedule() per cedere il processore
+				schedule(); @\label{lst:lock.schedule}@
+			}
+		}
+	
+	preempt_enable();
+
+	// Attesa attiva
+	if(mrsp->owner != task) {
+		do {
+			spin_lock(mrsp->lock);
+			
+				// Riferimento al task in testa alla coda
+				next = get_head(mrsp->task_queue);
+				// Risorsa libera e richiesta in testa?
+				if(sem->owner == NULL && next == t) {
+					// Il job entra in possesso della risorsa e innalza la priorita'
+					mrsp->owner = task;
+					task->priority = (mrsp->ceilings[task->cpu] + 2);
+				}
+
+			spin_unlock(mrsp->lock);
+		} while(mrsp->owner != task);
+	}
+}
+\end{lstlisting}
+
+\subsection{Rilascio della risorsa}
+\label{sec:impl.unlock}
+
+Il rilascio della risorsa richiede di modificare le informazioni contenute nella struttura dati che rappresenta la risorsa globale, di conseguenza richiede l'acquisizione del relativo spinlock. Inoltre, è necessario inibire il prerilascio per evitare che le operazioni vengano interrotte. Innanzitutto, l'implementazione attua il rilascio della risorsa e il ripristino della priorità del job e del ceiling. Da notare, riga~\ref{lst:unlock.state}, \texttt{mrsp\_state} è un riferimento alla struttura istanziata nel processore di origine del job, mentre la primitiva potrebbe essere eseguita in un altro processore a conseguenza di una migrazione. Ripristinando il ceiling prima della migrazione di ritorno, si limita il tempo di blocco subito nel processore di origine.\\
+Un volta rilasciata la risorsa, la primitiva controlla lo stato del prossimo possessore della risorsa, cioè quello corrispondente alla richiesta che ha raggiunto la testa della FIFO. Se è stato prerilasciato e si trova in una coda ready si prosegue con una migrazione, a meno che non sia il job che ha appena rilasciato la risorsa ad averlo prerilasciato in precedenza dopo una migrazione (righe ~\ref{lst:unlock.check_start} - \ref{lst:unlock.check_stop}). La migrazione avviene dopo aver rilasciato lo spinlock della risorsa e necessita, come visto nella sezione precedente (\ref{sec:impl.lock}), degli spinlock di due partizioni, facendo attenzione ad aggiornare la sua priorità e il parametro che indica la CPU in cui si trova.\\
+Infine, il job, se non è nel suo processore di origine (\texttt{task->home}), migra nella partizione in cui è allocato il corrispettivo task (righe ~\ref{lst:unlock.back1} - \ref{lst:unlock.back2}).\\
+
+\begin{lstlisting}
+void pfp_mrsp_unlock() {
+
+	preempt_disable();
+		spin_lock(mrsp->lock);
+			
+			// Rilascio della risorsa
+			mrsp->owner = NULL;
+			// Ripristino del ceiling nella cpu di orgine (cosi' da limitare il tempo di blocco)
+			mrsp_state.cpu_ceiling = LITMUS_LOWEST_PRIORITY; @\label{lst:unlock.state}@
+			// Ripristino la priorita' del job che ha rilasciato la risorsa
+			task.priority = task.priority_for_restore;
+			// Rimozione della richiesta dalla testa della coda
+			task_queue_pop(mrsp);
+
+			// Lista delle richieste vuota? @\label{lst:unlock.check_start}@
+			if(!list_empty(mrsp->task_queue)) {
+				// Riferimento al task in testa alla coda
+				next_lock_holder = get_head(mrsp->task_queue);
+				// E' accodato nella sua cpu?
+				if(is_queued(next_lock_holder)) {
+					// E' il job che sta rilasciando la risorsa a bloccarlo a causa di una migrazione?
+					if(next_lock_holder->cpu != task->cpu) {	
+						// C'e' un processore disponibile?
+						cpu = find_cpu_available(mrsp);
+						// Set-up per la migrazione
+						if(cpu != NULL) {
+							next_owner = next_lock_holder;
+							from_cpu = next_owner->cpu;
+							target_cpu = cpu;
+						}
+					}
+				}
+			} @\label{lst:unlock.check_stop}@
+
+		spin_unlock(mrsp->lock);
+
+		// E' necessario far migrare il prossimo lock holder?
+		if(next_owner) {
+			bool still_queued = true;
+
+			spin_lock(from->lock);
+				// Il job e' ancora accodato?
+				if(is_queued(next_owner)) {
+					// Rimozione del job dalla ready_queue in cui e' accodato
+					next_owner.cpu = target_cpu;
+					fp_dequeue(from, next_owner);
+				} else {
+					still_queued = false;
+				}
+			spin_unlock(from->lock);
+
+			if(still_queued) {
+				spin_lock(target->lock);
+
+					// Il job acquisisce il ceiling locale ed e' aggiunto alla ready_queue
+					next_owner->priority = (mrsp->ceilings[target] + 2);
+					requeue(next_owner, target);
+					preempt(target);
+
+				spin_unlock(target->lock);
+			}
+		}
+
+		// E' necessario far migrare il job alla propria CPU di origine? @\label{lst:unlock.back1}@
+		if(task->cpu != task->home) {
+			// Ripristino della CPU di origine
+			task->cpu = task->home;
+			// La migrazione avviene sfruttando il meccanismo messo a disposizione da LITMUS, il quale avviene dopo il context-switch
+			preempt(local_domain);
+		} else {
+			// Il job e' nella cpu di orgine, e' quello a priorita' piu' alta?
+			if (!highest_job(local_domain, task))
+				preempt(local_domain);
+		} @\label{lst:unlock.back2}@
+
+	preempt_enable();
+}
+\end{lstlisting}
+
+\subsection{Scheduling}
+\label{sec:impl.schedule}
+
+L'implementazione fornita da LITMUS\textsuperscript{RT} predispone una funzione di schedule che rispecchia la logica dello scheduler P-FP: dopo aver determinato lo stato corrente del processore e del job attualmente in esecuzione, la primitiva, se necessario, confronta il job in testa alla coda ready con quello attualmente in esecuzione e, se ha priorità superiore rispetto a quest'ultimo, effettua un prerilascio causando un \textit{context switch}. Di conseguenza, il job prelevato dalla coda inizia a eseguire mentre il job prerilasciato viene posizionato nella coda dei job ready in base alla sua priorità.\\
+
+\`E stato necessario modificare la primitiva per garantire il supporto al protocollo MrsP. Le funzionalità introdotte sono due: la prima deriva dal protocollo in sé, mentre la seconda deriva da una scelta algoritmica che mira a ridurre il numero di migrazioni.\\
+
+\paragraph{Lock holder prerilasciato.} Nel caso in cui il job precedentemente in esecuzione (\texttt{prev}), quindi prerilasciato, sia in possesso della risorsa, il paramentro CPU del task viene utilizzato come flag per eseguire la migrazione a context switch avvenuto (riga ~\ref{lst:sched.1} e ~\ref{lst:sched.2}). Come visto in sezione~\ref{sec:impl.lock} e ~\ref{sec:impl.unlock}, la migrazione consiste nel trasferire il task nella coda ready del processore selezionato. Potrebbe risultare logico effettuare l'operazione in questa primitiva, ad esempio sostituendo in riga \ref{lst:sched.2} \texttt{prev.cpu = MIGRATION} con \texttt{requeue(prev, remote\_domain)}. Purtroppo, tale approccio non è possibile in quanto la primitiva \texttt{pfp\_schedule} necessita dello spinlock locale (riga ~\ref{lst:sched.3} e \ref{lst:sched.4}) per garantire l'integrità del dominio e serializzare le decisi di scheduling. Di conseguenza, non è possibile ottenere lo spinlock né della risorsa né del processore in cui far migrare il job.\\
+Il flag utilizzato permette di posticipare la migrazione alla primitiva \texttt{pfp\_finish\_switch} (sezione~\ref{sec:impl.c_s}), la quale, come vedremo, non è vincolata da alcun tipo di spinlock.\\
+
+\paragraph{Placeholder.} Burns e Wellings in ~\cite{Burns:2013:SCM:2547348.2547350} non considerano una particolare circostanza che si viene a creare quando un job migra in un processore diverso dal proprio. L'idea principale su cui costruito il protocollo consiste nel permettere solamente a un job per processore di effettuare una richiesta di accesso alla risorsa. Questo comportamento è garantito dal fatto che il job che richiede/detiene la risorsa effettua attesa attiva/esegue la sezione critica a un livello di priorità superiore rispetto agli altri job che la potrebbero richiedere e che, quindi, non eseguono fino a che non hanno ottenuto e rilasciato la risorsa.\\
+Si supponga che il sistema si trovi nello stato seguente: al tempo $t_i$, $J_1$ acquisisce la risorsa mentre sta effettuando attesa attiva, esso si trova quindi nel processore ($P_1$) in cui il task "padre" $\tau_1$ è allocato. Al tempo $t_{i+1}$, $J_2$ viene rilasciato nel medesimo processore e causa prerilascio a $J_1$ in quanto ha priorità superiore rispetto al ceiling. $J_1$ migra in $P_2$ prerilasciando $J_3$, il primo processore disponibile tra quelli in coda. La situazione descritta non ha nulla di particolare e i meccanismi discussi sono sufficienti a soddisfare i requisiti del protocollo. Al tempo $t_{i+2}$, $J_2$ completa la propria esecuzione, mentre $J_1$ conclude la sezione critica al tempo $t_{i+3}$ e migra al processore di origine. \\
+Nel tempo compreso tra $t_{i+2}$ e $t_{i+3}$, lo scheduler della partizione $P_1$ assegna l'esecuzione al job a priorità più alta, cioè in testa alla coda ready, il quale richiede l'accesso alla risorsa globale.\\
+
+La situazione descritta evidenzia la necessità di un ulteriore meccanismo che venga attivato al momento del completamento di $J_2$. Di seguito sono descritte e illustrate (figura~\ref{fig:solutions}) delle possibili soluzioni:
+
+\begin{enumerate}[a)]
+\item in $P_1$ si attiva un "agente" che esegue con priorità pari al ceiling, simulando la presenza di $J_1$ nel processore;
+\item si forza $J_1$ a migrare in $P_1$ e in $P_2$ ricomincia a eseguire $J_3$;
+\item lo scheduler cede l'esecuzione in $P_1$ al job in testa alla coda ready solamente se ha priorità superiore al ceiling, in caso contrario il processore resta inutilizzato.
+\end{enumerate}
+
+
+  \begin{figure}
+    \centering
+      \begin{subfigure}[b]{0.99\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\agentSolution
+        \caption{Attivazione di un agente.}
+        \label{fig:agent_solution}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.99\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\migrationSolution
+        \caption{Migrazione nel processore di origine.}
+        \label{fig:migration_solution}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.99\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\ceilingSolution
+        \caption{Utilizzo del ceiling.}
+        \label{fig:ceilin_solution}
+      \end{subfigure}
+    \caption{Possibili soluzioni alla gestione del caso particolare.}
+    \label{fig:solutions}
+  \end{figure}
+
+Le soluzioni elencate portano al medesimo risultato, cioè nessun job in $P_1$ richiede la risorsa, ma con complessità e costi di implementazione ed esecuzione differenti: (a) richiede l'attivazione di un task, rendendo la soluzione la peggiore tra le tre; (b) comporta una migrazione, che, come si vedrà nel capitolo~\ref{sec:esperimenti}, è un'operazione molto onerosa; infine, (c) non aggiunge alcun costo aggiuntivo in quanto lascia un processore inutilizzato diminuendo il costo della primitiva di schedule.\\
+
+Considerando le soluzioni (b) e (c) da un punto di vista più  ampio, la terza soluzione, come si vede in figura~\ref{fig:solutions}, ritarda la migrazione che avviene al momento del rilascio della risorsa ($t_{i+3}$). Di conseguenza, (b) e (c) comportano lo stesso numero di migrazioni nell'esempio precedente.\\
+
+Generalizzando il confronto tra (b) e (c), quest'ultima comporta un numero di migrazioni minore o uguale rispetto alla prima.\\
+Si supponga di utilizzare l'approccio che prevede di migrare nella partizione di partenza: una volta ritornato al processore (sono già avvenute due migrazioni), esso viene prerilasciato dal job $J_x$ e migra nuovamente in una delle partizioni disponibili, per esempio $P_3$; di conseguenza, sono avvenute quattro migrazioni. Con un approccio basato sulla soluzione (c), vi sono diversi casi possibili da analizzare. Si ricorda che la scelta della partizione in cui migrare avviene in base all'ordine della coda, cioè FIFO; pertanto, il job vaglia sempre come prima opzione il processore in cui è allocato il rispettivo task.
+
+\begin{itemize}
+\item il job porta a termine la sezione critica nel processore in cui ha migrato in precedenza; (2)
+\item il job viene prerilasciato e ritorna alla partizione di partenza, in essa porta a termine la sezione critica; (2)
+\item il job viene prerilasciato e ritorna alla partizione di partenza, in essa viene prerilasciato da $J_x$ e migra in $P_3$; (4)
+\item il job viene prerilasciato e, dato che nella partizione di partenza sta eseguendo $J_x$, migra in $P_3$. (3)
+\end{itemize}
+
+Nei primi due casi elencati avvengono due migrazioni, nella terza tre e nella quarta quattro. Di conseguenza, si può affermare che l'approccio (c) comporta un numero minore o uguale di migrazioni rispetto a (b). Come detto in precedenza, la migrazione di un job da un processore a un altro è il costo principale che il protocollo comporta, quindi è necessario effettuarne il meno possibile.\\
+
+L'implementazione del protocollo (righe~\ref{lst:sched.3} - ~\ref{lst:sched.4}) utilizza la struttura \texttt{mrsp\_state} per tenere traccia del livello del ceiling attualmente in vigore in un processore per poter determinare se il processore deve restare inutilizzato, simulando quindi la presenza del job che detiene la risorsa, o eseguire il job a priorità più alta tra quelli nella coda ready.\\
+
+\begin{lstlisting}
+task_struct* pfp_schedule(struct task_struct * prev)
+{
+	int lock_holder, placeholder;
+
+	[...]
+
+	// Determino se il job in esecuzione e' in possesso della risorsa
+	if(prev == local_domain->mrsp->owner) {
+		lock_holder = 1; @\label{lst:sched.1}@
+	}
+
+	spin_lock(local_domain->lock); @\label{lst:sched.3}@
+
+		[...]
+
+		// Se e' stato prerilascio il possessore della risorsa attivo il flag per la migrazione
+		if(prev && preempt && lock_holder) {
+				prev.cpu = MIGRATION; @\label{lst:sched.2}@
+		} else {
+			// Altrimenti, se necessario, lo riaccodo nella coda ready
+			if (prev && !blocks && !migrate)
+				requeue(prev, local_domain);
+		}
+
+		struct task_struct *task_head = fp_prio_peek(local_domain->ready_queue);@\label{lst:sched.3}@
+
+		// Confronto il job in testa alla coda ready con il ceiling attuale
+		if(task_head->priority > mrsp_state.cpu_ceiling) {
+			placeholder = 0;
+		} else {
+			placeholder = 1;
+		}
+		
+		[...]
+
+		// Eseguo il job in testa alla coda ready ready o lascio il processore inattivo
+		if(placeholder == 0) {
+			next = fp_prio_take(local_domain->ready_queue);
+		} else {
+			next = NULL;
+		}@\label{lst:sched.4}@
+
+	[...]
+
+	spin_unlock(local_domain->lock); @\label{lst:sched.4}@
+
+	return next;
+}
+\end{lstlisting}
+
+
+\subsection{Context switch}
+\label{sec:impl.c_s}
+
+L'operazione di \textit{context switch} è richiamata dal plugin quando un job (\texttt{prev}) smette di eseguire a favore di un altro \texttt{local\_domain->scheduled}. Al contrario dell'operazione di schedule, essa non necessita dello spinlock del dominio locale per eseguire, quindi si presta per effettuare le migrazioni.\\
+
+I meccanismi di migrazione implementati sono tre e servono a gestire situazioni differenti:
+
+\paragraph{MIGRATION.} La sezione precedente (\ref{sec:impl.schedule}) discute il funzionamento della primitiva di schedule, la quale ha il compito di notificare al protocollo il prerilascio del possessore della risorsa tramite l'utilizzo del flag \texttt{MIGRATION}. La primitiva \texttt{pfp\_finish\_switch} gestisce la migrazione vera e propria (righe \ref{lst:sched.9} - \ref{lst:sched.10}): dopo aver ottenuto lo spinlock della risorsa, viene cercata una cpu disponibile per l'esecuzione del job. La funzione \texttt{find\_cpu\_available}, già utilizzata in precedenza, scorre la lista delle richieste accodate in ordine FIFO e per ogni nodo controlla lo stato della CPU, la quale è disponibile se o non vi è nessun job in esecuzione, quindi è la CPU di origine del job che possiede la risorsa, o il job che sta eseguendo ha priorità pari al ceiling locale (+1). In caso di successo, il job acquisisce il ceiling della partizione in cui sta per migrare (riga~\ref{lst:sched.11}).
+
+\paragraph{Meccanismo di base.} L'implementazione fornita di P-FP dispone un meccanismo di base per la migrazione. \`E attivato quando la CPU di un task non è uguale a quella in cui la primitiva è eseguita e, quindi, in cui si trova il job stesso (riga~\ref{lst:sched.12}). La migrazione avviene come negli altri casi visti finora e si riassume in quattro passaggi: acquisizione spinlock del dominio della partizione, accodamento del task nella \texttt{ready\_queue}, (se necessario) prerilascio del job attualmente in esecuzione e rilascio dello spinlock. Questo meccanismo viene sfruttato da MrsP all'atto del rilascio della risorsa.
+
+\paragraph{Job resume.} Il terzo caso è attivato in presenza di tre circostanze:
+
+\begin{itemize}
+\item il job in possesso della risorsa è accodato in una qualche partizione (\ref{lst:sched.5});
+\item la CPU in cui esegue la primitiva è tra quelli accodati nella FIFO della risorsa (\ref{lst:sched.6});
+\item la CPU è disponibile per la migrazione del job (\ref{lst:sched.7}).
+\end{itemize}
+
+Il controllo al terzo punto è simile a quanto descritto per la funzione \texttt{find\_cpu\_available}. La migrazione avviene come nei casi precendenti, quindi acquisendo gli spinlock per togliere il job da una coda ready per poi inserirlo in quella di destinazione. Il controllo a riga~\ref{lst:sched.8} è necessario in un sistema parallelo: il possessore della risorsa potrebbe essere tornato in esecuzione nel processore in cui era accodato, oppure un altro processore ha attivato altri meccanismi di MrsP che ne hanno causato la migrazione.\\
+
+\begin{lstlisting}
+void pfp_finish_switch(struct task_struct *prev)
+{
+	mrsp = local_domain->mrsp;
+
+	// Il flag per la migrazione e' attivo?
+	if (prev->cpu == MIGRATION) {
+
+		// Ricerca di una cpu disponibile in cui migrare
+		spin_lock(mrsp->lock); @\label{lst:sched.9}@
+			cpu = find_cpu_available(mrsp);
+		spin_unlock(mrsp->lock);
+	
+		// Cambio di cpu e ceiling
+		if(cpu != NULL) {
+			prev->cpu = cpu;@\label{lst:sched.11}@
+			prev->priority = mrsp->ceilings[cpu] + 2;
+		}
+
+		// Accodo il job nella coda ready e prerilascio il job che sta effettuando attesa attiva
+		spin_lock(remote_domain->lock);
+			requeue(prev, remote_domain);
+			if (fp_preemption_needed(remote_domain->ready_queue, remote_domain->scheduled))
+				preempt(remote_domain);
+		spin_unlock(remote_domain->lock); @\label{lst:sched.10}@
+
+	} else if (prev->cpu != local_cpu) {@\label{lst:sched.12}@
+
+		// Meccanismo di base di LITMUS per la migrazione, il parametro cpu e' stato modificato in precedenza
+
+		spin_lock(remote_domain->lock);
+			requeue(prev, remote_domain);
+			if (fp_preemption_needed(remote_domain->ready_queue, remote_domain->scheduled))
+				preempt(remote_domain);
+		spin_unlock(remote_domain->lock);
+
+	} else {
+	
+		//Caso in cui il job lock holder ha dovuto migrare in un altra cpu, nella quale e' stato a sua volta prerilasciato e si trova accodato. Il job che ne aveva
+		//causato la migrazione ha completato il proprio ciclo, la cpu e' tornata disponibile. Quindi o non c'e' nessun job schedulato (e' la cpu home del lock
+		//holder?) o e' stato ri-selezionato per eseguire un job che sta effettuando busy wait.
+		
+		struct task_struct* owner = NULL;
+		int from_cpu, target_cpu;
+
+		spin_lock(mrsp->lock);
+
+			// Se il lock holder e' accodato...
+			if(is_queued(mrsp->owner)) {  @\label{lst:sched.5}@
+				// ...e la cpu corrente e' tra quelle insite nella FIFO della risorsa globale
+				if(cpu_queued()) {  @\label{lst:sched.6}@
+
+					// Per essere disponibile alla migrazione:
+					// - o non vi e' nessun job in esecuzione
+					// - o il job in esecuzione e' quello che sta effettuando attesa attiva
+					if(local_domain->scheduled == NULL || (local_domain->scheduled->priority == (mrsp_state.cpu_ceiling + 1))) {  @\label{lst:sched.7}@
+							owner = sem->owner;
+							from_cpu = owner->cpu;
+							target_cpu = local_domain->cpu;
+					}
+				} 
+			}
+
+		spin_unlock(mrsp->lock);
+
+		// E' necessario effettuare una migrazione?
+		if(owner != NULL) {
+			preempt_disable();
+
+				bool fail = false;
+
+				spin_lock(from_cpu->lock);
+				
+					if(is_queued(owner)) {
+						owner->cpu = target_cpu;
+						fp_dequeue(from_cpu, owner);
+					} else {
+						fail = true;
+					}
+				
+				spin_unlock(from_cpu->lock);
+
+				if(!fail) { @\label{lst:sched.8}@
+					spin_lock(target_cpu->lock);
+						owner->priority = mrsp->ceilings[cpu] + 2;
+						requeue(owner, target_cpu);
+						preempt(target_cpu);
+					spin_unlock(target_cpu->lock);
+				}
+
+			preempt_enable();
+		}
+	}
+}
+\end{lstlisting}
+
+\subsection{Esempio di esecuzione}
+\label{sec:mrsp_exe}
+
+Questa sezione propone un esempio di esecuzione dello scheduler P-FP e di gestione dell'accesso alle risorse con il protocollo MrsP. Il taskset è creato appositamente per andare a innescare i meccanismi discussi in questo capitolo:
+
+\begin{itemize}
+	\item [$P_1$:] $\tau_1$ ($prio$ = 2), $\tau_2$ (4), $\tau_3$ (7); $\tau_2$ necessita della risorsa, quindi il ceiling locale è pari a 4.
+	\item [$P_2$:] $\tau_4$ ($prio$ = 1), $\tau_5$ (3), $\tau_6$ (8); $\tau_4$ e $\tau_5$ necessitano della risorsa, il ceiling locale è pari a 3.
+	\item [$P_3$:] $\tau_7$ ($prio$ = 2), $\tau_8$ (6); $\tau_7$ necessita della risorsa, il ceiling locale è pari a 2.
+	\item [$P_4$:] $\tau_9$ ($prio$ = 3), $\tau_10$ (7); $\tau_9$ necessita della risorsa, il ceiling locale è pari a 3.
+\end{itemize}
+
+I job che accedono la risorsa eseguono senza di essa sia prima che dopo la sezione critica, quindi il rilascio della risorsa non coincide con il loro completamento.\\
+
+L'esecuzione illustrata in figura~\ref{fig:mrsp_exe} rappresenta un esempio di funzionamento del protocollo MrsP nella gestione della contesa per la risorsa, in particolare, evidenzia come le primitive discusse in questo capitolo vadano a operare sulla coda, quindi il fulcro dell'implementazione. Di seguito sono discussi uno per uno gli interleaving interessanti dell'esecuzione e i meccanismi che li gestiscono.
+
+\begin{sidewaysfigure}
+    \centering
+	\mrspExe
+    \caption{Attivazione di un agente.}
+    \label{fig:mrsp_exe}
+\end{sidewaysfigure}
+
+\begin{itemize}
+	\item [$t_1$)] I job $J_9$, $J_2$ e $J_4$ richiedono la risorsa nel medesimo istante, essi, come visto nella sezione~\ref{sec:impl.lock}, acquisiscono il ceiling del corrispettivo processore ($J_9$ +2 mentre $J_2$ e $J_4$ +1) e innalzano il ceiling locale. Inoltre accodano le rispettive richieste nella coda FIFO in ordine {$J_9$, $J_2$, $J_4$}, pertanto $J_9$ acquisisce la risorsa e gli altri due effettuano attesa attiva.
+	\item [$t_2$)] $J_9$ rilascia la risorsa, quindi ripristina la propria priorità il ceiling locale e toglie la propria richiesta dalla coda, inoltre, dato che non vi sono altri job nel medesimo processore, prosegue a eseguire fino al completamento (sezione~\ref{sec:impl.unlock}. Al primo ciclo utile di attesa attiva, $J_2$ rileva che la propria richiesta ha raggiunto la testa della coda, di conseguenza, acquisisce la risorsa e innalza la propria priorità al valore di ceiling +2. Nel processore $P_3$, $J_7$ richiede la risorsa.
+	\item [$t_3$)] In $P_1$ viene rilasciato $J_3$ e, dato che ha priorità superiore rispetto a $J_2$ (rispettivamente 7 e 6), inizia a eseguire, causando la migrazione del job nel primo processore in coda disponibile (sezione~\ref{sec:impl.c_s}, cioè $P_2$, in cui acquisisce il valore di ceiling +2 in modo da prerilasciare il job che sta effettuando attesa attiva ($J_4$). Inoltre, al completamento da parte di $J_3$, il processore rimane inutilizzato nonostante vi sia $J_1$ nella coda ready, in quanto quest'ultimo ha priorità inferiore rispetto al ceiling (sezione~\ref{sec:impl.schedule}.
+	\item [$t_4$)] $J_2$ termina l'esecuzione della sezione critica mentre si trova in $P_2$, quindi, dopo aver ripristinato la propria priorità  il ceiling in $P_1$ e tolto la richiesta dalla coda, migra nel processore di origine. In $P_1$ è ancora il job a priorità superiore, quindi completa l'esecuzione per poi lasciare il processore a $J_1$. All'atto del rilascio della risorsa, il protocollo rileva che il prossimo possessore della risorsa, $J_4$, non è in esecuzione, ma è accodato nella medesima partizione. Di conseguenza, al termine della primitiva, $J_4$, tramite l'attesa attiva, acquisisce autonomamente la risorsa.
+	\item [$t_5$)] $J_4$ porta a compimento la sezione critica. Il protocollo, tramite la primitiva di rilascio della risorsa, rileva che $J_7$, il prossimo possessore, è accodato, ma non vi sono processori disponibili per la migrazione. Inoltre, $J_4$, una volta ripristinata la propria priorità e il ceiling, non è più il job a priorità superiore nella partizione, quindi forza la chiamata alla primitiva di schedule per cedere l'esecuzione a $J_5$.
+	\item [$t_6$)] I job $J_5$ e $J_9$ richiedono la risorsa, ma $J_7$ (il job che la detiene) è accodato, quindi $J_5$, ancor prima di iniziare a effettuare attesa attiva, cede l'esecuzione in $P_2$ a $J_7$.
+	\item [$t_7$)] $J_7$ è nuovamente prerilasciato. Dato che anche $J_9$ non è in esecuzione, non vi sono processori disponibili per la migrazione, pertanto viene inserito nella coda ready del processore in cui iera migrato in precedenza.
+	\item [$t_8$)] In $P_4$, il job a priorità superiore rispetto al ceiling ($J_{10}$) completa la sua esecuzione. La primitiva di schedule designa per $J_9$ per l'esecuzione, il quale riprende a effettuare attesa attiva. La primitiva di context switch, successiva alla schedule, rileva che il lock holder, $J_7$, è accodato e gli cede l'esecuzione nel processore tramite una migrazione. Successivamente, in $P_2$, $J_5$ torna a eseguire attesa attiva dato che il possessore della risorsa non è stato prerilasciato.
+	\item [$t_9$)] $J_7$ termina la sezione critica, rilascia la risorsa e migra in $P_3$, nel quale completa la propria esecuzione in quanto unico job attivo. $J_5$ acquisisce la risorsa e $J_9$ ricomincia a effettuare attesa attiva.
+	\item [$t_{10}$ e $t_{11}$)] $J_9$ acquisisce e rilascia la risora, la quale rimane inutilizzata in quanto non vi sono job in coda che la necessitano.
+\end{itemize}

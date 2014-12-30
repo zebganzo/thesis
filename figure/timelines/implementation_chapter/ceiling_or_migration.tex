@@ -1,0 +1,221 @@
+\newcommand{\ceilingSolution}{
+\begin{tikzpicture}[
+  yscale = 0.8,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  waiting/.style={fill=white},
+  busywait/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|},
+  important/.style={color=red,thick,|-|},
+  every text node part/.style={align=center}
+]
+%general params
+\def\th{.4} %task height
+\def\tyDown{0} %task a asse y
+\def\tyUp{1}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (0.5,2.5);
+
+%tasklines
+\draw[very thin, gray] (-.7,\tyDown)node[above,left,black]{$P_2$} -- +(10.2,0);
+\draw[very thin, gray] (-.7,\tyUp)node[above,left,black]{$P_1$} -- +(10.2,0);
+
+%axes
+\draw[thick, black, -] (-.5,-1) -- (-.5, 2.3);
+\draw[thick, black, ->] (-1,-.5) -- (10, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,9}\draw[thin, black] (\x, -.6) -- (\x, -.4);
+
+%Processor 1 ==> \tyUp
+
+\draw[normal]   (0, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[resource] (1, \tyUp) rectangle +(2, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[normal]   (3, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[normal]   (5, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+
+
+%\draw[resource] (5, \tyUp) rectangle +(1, \th) node[color=white,midway] {{\footnotesize  $\tau_1$}};%\fill[busywait] (6, \tyUp) rectangle +(3, \th) node[midway] {{\footnotesize $\tau_3$}};%\draw[resource] (9, \tyUp) rectangle +(3, \th) node[color=white,midway] {{\footnotesize  $\tau_3$}};
+
+\draw[release] (0,\tyUp) -- +(0,.8);
+\draw[request] (1,\tyUp) -- +(0,.8);
+\path(1, -.6)node[below]{{\tiny $t_{i}$}};
+\draw[release] (3,\tyUp) -- +(0,.8);
+\path(3, -.6)node[below]{{\tiny $t_{i+1}$}};
+\draw[complet] (4,\tyUp) -- +(0, .7);
+\path(4, -.6)node[below]{{\tiny $t_{i+2}$}};
+\draw[complet] (6,\tyUp) -- +(0, .7);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\draw[complet] (6,\tyUp) -- +(0, .7);
+%\draw[request] (6,\tyUp) -- +(0,1);
+%\draw[complet] (12,\tyUp) -- +(0, .7);
+
+%Processor 2 ==> \tyDown
+
+\draw[normal]   (0.5, \tyDown) rectangle +(1, \th) node[midway] {{\footnotesize $J_3$}};
+\fill[busywait] (1.5, \tyDown) rectangle +(1.5, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[resource] (3, \tyDown) rectangle +(2, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[resource] (5, \tyDown) rectangle +(3, \th) node[color=white,midway] {{\footnotesize  $J_3$}};
+\draw[normal]   (8, \tyDown) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_3$}};
+
+%\draw[resource] (4, \tyDown) rectangle +(1, \th) node[color=white,midway] {{\footnotesize  $\tau_1$}};
+%\fill[busywait] (5, \tyDown) rectangle +(1, \th) node[midway] {{\footnotesize $\tau_4$}};
+%\draw[resource] (6, \tyDown) rectangle +(3, \th) node[color=white,midway] {{\footnotesize $\tau_4$}};
+
+\draw[release] (0.5,\tyDown) -- +(0,.8);
+\draw[request] (1.5,\tyDown) -- +(0,.8);
+\path(5, -.6)node[below]{{\tiny $t_{i+3}$}};
+\draw[complet] (8.5,\tyDown) -- +(0, .7);
+
+%\draw[release] (3,\tyDown) -- +(0,.8);
+%\draw[complet] (4,\tyDown) -- +(0, .7);
+%\draw[complet] (9,\tyDown) -- +(0, .7);
+
+\draw[important] (4.05,\tyUp + \th) node[above,xshift=0.45cm]{\footnotesize idle} -- (4.95,\tyUp + \th);
+
+\end{tikzpicture}
+}
+
+
+
+\newcommand{\migrationSolution}{
+\begin{tikzpicture}[
+  yscale = 0.8,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  waiting/.style={fill=white},
+  busywait/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|},
+  important/.style={color=red,thick,|-|},
+  every text node part/.style={align=center}
+]
+%general params
+\def\th{.4} %task height
+\def\offeset{.25} %task height
+\def\tyDown{0} %task a asse y
+\def\tyUp{1}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (0.5,2.5);
+
+%tasklines
+\draw[very thin, gray] (-.7,\tyDown)node[above,left,black]{$P_2$} -- +(10.2,0);
+\draw[very thin, gray] (-.7,\tyUp)node[above,left,black]{$P_1$} -- +(10.2,0);
+
+%axes
+\draw[thick, black, -] (-.5,-1) -- (-.5, 2.3);
+\draw[thick, black, ->] (-1,-.5) -- (10, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,9}\draw[thin, black] (\x, -.6) -- (\x, -.4);
+
+%Processor 1 ==> \tyUp
+
+\draw[normal]   (0, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[resource] (1, \tyUp) rectangle +(2, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[normal]   (3, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[resource] (4, \tyUp) rectangle +(1, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[normal]   (5, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+
+\draw[release] (0,\tyUp) -- +(0,.8);
+\draw[request] (1,\tyUp) -- +(0,.8);
+\path(1, -.6)node[below]{{\tiny $t_{i}$}};
+\draw[release] (3,\tyUp) -- +(0,.8);
+\path(3, -.6)node[below]{{\tiny $t_{i+1}$}};
+\draw[complet] (4,\tyUp) -- +(0, .7);
+\path(4, -.6)node[below]{{\tiny $t_{i+2}$}};
+\draw[complet] (6,\tyUp) -- +(0, .7);
+
+%Processor 2 ==> \tyDown
+
+\draw[normal]   (0.5, \tyDown) rectangle +(1, \th) node[midway] {{\footnotesize $J_3$}};
+\fill[busywait] (1.5, \tyDown) rectangle +(1.5, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[resource] (3, \tyDown) rectangle +(1, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\fill[busywait] (4, \tyDown) rectangle +(1, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[resource] (5, \tyDown) rectangle +(3, \th) node[color=white,midway] {{\footnotesize  $J_3$}};
+\draw[normal]   (8, \tyDown) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_3$}};
+
+\draw[release] (0.5,\tyDown) -- +(0,.8);
+\draw[request] (1.5,\tyDown) -- +(0,.8);
+\path(5, -.6)node[below]{{\tiny $t_{i+3}$}};
+\draw[complet] (8.5,\tyDown) -- +(0, .7);
+
+\draw[important] (4,\tyUp - \offeset) -- (5,\tyUp - \offeset);
+
+\end{tikzpicture}
+}
+
+\newcommand{\agentSolution}{
+\begin{tikzpicture}[
+  yscale = 0.8,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  waiting/.style={fill=white,draw=red},
+  busywait/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|},
+  important/.style={color=red,thick,|-|},
+  every text node part/.style={align=center}
+]
+%general params
+\def\th{.4} %task height
+\def\tyDown{0} %task a asse y
+\def\tyUp{1}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (0.5,2.5);
+
+%tasklines
+\draw[very thin, gray] (-.7,\tyDown)node[above,left,black]{$P_2$} -- +(10.2,0);
+\draw[very thin, gray] (-.7,\tyUp)node[above,left,black]{$P_1$} -- +(10.2,0);
+
+%axes
+\draw[thick, black, -] (-.5,-1) -- (-.5, 2.3);
+\draw[thick, black, ->] (-1,-.5) -- (10, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,9}\draw[thin, black] (\x, -.6) -- (\x, -.4);
+
+%Processor 1 ==> \tyUp
+
+\draw[normal]   (0, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[resource] (1, \tyUp) rectangle +(2, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[normal]   (3, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[waiting]   (4, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $A$}};
+\draw[normal]   (5, \tyUp) rectangle +(1, \th) node[midway] {{\footnotesize $J_1$}};
+
+\draw[release] (0,\tyUp) -- +(0,.8);
+\draw[request] (1,\tyUp) -- +(0,.8);
+\path(1, -.6)node[below]{{\tiny $t_{i}$}};
+\draw[release] (3,\tyUp) -- +(0,.8);
+\path(3, -.6)node[below]{{\tiny $t_{i+1}$}};
+\draw[complet] (4,\tyUp) -- +(0, .7);
+\path(4, -.6)node[below]{{\tiny $t_{i+2}$}};
+
+%Processor 2 ==> \tyDown
+
+\draw[normal]   (0.5, \tyDown) rectangle +(1, \th) node[midway] {{\footnotesize $J_3$}};
+\fill[busywait] (1.5, \tyDown) rectangle +(1.5, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[resource] (3, \tyDown) rectangle +(2, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[resource] (5, \tyDown) rectangle +(3, \th) node[color=white,midway] {{\footnotesize  $J_3$}};
+\draw[normal]   (8, \tyDown) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_3$}};
+
+\draw[release] (0.5,\tyDown) -- +(0,.8);
+\draw[request] (1.5,\tyDown) -- +(0,.8);
+\path(5, -.6)node[below]{{\tiny $t_{i+3}$}};
+\draw[complet] (8.5,\tyDown) -- +(0, .7);
+
+\draw[normal]   ($(   0,0.5) + (legend)$) node[below, xshift=0.2cm]{\tiny executing} rectangle +\blockdim;
+\draw[resource] ($(1.75,0.5) + (legend)$) node[below, xshift=0.2cm]{\tiny resource} rectangle +\blockdim;
+\fill[busywait] ($( 3.5,0.5) + (legend)$) node[below, xshift=0.2cm]{\tiny busy wait} rectangle +\blockdim;
+\draw[release]  ($(5.25,0.5) + (legend)$) node[below]{\tiny job release}      -- +\arrowdim;
+\draw[request]  ($(   7,0.5) + (legend)$) node[below]{\tiny request}     -- +\arrowdim;
+\draw[complet]  ($(8.75,0.5) + (legend)$) node[below]{\tiny completion}   -- +\arrowdimB;
+
+\end{tikzpicture}
+}

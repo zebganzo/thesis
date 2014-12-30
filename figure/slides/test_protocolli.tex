@@ -1,0 +1,77 @@
+\newcommand{\smallqueueS}[2]{%
+\draw[queuesty] (#1)node[right,xshift=.2cm,yshift=.-0.4cm]{\sffamily #2}-- ++(.2,.15)-- ++(.9,0)-- ++(0,-.3)-- ++(-.9,0)-- cycle;
+\draw[fill=green!80] (#1) ++ (.3,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$L_1$};
+\draw[fill=orange!80] (#1) ++ (.7,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$L_3$};}
+\newcommand{\bigqueueS}[2]{%
+\draw[queuesty] (#1)node[right,xshift=.2cm]{\sffamily #2}-- ++(.3,.3)-- ++(.8,0)-- ++(0,-.6)-- ++(-.8,0)-- cycle;}
+
+\newcommand{\exampleTest}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  cpusty/.style={fill=gray!40, draw, circle, minimum width=1cm},
+  srpsty/.style={fill=white, draw, circle, text width=.17cm, font=\tiny, very thick},
+  numsty/.style={text width=.1cm, font=\tiny},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  arrow/.style={->,>=stealth},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  emptytask/.style={rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA/.style={fill=green!40, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB/.style={fill=orange!40!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  task/.style={fill=white, draw, rectangle, minimum width=.7cm,font=\footnotesize}]
+
+\begin{scope}[xshift=4cm, yshift=1cm]
+\coordinate (SRP1node) at (0,0);
+\node[cpusty] (P1) at (2.5,0) {$P_1$};
+\node[taskA] (T1) at (1.3,0.8) {$L_1$};
+\node[emptytask] (TP1) at (1.3,0.4) {$\cdots$};
+\node[task] (TJ) at (1.3,0) {$J_i$};
+\node[emptytask] (TP2) at (1.3,-0.4) {$\cdots$};
+\node[taskA] (T2) at (1.3,-0.8) {$H_2$};
+\draw[arrow] (T1.east) -- (P1.west);
+\draw[arrow] (TJ.east) -- (P1.west);
+\draw[arrow] (T2.east) -- (P1.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]T1.north-|SRP1node) node[right,xshift=.3cm,littletext]{partition$_1$} rectangle ([shift={(.1,-.1)}]T2.south-|P1.east);
+\node[srpsty] (SRP1) at (SRP1node) {}; \node[font=\sffamily\tiny] at(SRP1node.east){SRP};
+\draw[arrow] (T1.west) to[out=180,in=0] ([yshift=.1cm]SRP1.east);
+\node[numsty] (N1) at (0.50,.65) {}; \node[font=\sffamily\tiny] at(N1){\color{red}1};
+
+
+\node[numsty] (N3) at (1.9,-.45) {}; \node[font=\sffamily\tiny] at(N3){\color{red}3};
+
+\end{scope}
+
+\begin{scope}[xshift=4cm, yshift=-1.1cm]
+\coordinate (SRP2node) at (0,-.8);
+\node[cpusty] (P2) at (2.5,-0.8) {$P_2$};
+
+\node[task] (TX) at (1.3,0) {$J_x$};
+\node[emptytask] (TP3) at (1.3,-0.4) {$\cdots$};
+\node[taskB] (T3) at (1.3,-0.8) {$L_3$};
+\node[emptytask] (TP4) at (1.3,-1.2) {$\cdots$};
+\node[task] (TY) at (1.3,-1.6) {$J_y$};
+
+\draw[arrow] (T3.east) -- (P2.west);
+\draw[arrow] (TX.east) -- (P2.west);
+\draw[arrow] (TY.east) -- (P2.west);
+
+\draw[dashed, thin] ([shift={(-.1,.2)}]TX.north-|SRP2node) node[right,xshift=.3cm,littletext]{partition$_2$} rectangle ([shift={(.1,-.1)}]TY.south-|P2.east);
+\node[srpsty] (SRP2) at (SRP2node) {}; \node[font=\sffamily\tiny] at(SRP2node.east){SRP};
+\draw[arrow] (T3.west) to[out=180,in=0] (SRP2.east);
+\node[numsty] (N2) at (0.6,-0.6) {}; \node[font=\sffamily\tiny] at(N2){\color{red}2};
+
+
+\end{scope}
+
+\begin{scope}
+\draw[ressty] (-0.5,-.65) rectangle +(1.5,.5) node[midway, font=\tiny]{resource};
+\smallqueueS{1.0,-0.4}{FIFO}
+\draw[|-|] (1.2, -.02) -- ++(.9,0)node[midway,fill=white,font=\tiny]{$2$};
+\end{scope}
+
+\draw[arrow] (SRP1.west)node[anchor=south east,yshift=-.3cm,font=\tiny\sffamily]{ \begin{tabular}{c} top of access queue, \\ acquires resource \end{tabular}} to[out=180,in=0] (2.1,-.3);
+\draw[arrow] (SRP2.west)node[anchor=north east,yshift=.3cm,font=\tiny\sffamily]{ \begin{tabular}{c} not top of access queue, \\ spins locally \end{tabular}} to[out=180,in=0] (2.1,-.5);
+
+\end{tikzpicture}}

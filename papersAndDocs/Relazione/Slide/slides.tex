@@ -1,0 +1,269 @@
+
+\documentclass{beamer}
+
+\usepackage{mathtools}
+
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\usetikzlibrary{patterns,shapes,arrows,calc}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\input{../C1Figures.tex}
+
+\begin{document}
+
+\title{Multiprocessor Resource Sharing Protocol}
+
+\frame{\titlepage} 
+
+\frame{
+
+	\frametitle{Aim}
+
+	\begin{block}{Develope a schedulability compatible protocol}
+	\end{block}
+
+	\hspace{1mm}
+
+	\begin{block}{Response-Time Analysis with PCP/SRP for single-processor systems}
+		\begin{center}
+			$R_i = C_i + B_i + I_i$
+		\end{center}
+	\end{block}			
+		
+	\begin{itemize}
+		\item $I_i = \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j$
+		\item $B_i = max$\{\textcolor{red}{$\hat{c}$}$,\hat{b}\}$
+		\item $C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \textcolor{red}{c^j}$
+	\end{itemize} 
+}
+
+\frame{
+
+	\frametitle{System and Task Model}
+
+	\begin{itemize}
+		\item Fully partitioned system
+		\item Fixed Priorities scheduler
+		\item Sporadic task model
+		\item \textit{m} identical processors
+	\end{itemize}
+
+	\begin{block}{Resources}
+		\begin{itemize}
+			\item Local resources can be accessed from the same processor
+			\item Global resources can be accessed from all processors
+			\item Accessed under mutual exclusion
+			\item Serialization of the parallel accesses to the global resources
+		\end{itemize}
+	\end{block}
+}
+
+\frame{
+
+	\frametitle{Model - 1}
+	
+	The main aim of the protocol is to bound the global resource's side effect
+
+	\hspace{1mm}
+	
+	Response-Time Analisy can be used "as is"
+
+	\begin{itemize}
+
+		\item A job can be blocked at most one time and before its execution
+
+		\item The job spins until when it gets the access to the resource
+
+	\end{itemize}
+
+}
+
+\frame{
+	
+	\frametitle{Model - 2}
+
+	In the local processor the combination of PCP/SRP and a spin-based protocol guarantees one single request per cpu at the same time
+
+	\hspace{1mm}
+	
+	All resources are assigned a set of ceiling, one per processor
+
+	\hspace{1mm}
+	
+	At the global level, the requests are queued in global FIFO queue and the access to the resource is granted when the request reaches the head of the queue
+
+	\hspace{1mm}
+
+	We need a mechanism to bound the time a job waits to get the access, the lock holder can migrate when preempted and executes in the processors where jobs are busy waiting
+
+}
+
+\frame{
+
+	\frametitle{Implementation}
+	
+	LITMUS-RT provides a set of callback to handle the events in the real time system. We need only a subset of these functions.
+
+	\hspace{1mm}	
+
+	We need a mechanism that notify the protocol when a processor is available to execute the lock holder.
+
+	\hspace{1mm}
+
+	MrsP needs to handle a set of events to make partitioned fixed priority scheduler compatible with schedulability analisies:
+
+	\begin{itemize}
+		\item schedule
+		\item context switch
+		\item resource's access request
+		\item resource release
+	\end{itemize}	
+}
+
+\frame{
+
+	\frametitle{Implementation - LITMUS-RT callbacks}
+	
+	\begin{block}{pfp scheduler: pfp\_schedule}
+		\begin{itemize}
+			\item detect when lock holder is preempted
+			\item keep the processor idle when necessary
+		\end{itemize}
+	\end{block}
+
+	\begin{block}{pfp scheduler: pfp\_finish\_switch}
+		\begin{itemize}
+			\item force the lock holder to migrate
+			\item notify the protocol that a processor became available for a migration
+		\end{itemize}
+	\end{block}
+
+	\begin{block}{mrsp resource: pfp\_mrsp\_open}
+		\begin{itemize}
+			\item computes the set of ceiling
+		\end{itemize}
+	\end{block}
+
+}
+
+\frame{
+
+	\frametitle{Implementation - LITMUS-RT callbacks}
+
+
+	\begin{block}{mrsp resource: pfp\_mrsp\_lock}
+		\begin{itemize}
+			\item reise task priority to the local ceiling
+			\item add the request to the global FIFO queue
+			\item wake up lock holder if necessary
+			\item busy wait
+		\end{itemize}
+	\end{block}
+
+	\begin{block}{mrsp resource: pfp\_mrsp\_unlock}
+		\begin{itemize}
+			\item restore task priority
+			\item remove the request from the head of the queue
+			\item force the job to migrate back
+		\end{itemize}
+	\end{block}
+}
+
+\frame{
+
+	\frametitle{Taskset - 1}
+
+	\begin{table}
+	\centering
+	\begin{tabular}{cccccc}
+	\hline\hline
+    Task     & Processor & Release time & WCET & C.S. length & Prio \\ \hline
+    $\tau_1$ & $P_1$  & 0            & 3              & 2                       & low      \\
+    $\tau_2$ & $P_1$  & 4            & 2              & 0                       & high     \\
+    $\tau_3$ & $P_2$  & 0            & 3              & 2                       & low      \\
+    $\tau_4$ & $P_2$  & 4            & 1              & 0                       & high     \\
+    $\tau_5$ & $P_3$  & 0            & 3              & 2                       & low      \\
+    $\tau_6$ & $P_3$  & 4            & 2              & 0                       & high     \\
+    \hline
+    \end{tabular}
+	\end{table}
+
+}
+
+\frame{
+
+	\frametitle{Run-time - 1}
+
+	\begin{figure}
+		\centering
+		\Slide
+		\caption{3 processors, 6 tasks, 1 global resource}
+	\end{figure}
+
+}
+
+\frame{
+
+	\frametitle{Taskset - 2}
+
+	\begin{table}
+	\centering
+	\begin{tabular}{cccccc}
+	\hline\hline
+    Task     & Processor & Release time & WCET & C.S. length & Prio \\ \hline
+    $\tau_1$ & $P_1$  & 0            & 2              & 3                       & middle      \\
+    $\tau_2$ & $P_1$  & 3            & 2              & 0                       & high     \\
+    $\tau_3$ & $P_1$  & 0            & 0              & 3                       & low     \\
+    $\tau_4$ & $P_2$  & 0            & 2              & 3                       & low      \\
+    $\tau_5$ & $P_2$  & 3            & 1              & 0                       & high     \\
+    \hline
+    \end{tabular}
+\end{table}
+
+}
+
+\frame{
+
+	\frametitle{Run-time - 2}
+
+	\begin{figure}
+		\SlideBis
+		\centering
+		\caption{2 processors, 5 tasks, 1 global resource}
+	\end{figure}
+
+}
+
+\frame{
+
+	\frametitle{Experiments}
+
+	Performance comparison between MrsP and a protocol based on SRP and Simple Lock
+
+	\hspace{1mm}
+
+	Finding a relation between the resource's critical section length and the MrsP's overhead, determining whether the protocol is useful or not.
+
+	\hspace{1mm}
+
+	Comparison among different implementations, e.g. deciding when to force the lock holder to migrate back
+
+	\begin{itemize}
+		\item as soon as possible
+		\item as late as possible
+	\end{itemize}
+
+}
+
+
+
+\end{document}
+

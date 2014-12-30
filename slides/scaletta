@@ -1,0 +1,61 @@
+
+
+Modello
+- workload
+- scheduler P-FP
+- risorse attive/passive
+
+MrsP
+- task indipendenti, quindi risorse: locali / globali, spin-based/suspension-based, problema di limitare il tempo di blocco e garantire indipendenza dei job
+- prende spunto dal piu' protocolli per ottenerne uno per poter utilizzare RTA
+- estensione multiprocessor di SRP
+- spin-based, accodamento FIFO e riprendere l'esecuzione 
+
+=======
+
+Soluzione
+
+- localmente IPCP (ceiling pre calcolato, innalzamento priorita' non appena inoltro la richiesta)
+- accodamento FIFO della richiesta e non tolto dalla coda fino a che non rilascio la risorsa
+- spin-based
+- migrazione in caso di prerilascio
+
+
+LITMUS (breve introduzione)
+
+- estensione ubuntu
+- nuova classe di processi + plugin per scheduler e risorse + astrazione dominio
+
+Implementazione
+
+- strutture dati
+- algoritmo
+-- gestione della coda
+-- lock (ceiling +1 +2, varie fasi)
+-- unlock (3 fasi)
+-- schedule (placeholder e predisposizione migrazione)
+-- context switch (MIGRATION, base, job resumed)
+-Esempio di esecuzione? SIngoli esempio per ciascuno?
+
+Esperimenti
+
+- architettura di esecuzione?
+- generazione degli esperimenti
+- #1 confronto tra protocolli
+-- approcci alla base di altri protocolli
+-- immagine con la configurazione
+-- Risultati e considerazioni
+- #2 calcolo overhead
+-- valutare impatto del protocollo in presenza di risorse
+-- configurazione (25 job su 4 CPU) e chi affligge i costi
+-- Risultati e considerazioni
+- #3 impatto protocollo su P-FP
+-- valutare impatto del protocollo in assenza di risorse
+-- configurazione (vario l'utilization del sistema)
+-- Risultati e considerazioni
+
+Conclusini e sviluppi futuri
+
+- risorse innestate
+- confronto OMIP
+- limitare le migrazioni

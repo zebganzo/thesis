@@ -1,0 +1,84 @@
+\newcommand{\SuspOrSpin}{
+\begin{tikzpicture}[
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  waiting/.style={fill=white},
+  busywait/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|},
+  important/.style={color=red,thick,|-|},
+  every text node part/.style={align=center},
+  unlock/.style={-*}
+]
+%general params
+\def\th{.4} %task height
+\def\offeset{.25} %task height
+\def\tyDown{0} %task a asse y
+\def\tyUp{1}
+\def\tyAbove{2}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (0.5,2.5);
+
+%tasklines
+\draw[very thin, gray] (-.7,\tyDown)node[above,left,black]{$P_3$} --    +(8.2,0);
+\draw[very thin, gray] (-.7,\tyUp)node[above,left,black]  {$P_2$} --    +(8.2,0);
+\draw[very thin, gray] (-.7,\tyAbove)node[above,left,black]  {$P_1$} -- +(8.2,0);
+
+%axes
+\draw[thick, black, -] (-.5,-0.6) -- (-.5, 2.8);
+\draw[thick, black, ->] (-1,-.5) -- (8, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,7}\draw[thin, black] (\x, -.6) -- (\x, -.4);
+
+%Processor 1 ==> \tyAbove
+
+\draw[release] (0,    \tyAbove) -- +(0,.8);
+\draw[normal]   (0,   \tyAbove) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[request] (0.5,  \tyAbove) -- +(0,.8);
+\draw[resource] (0.5, \tyAbove) rectangle +(2, \th) node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[unlock]   (2.5, \tyAbove) -- +(0,.8);
+\draw[normal]   (2.5, \tyAbove) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[complet] (3,    \tyAbove) -- +(0, .7);
+
+
+%Processor 2 ==> \tyUp
+
+\def\offsetA{.3}
+\def\offsetB{2}
+
+\draw[release]  (0.0+\offsetA, \tyUp) -- +(0,.8);
+\draw[normal]   (0.0+\offsetA, \tyUp) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[request]  (0.5+\offsetA, \tyUp) -- +(0,.8) node[right] {{\tiny \textcolor{red}{self-suspend}}};
+\draw[resource] (0.5+\offsetB, \tyUp) rectangle +(2, \th) node[color=white,midway] {{\footnotesize $J_2$}};
+\draw[unlock]   (2.5+\offsetB, \tyUp) -- +(0,.8);
+\draw[normal]   (2.5+\offsetB, \tyUp) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[complet]  (3.0+\offsetB, \tyUp) -- +(0, .7);
+
+%Processor 2 ==> \tyDown
+
+\def\offsetC{.5}
+\def\offsetD{4}
+
+\draw[release]  (0.0+\offsetC, \tyDown) -- +(0,.8);
+\draw[normal]   (0.0+\offsetC, \tyDown) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[request]  (0.5+\offsetC, \tyDown) -- +(0,.8) node[right] {{\tiny \textcolor{red}{busy wait}}};
+\fill[busywait] (0.5+\offsetC, \tyDown) rectangle +(\offsetD - \offsetC, \th)   node[midway] {{\footnotesize $J_3$}};
+\draw[resource] (0.5+\offsetD, \tyDown) rectangle +(2, \th) node[color=white,midway] {{\footnotesize $J_3$}};
+\draw[unlock]   (2.5+\offsetD, \tyDown) -- +(0,.8);
+\draw[normal]   (2.5+\offsetD, \tyDown) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[complet]  (3.0+\offsetD, \tyDown) -- +(0, .7);
+
+\coordinate (legend) at (0,3);
+
+\draw[normal]   ($(-1,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize executing} rectangle +\blockdim;
+\draw[resource] ($(0.5,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize resource} rectangle +\blockdim;
+\fill[busywait] ($(2,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize busy wait} rectangle +\blockdim;
+\draw[release]  ($(3.5,0.5) + (legend)$) node[below]{\scriptsize release}      -- +\arrowdim;
+\draw[complet]  ($(5,0.5) + (legend)$) node[below]{\scriptsize completion}   -- +\arrowdim;
+\draw[request]  ($(6.5,0.5) + (legend)$) node[below]{\scriptsize request}     -- +\arrowdim;
+\draw[unlock]   ($(8,0.5) + (legend)$) node[below]{\scriptsize resource \\ \scriptsize release}     -- +\arrowdim;
+
+\end{tikzpicture}
+}

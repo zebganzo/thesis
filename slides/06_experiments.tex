@@ -1,0 +1,198 @@
+\input{../figure/slides/test_protocolli.tex}
+\input{../figure/grafico1.tex}
+\input{../figure/slides/overheads.tex}
+\input{grafico_sched.tex}
+\input{../figure/slides/miss.tex}
+
+\section{Experiments}
+
+\begin{frame}
+
+	\frametitle{Experiments}
+	\framesubtitle{Overview}
+
+		\begin{block}{Experiment \#1: Comparison among protocols}
+			MrsP outperfmors protocols based on simple ceiling or non preemption
+		\end{block}
+
+		\begin{block}{Experiment \#2: Sampling of the overheads}
+			MrsP brings benefits at reasonable costs
+		\end{block}
+
+		\begin{block}{Experiment \#3: Absence of global resources}
+			The protocol doesn't interfere with the scheduler
+		\end{block}
+
+\end{frame}
+
+
+\begin{frame}
+
+	\frametitle{Experiment \#1}
+	\framesubtitle{Comparison among protocols - 1}
+
+	The experiment observes the \alert{response times} of $L_1$, $H_2$ and $L_3$ while varying the \alert{critical section length} and the \alert{WCET} of $H_2$
+
+	\vspace{0.2cm}
+
+    \centerline{\exampleTest{1}{1}}
+
+\end{frame}
+
+% \begin{frame}
+
+% 	\frametitle{Experiments}
+% 	\framesubtitle{Comparison between protocols - 2}
+	
+%   \begin{figure}
+%     \centering
+%       \begin{subfigure}[b]{0.49\textwidth}
+%         \centering
+%         \resizebox{\linewidth}{!}\confrontoProtocolliLUno
+%         \caption{Response time of $L_1$}
+%       \end{subfigure}
+%       \begin{subfigure}[b]{0.49\textwidth}
+%         \centering
+%         \resizebox{\linewidth}{!}\confrontoProtocolliHDue
+%         \caption{Response time of $H_2$}
+%       \end{subfigure}
+%   \end{figure}
+
+
+% \end{frame}
+
+\begin{frame}
+
+	\frametitle{Experiment \#1}
+	\framesubtitle{Comparison among protocols - 2}
+
+	\begin{figure}
+	  \centering
+	  \scalebox{0.7}{\confrontoProtocolliLUno}
+	  \caption{Response time of $L_1$}
+	  \label{fig:test_protocols_L3}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Experiment \#1}
+	\framesubtitle{Comparison among protocols - 3}
+
+	\begin{figure}
+	  \centering
+	  \scalebox{0.7}{\confrontoProtocolliHDue}
+	  \caption{Response time of $H_2$}
+	  \label{fig:test_protocols_L3}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Experiment \#1}
+	\framesubtitle{Comparison among protocols - 4}
+
+	\begin{figure}
+	  \centering
+	  \scalebox{0.7}{\confrontoProtocolliLTre}
+	  \caption{Response time of $L_3$}
+	  \label{fig:test_protocols_L3}
+	\end{figure}
+
+\end{frame}
+
+% \begin{frame}
+
+% 	\frametitle{Experiments}
+% 	\framesubtitle{Sampling of the overheads - 1}
+
+% 	The experiment samples the overheads added by protocol's implementation.
+
+% 	\begin{itemize}
+% 		\item mrsp\_lock:
+% 		\begin{itemize}
+% 			\item [I)] local PCP/SRP
+% 			\item [II)] yield the processor
+% 			\item [III)] busy wait
+% 		\end{itemize}
+% 		\item mrsp\_unlock:
+% 		\begin{itemize}
+% 			\item [I)] local PCP/SRP
+% 			\item [II)] migrate the next lock holder
+% 		\end{itemize}
+% 		\item finish\_switch:
+% 		\begin{itemize}
+% 			\item [I)] lock holder preempted
+% 			\item [II)] processor returns available
+% 			\item [III)] migration mechanism of LITMUS\textsuperscript{RT}
+% 		\end{itemize}
+% 	\end{itemize}
+
+% \end{frame}
+
+\begin{frame}
+
+	\frametitle{Experiment \#2}
+	\framesubtitle{Sampling of the overheads}
+
+	\begin{figure}
+    \centering
+      \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\overheadsLock
+        \caption{mrsp\_lock}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.28\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\overheadsRelease
+        \caption{mrsp\_unlock}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \resizebox{\linewidth}{!}\overheadsFS
+        \caption{finish\_switch}
+      \end{subfigure}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Experiment \#3}
+	\framesubtitle{MrsP without global resources}
+
+	The collected data show the same number of deadline miss
+
+	\begin{figure}
+    \scalebox{0.8}{\miss}
+    \caption{Number of \textit{deadline miss}} %%Average job release overhead.
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Experiment \#3}
+	\framesubtitle{MrsP without global resources - pfp\_schedule performance}
+
+	\begin{figure}[htb]
+	    \centering
+	      \begin{subfigure}[b]{0.49\textwidth}
+	        \centering
+	        \resizebox{\linewidth}{!}\graficoSchedMIN  
+	        \caption{pfp\_schedule: Min}
+	      \end{subfigure}
+	      \begin{subfigure}[b]{0.49\textwidth}
+	        \centering
+	        \resizebox{\linewidth}{!}\graficoSchedMAX
+	        \caption{pfp\_schedule: Max}
+	      \end{subfigure}
+	      \begin{subfigure}[b]{0.49\textwidth}
+	        \centering
+	        \resizebox{\linewidth}{!}\graficoSchedAVG
+	        \caption{pfp\_schedule: Average}
+	      \end{subfigure}
+	  \end{figure}
+
+  \end{frame}

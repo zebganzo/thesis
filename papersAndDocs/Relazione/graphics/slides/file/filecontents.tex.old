@@ -1,0 +1,241 @@
+%%%%%%%%%%%%%%%%% SCHED MIN %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPschedMIN.data}
+#Utilization   Times $\mu$s
+1.0  17.35
+2.0  17.60
+3.0  17.03
+3.5  14.54
+4.0  16.91
+4.5  16.16
+5.0  16.46
+6.0  16.37
+\end{filecontents}
+
+\begin{filecontents}{MRSPschedMIN.data}
+#Utilization   Times $\mu$s
+1.0  14.20
+2.0  17.88
+3.0  15.02
+3.5  13.94
+4.0  14.99
+4.5  13.98
+5.0  12.36
+6.0  13.32
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% SCHED MAX %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPschedMAX.data}
+#Utilization   Times $\mu$s
+1.0  3.1108
+2.0  5.1018
+3.0  4.8526
+3.5  3.1108
+4.0  4.2522
+4.5  2.9623
+5.0  3.7787
+6.0  2.8438
+\end{filecontents}
+
+\begin{filecontents}{MRSPschedMAX.data}
+#Utilization   Times $\mu$s
+1.0  2.8438
+2.0  5.1799
+3.0  4.8708
+3.5  3.6047
+4.0  4.3150
+4.5  2.9238
+5.0  3.4238
+6.0  2.8985
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% SCHED AVG %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPschedAVG.data}
+#Utilization   Times $\mu$s
+1.0  17.754
+2.0  14.135
+3.0  12.070
+3.5  9.362
+4.0  10.353
+4.5  8.302
+5.0  10.132
+6.0  7.746
+\end{filecontents}
+
+\begin{filecontents}{MRSPschedAVG.data}
+#Utilization   Times $\mu$s
+1.0  16.085
+2.0  13.076
+3.0  11.795
+3.5  10.968
+4.0  10.374
+4.5  9.009
+5.0  9.392
+6.0  8.349
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% RELEASE MIN %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPreleaseMIN.data}
+#Utilization   Times $\mu$s
+1.0  15.27
+2.0  15.36
+3.0  13.04
+3.5  13.22
+4.0  12.13
+4.5  13.75
+5.0  13.95
+6.0  13.70
+\end{filecontents}
+
+\begin{filecontents}{MRSPreleaseMIN.data}
+#Utilization   Times $\mu$s
+1.0  11.34
+2.0  11.40
+3.0  11.16
+3.5  10.96
+4.0  11.04
+4.5  10.70
+5.0  11.04
+6.0  10.94
+\end{filecontents}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% RELEASE MAX %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPreleaseMAX.data}
+#Utilization   Times $\mu$s
+1.0  2.2583
+2.0  2.2429
+3.0  2.3804
+3.5  2.2704
+4.0  2.3694
+4.5  2.4035
+5.0  2.3551
+6.0  1.8062
+\end{filecontents}
+
+\begin{filecontents}{MRSPreleaseMAX.data}
+#Utilization   Times $\mu$s
+1.0  2.3584
+2.0  2.1505
+3.0  2.0218
+3.5  1.8102
+4.0  1.8348
+4.5  1.5323
+5.0  1.4652
+6.0  0.8591
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% RELEASE AVG %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPreleaseAVG.data}
+#Utilization   Times $\mu$s
+1.0  11.110
+2.0  8.980
+3.0  7.791
+3.5  6.390
+4.0  6.634
+4.5  5.420
+5.0  5.751
+6.0  4.366
+\end{filecontents}
+
+\begin{filecontents}{MRSPreleaseAVG.data}
+#Utilization   Times $\mu$s
+1.0  6.760
+2.0  5.426
+3.0  4.872
+3.5  3.996
+4.0  3.733
+4.5  3.076
+5.0  3.051
+6.0  2.642
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% CXS MIN %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPcxsMIN.data}
+#Utilization   Times $\mu$s
+1.0  15.37
+2.0  14.27
+3.0  15.52
+3.5  13.23
+4.0  12.13
+4.5  11.82
+5.0  12.83
+6.0  12.79
+\end{filecontents}
+
+\begin{filecontents}{MRSPcxsMIN.data}
+#Utilization   Times $\mu$s
+1.0  15.38
+2.0  15.68
+3.0  15.76
+3.5  13.67
+4.0  13.17
+4.5  12.51
+5.0  13.74
+6.0  14.30
+\end{filecontents}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% CXS MAX %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPcxsMAX.data}
+#Utilization   Times $\mu$s
+1.0  5.1078
+2.0  4.2270
+3.0  3.7190
+3.5  3.1229
+4.0  3.0994
+4.5  2.7984
+5.0  2.5619
+6.0  1.0890
+\end{filecontents}
+
+\begin{filecontents}{MRSPcxsMAX.data}
+#Utilization   Times $\mu$s
+1.0  4.2754
+2.0  3.2499
+3.0  3.1999
+3.5  3.0151
+4.0  2.8622
+4.5  2.5777
+5.0  1.4098
+6.0  0.9922
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% CXS AVG %%%%%%%%%%%%%%%%%%%%%%%
+\begin{filecontents}{PFPcxsAVG.data}
+#Utilization   Times $\mu$s
+1.0  11.519
+2.0  8.522
+3.0  6.677
+3.5  4.931
+4.0  5.067
+4.5  3.870
+5.0  4.233 
+6.0  3.219
+\end{filecontents}
+
+\begin{filecontents}{MRSPcxsAVG.data}
+#Utilization   Times $\mu$s
+1.0  8.759
+2.0  6.620
+3.0  5.528
+3.5  4.825
+4.0  4.267
+4.5  3.573
+5.0  3.323
+6.0  2.885
+\end{filecontents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,155 @@
+\input{../figure/slides/data_structures.tex}
+
+\section{Implementation}
+
+% \begin{frame}
+
+% 	\frametitle{Implementation}
+% 	\framesubtitle{Development environment}
+
+% 	The LITMUS\textsuperscript{RT} is a real-time extension of the Linux kernel.
+
+% 	\vspace{0.3cm}
+	
+% 	It provides the following fundamental features:
+
+% 	\begin{itemize}
+% 		\item add a class at the top of the scheduling classes' hierarchy;
+% 		\item simple plugin interface for implementing of scheduling and resource access algorithms;
+% 		\item real-time domain abstraction.
+% 	\end{itemize}
+
+% \end{frame}
+
+\begin{frame}
+
+	\frametitle{Implementation}
+	\framesubtitle{Data structures}
+
+	\centerline{\system{1}{1}}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Implementation}
+	\framesubtitle{Queue management - 1}
+
+	Focused on managing the access requests queue
+
+	\vspace{0.2cm}
+
+	\centerline{\queueFirst{1}{1}}
+
+	\vspace{0.2cm}
+
+	If preempted, the lock holder ($J_x$)
+		\begin{enumerate}
+			\item inherits the ceiling ($c_3 + 1$)
+			\item migrates to $P_3$
+			\item preempts $J_y$
+		\end{enumerate}
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Implementation}
+	\framesubtitle{Queue management - 2}
+
+	% However, if there aren't available processors, the job will be re-queued in the \emph{ready\_queue}.
+
+	The job will be re-queued in the \emph{ready\_queue}
+
+	\vspace{0.1cm}
+
+	\centerline{\queueSecond{1}{1}}
+
+	\vspace{0.1cm}
+
+	The algorithm catches the operations that 
+
+\begin{figure}[htb]
+	\centering
+		\begin{subfigure}[b]{0.99\textwidth}
+			\centering
+			\resizebox{\linewidth}{!}\queueFourth
+		\end{subfigure}
+ \end{figure}
+  
+	% \begin{itemize}
+	% 	\item add a new request to the queue
+	% 	\item when a processor becomes available
+	% \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Implementation}
+	\framesubtitle{Primitive: mrsp\_lock}
+
+	\begin{figure}
+		\includegraphics[width=\linewidth]{../images/slides/slide_mrsp_lock.png}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Implementation}
+	\framesubtitle{Primitive: mrsp\_unlock}
+
+	\begin{figure}
+		\includegraphics[height=7cm]{../images/slides/slide_mrsp_unlock.png}
+	\end{figure}
+
+\end{frame}
+
+% \begin{frame}
+
+% 	\frametitle{Implementation}
+% 	\framesubtitle{Primitive: pfp\_schedule and finish\_switch}
+
+% 	In the schedule primitive:
+
+% 	\begin{itemize}
+% 		\item a job can execute only if its priority is higher than the local ceiling;
+%  		\item if preempted, the lock holder is marked for migration. 
+%  	\end{itemize}
+
+%  	After a context switch:
+
+% 	\begin{itemize}
+% 		\item the migrations take place
+% 		\begin{itemize}
+% 			\item the job inherites the ceiling value + 2
+% 			\item it is queued in the ready\_queue;
+% 		\end{itemize}
+%  		\item when a waiting job resumes execution, if the lock holder has been preempted, the protocol would yield the processor to it.
+%  	\end{itemize}
+
+% \end{frame}
+
+\begin{frame}
+	\frametitle{Implementation}
+	\framesubtitle{Primitive: pfp\_schedule and finish\_switch - 1}
+
+	\centerline{\MrsPProtocolsHarder}
+
+	\begin{itemize}
+	\item $t_1$: $J_2$ is marked for migration
+	\item $t_2$: $J_4$'s priority is lower than the local ceiling
+	\item $t_3$: default migration mechanism
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Implementation}
+	\framesubtitle{Primitive: pfp\_schedule and finish\_switch - 2}
+
+	\centerline{\MrsPProtocolsHarderBis}
+
+	\begin{itemize}
+	\item $t$: $J_1$ completes and $P_1$ returns available
+	\end{itemize}
+\end{frame}

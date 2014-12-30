@@ -1,0 +1,170 @@
+\newcommand{\MSRP}{%
+\begin{tikzpicture}[
+  xscale=1.3,
+  normal/.style={fill=black!30},
+  release/.style={-latex},
+  complet/.style={-|},
+  every text node part/.style={align=center},
+  important/.style={color=red,thick,-,dashed},
+  resource1/.style={ fill=black!70},
+  resource2/.style={ fill=black!90},
+  waiting/.style={fill=white},
+  busywait/.style={fill=black!10,postaction={pattern=north east lines, very thin}},
+  request/.style={-o},
+  unlock/.style={-*},
+]
+%general params
+\def\th{.5} %task height
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+
+\def\tyTFour{3}
+\def\tyTTwo{2}
+\def\tyTThree{1}
+\def\tyTOne{0}
+%axes
+
+%tasklines
+\def\tasklinelength{(7.8,0)}
+\draw[very thin, gray] (-.5,\tyTOne)node[above,left,black]{$\tau_1$} -- +\tasklinelength;
+\draw[very thin, gray] (-.5,\tyTThree)node[above,left,black]{$\tau_3$} -- +\tasklinelength;
+\draw[very thin, gray] (-.5,\tyTTwo)node[above,left,black]{$\tau_2$} -- +\tasklinelength;
+\draw[very thin, gray] (-.5,\tyTFour)node[above,left,black]{$\tau_4$} -- +\tasklinelength;
+
+%axes
+\draw[thick, black, -] (-.4,-.5) -- (-.4, 4.8);
+\draw[thick, black, ->] (-.6,-.4) -- (8, -.4) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,7} \draw[thin, black] (\x, -.6) -- (\x, -.3);
+
+\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+(-1,0) -- (-1,1.2) node [black,midway,xshift=-0.6cm] 
+{\footnotesize $P_1$};\
+
+\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt]
+(-1,1.8) -- (-1,3.2) node [black,midway,xshift=-0.6cm] 
+{\footnotesize $P_2$};
+
+
+\draw[release]   (0.0, \tyTFour) -- +(0,.8);
+\draw[normal]    (0.0, \tyTFour) rectangle +(1, \th);
+\draw[request]   (1.0, \tyTFour) -- +(0,.8);
+\fill[busywait]  (1.0, \tyTFour) rectangle +(1.5, \th);
+\draw[resource1] (2.5, \tyTFour) rectangle +(0.5, \th);
+\draw[unlock]    (3.0, \tyTFour) -- +(0,.8);
+
+\draw[release]   (0.0, \tyTThree) -- +(0,.8);
+\draw[normal]    (0.0, \tyTThree) rectangle +(0.5, \th);
+\draw[request]   (0.5, \tyTThree) -- +(0,.8);
+\draw[resource1] (0.5, \tyTThree) rectangle +(2.0, \th);
+\draw[unlock]    (2.5, \tyTThree) -- +(0,.8);
+
+\draw[release]   (1.5, \tyTTwo) -- +(0,.8);
+\draw[normal]    (3.0, \tyTTwo) rectangle +(0.5, \th);
+\draw[request]   (3.5, \tyTTwo) -- +(0,.8);
+\fill[busywait]  (3.5, \tyTTwo) rectangle +(0.5, \th);
+\draw[resource1] (4.0, \tyTTwo) rectangle +(0.5, \th);
+\draw[unlock]    (4.5, \tyTTwo) -- +(0,.8);
+\draw[normal]    (4.5, \tyTTwo) rectangle +(1.5, \th);
+\draw[request]   (6.0, \tyTTwo) -- +(0,.8);
+\draw[resource2] (6.0, \tyTTwo) rectangle +(0.5, \th);
+\draw[unlock]    (6.5, \tyTTwo) -- +(0,.8);
+\draw[normal]    (6.5, \tyTTwo) rectangle +(0.5, \th);
+\draw[complet]   (7.0, \tyTTwo) -- +(0,.8);
+
+\draw[release]   (1.0, \tyTOne) -- +(0,.8);
+\draw[normal]    (2.5, \tyTOne) rectangle +(0.5, \th);
+\draw[request]   (3.0, \tyTOne) -- +(0,.8);
+\draw[resource1] (3.0, \tyTOne) rectangle +(1.0, \th);
+\draw[unlock]    (4.0, \tyTOne) -- +(0,.8);
+\draw[normal]    (4.0, \tyTOne) rectangle +(0.5, \th);
+\draw[complet]   (4.5, \tyTOne) -- +(0,.8);
+
+\draw[request]   (4.5, \tyTThree) -- +(0,.8);
+\draw[resource2] (4.5, \tyTThree) rectangle +(0.5, \th);
+\draw[unlock]    (5.0, \tyTThree) -- +(0,.8);
+\draw[normal]    (5.0, \tyTThree) rectangle +(0.5, \th);
+\draw[complet]   (5.5, \tyTThree) -- +(0,.8);
+
+\draw[normal]    (7.0, \tyTFour) rectangle +(0.5, \th);
+\draw[complet]   (7.5, \tyTFour) -- +(0,.8);
+
+\end{tikzpicture}
+}
+
+\newcommand{\MrsPProtocols}{%
+\begin{tikzpicture}[
+  xscale=1.5,
+  normal/.style={fill=black!30},
+  release/.style={-latex},
+  complet/.style={-|},
+  every text node part/.style={align=center},
+  important/.style={color=red,thick,-,dashed},
+  resource/.style={ fill=black!80},
+  waiting/.style={fill=white},
+  busywait/.style={fill=black!10,postaction={pattern=north east lines, very thin}},
+  request/.style={-o},
+  unlock/.style={-*},
+]
+%general params
+\def\th{.5} %task height
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+
+\def\tyTwo{1}
+\def\tyOne{0}
+%axes
+
+%tasklines
+\def\tasklinelength{(6.8,0)}
+\draw[very thin, gray] (-.5,\tyOne)node[above,left,black]{$P_1$} -- +\tasklinelength;
+\draw[very thin, gray] (-.5,\tyTwo)node[above,left,black]{$P_2$} -- +\tasklinelength;
+
+%axes
+\draw[thick, black, -] (-.4,-.5) -- (-.4, 2.3);
+\draw[thick, black, ->] (-.6,-.4) -- (7, -.4) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,5} \draw[thin, black] (\x, -.6) -- (\x, -.3);
+
+\draw[release]  (0.0, \tyOne) -- +(0,.8);
+\draw[normal]   (0.0, \tyOne) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[request]  (0.5, \tyOne) -- +(0,.8);
+\draw[resource] (0.5, \tyOne) rectangle +(1.5, \th)   node[color=white,midway] {{\footnotesize  $J_1$}};
+
+\path(2.0, -1.2) node[above]{{\footnotesize $t$}};
+
+\draw[release]  (2.0, \tyOne) -- +(0,.8);
+\draw[normal]   (2.0, \tyOne) rectangle +(1.5, \th) node[midway] {{\footnotesize $J_2$}};
+\draw[complet]  (3.5, \tyOne) -- +(0,.8);
+
+\draw[normal]   (3.5, \tyOne) rectangle +(1.0, \th) node[midway] {{\footnotesize $J_1$}};
+\draw[complet]  (4.5, \tyOne) -- +(0,.8);
+
+
+\draw[release]  (1.0, \tyTwo) -- +(0,.8);
+\draw[normal]   (1.0, \tyTwo) rectangle +(0.5, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[request]  (1.5, \tyTwo) -- +(0,.8);
+\fill[busywait] (1.5, \tyTwo) rectangle +(0.5, \th)   node[midway] {{\footnotesize $J_3$}};
+
+\draw[resource] (2.0, \tyTwo) rectangle +(1.0, \th)   node[color=white,midway] {{\footnotesize  $J_1$}};
+\draw[unlock]   (3.0, \tyTwo) -- +(0,.8);
+
+\draw[resource] (3.0, \tyTwo) rectangle +(1.5, \th)   node[color=white,midway] {{\footnotesize  $J_3$}};
+\draw[unlock]   (4.5, \tyTwo) -- +(0,.8);
+
+\draw[normal]   (4.5, \tyTwo) rectangle +(1.0, \th) node[midway] {{\footnotesize $J_3$}};
+\draw[complet]  (5.5, \tyTwo) -- +(0,.8);
+
+
+\coordinate (legend) at (0,3);
+
+\draw[normal]   ($(0,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize executing} rectangle +\blockdim;
+\draw[resource] ($(1,0.5) + (legend)$) node[below,yshift=-0.4cm, xshift=0.2cm]{\scriptsize resource} rectangle +\blockdim;
+\fill[busywait] ($(2,0.5) + (legend)$) node[below, xshift=0.2cm]{\scriptsize busy wait} rectangle +\blockdim;
+\draw[release]  ($(3,0.5) + (legend)$) node[below,yshift=-0.4cm]{\scriptsize job release}      -- +\arrowdim;
+\draw[complet]  ($(4,0.5) + (legend)$) node[below]{\scriptsize completion}   -- +\arrowdim;
+\draw[request]  ($(5,0.5) + (legend)$) node[below,yshift=-0.4cm]{\scriptsize request}     -- +\arrowdim;
+\draw[unlock]   ($(6,0.5) + (legend)$) node[below]{\scriptsize resource release}     -- +\arrowdim;
+
+\end{tikzpicture}
+}

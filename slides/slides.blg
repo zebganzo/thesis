@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: slides.aux
+A level-1 auxiliary file: 02_MrsP.aux
+A level-1 auxiliary file: 03_Solution.aux
+A level-1 auxiliary file: 04_LITMUS.aux
+A level-1 auxiliary file: 05_implementation.aux
+A level-1 auxiliary file: 06_experiments.aux
+A level-1 auxiliary file: 07_conclusion.aux
+The style file: plain.bst
+Database file #1: ../reference.bib
+You've used 5 entries,
+            2118 wiz_defined-function locations,
+            542 strings with 5259 characters,
+and the built_in function-call counts, 2115 in all, are:
+= -- 222
+> -- 63
+< -- 4
++ -- 28
+- -- 20
+* -- 129
+:= -- 311
+add.period$ -- 17
+call.type$ -- 5
+change.case$ -- 25
+chr.to.int$ -- 0
+cite$ -- 5
+duplicate$ -- 101
+empty$ -- 183
+format.name$ -- 20
+if$ -- 485
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 29
+preamble$ -- 1
+purify$ -- 20
+quote$ -- 0
+skip$ -- 84
+stack$ -- 0
+substring$ -- 159
+swap$ -- 41
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 20
+warning$ -- 0
+while$ -- 22
+width$ -- 6
+write$ -- 63

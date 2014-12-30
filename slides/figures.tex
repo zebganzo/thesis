@@ -1,0 +1,436 @@
+\newcommand{\smallqueue}[2]{%
+\draw[queuesty] (#1)node[right,xshift=.1cm,yshift=.-0.5cm]{\sffamily #2}-- ++(.2,.15)-- ++(.9,0)-- ++(0,-.3)-- ++(-.9,0)-- cycle;
+\draw[fill=green!80] (#1) ++ (.2,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$\tau_1$};
+\draw[fill=orange!80] (#1) ++ (.5,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$\tau_2$};
+\draw[fill=blue!80] (#1) ++ (.8,.15)rectangle +(.3,-.3)node[font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt, midway]{$\tau_1$};}
+\newcommand{\bigqueue}[2]{%
+\draw[queuesty] (#1)node[right,xshift=.2cm]{\sffamily #2}-- ++(.3,.3)-- ++(.8,0)-- ++(0,-.6)-- ++(-.8,0)-- cycle;}
+
+\newcommand{\MrsP}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  cpusty/.style={fill=gray!40, draw, circle, minimum width=1cm},
+  srpsty/.style={fill=white, draw, circle, text width=.17cm, font=\tiny, very thick},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  arrow/.style={->,>=stealth},
+  littletextB/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  emptytask/.style={rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA/.style={fill=green!30, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB/.style={fill=orange!30!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskC/.style={fill=blue!30, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA_H/.style={fill=green!80, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB_H/.style={fill=orange!80!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskC_H/.style={fill=blue!80, draw, rectangle, minimum width=.7cm,font=\footnotesize}]
+
+\begin{scope}[xshift=4cm, yshift=3.3cm]
+\coordinate (SRP1node) at (0,0);
+\node[cpusty] (P1) at (2.5,0) {$P_1$};
+\node[taskA_H] (T1) at (1.3,.4) {$\tau_1$};
+\node[emptytask]  at (1.3,0) {$\cdots$};
+\node[taskA] (T2) at (1.3,-.4) {$\tau_2$};
+\draw[arrow] (T1.east) -- (P1.west);
+\draw[arrow] (T2.east) -- (P1.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]T1.north-|SRP1node) node[right,xshift=.3cm,littletext]{partition$_1$} rectangle ([shift={(.1,-.1)}]T2.south-|P1.east);
+\node[srpsty] (SRP1) at (SRP1node) {}; \node[font=\sffamily\tiny] at(SRP1node.east){SRP};
+\draw[arrow] (T1.west) to[out=180,in=0] ([yshift=.1cm]SRP1.east);
+\end{scope}
+
+\node[emptytask] at (5,2.2) {$\cdots$};
+
+\begin{scope}[xshift=4cm, yshift=1.1cm]
+\coordinate (SRP2node) at (0,0);
+\node[cpusty] (P2) at (2.5,0) {$P_2$};
+\node[taskB_H] (T3) at (1.3,.4) {$\tau_3$};
+\node[emptytask]  at (1.3,0) {$\cdots$};
+\node[taskB] (T4) at (1.3,-.4) {$\tau_4$};
+\draw[arrow] (T3.east) -- (P2.west);
+\draw[arrow] (T4.east) -- (P2.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]T3.north-|SRP2node) node[right,xshift=.3cm,littletext]{partition$_2$} rectangle ([shift={(.1,-.1)}]T4.south-|P2.east);
+\node[srpsty] (SRP2) at (SRP2node) {}; \node[font=\sffamily\tiny] at(SRP2node.east){SRP};
+\draw[arrow] (T3.west) to[out=180,in=0] ([yshift=.1cm]SRP2.east);
+\end{scope}
+\node[emptytask] at (5,0) {$\cdots$};
+
+\begin{scope}[xshift=4cm, yshift=-1.1cm]
+\coordinate (SRPmnode) at (0,0);
+\node[cpusty] (Pm) at (2.5,0) {\!$P_3$};
+\node[taskC] (Ty) at (1.3,.4) {$\tau_5$};
+\node[emptytask]  at (1.3,0) {$\cdots$};
+\node[taskC_H] (Tn) at (1.3,-.4) {$\tau_6$};
+\draw[arrow] (Ty.east) -- (Pm.west);
+\draw[arrow] (Tn.east) -- (Pm.west);
+\draw[dashed, thin] ([shift={(-.1,.2)}]Ty.north-|SRPmnode) node[right,xshift=.3cm,littletext]{partition$_3$} rectangle ([shift={(.1,-.1)}]Tn.south-|Pm.east);
+\node[srpsty] (SRPm) at (SRPmnode) {}; \node[font=\sffamily\tiny] at(SRPmnode.east){SRP};
+\draw[arrow] (Tn.west) to[out=180,in=0] ([yshift=-.1cm]SRPm.east);
+\end{scope}
+
+\begin{scope}
+\draw[ressty] (-1.5,1) rectangle +(1.5,.5) node[midway]{res$_k$};
+\smallqueue{-.2,1.25}{FIFO}
+\draw[|-|] (0, 1.75) -- ++(.9,0)node[midway,fill=white,font=\tiny]{$m$};
+\end{scope}
+
+\draw[arrow] (SRP1.west) to[out=180,in=0] (1.5,1.4);
+\draw[arrow] (SRP2.west)node[anchor=east,yshift=-.2cm,,font=\tiny\sffamily]{ \begin{tabular}{c} spinning at\\own ceiling\end{tabular}} to[out=180,in=0] (1.5,1.2);
+\draw[arrow] (SRPm.west)node[anchor=north east,yshift=.2cm,font=\tiny\sffamily]{ \begin{tabular}{c} spinning at\\own ceiling\end{tabular}} to[out=180,in=0] (1.5,1.0);
+
+\end{tikzpicture}}
+
+
+
+
+
+
+
+
+
+
+
+
+\newcommand{\OMLPglob}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  cpusty/.style={fill=gray!40, draw, circle, minimum width=1cm},
+  srpsty/.style={fill=white, draw, circle, text width=.17cm, font=\tiny, very thick},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  arrow/.style={->,>=stealth},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  emptytask/.style={rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA/.style={fill=orange!0!yellow, draw, rectangle, minimum width=1cm,font=\footnotesize}]
+
+\begin{scope}[xshift=5cm, yshift=-1cm]
+\node[taskA] (T1) at(0,2) {$\tau_1$};
+\node[emptytask]  at(0,1.1) {$\vdots$};
+\node[taskA] (Tn) at(0,0) {$\tau_n$};
+\draw[dashed, thin] ([shift={(-.1,.3)}]T1.north west)node[right,xshift=.3cm,littletext]{taskset} rectangle ([shift={(.1,-.1)}]Tn.south east);
+\end{scope}
+
+\begin{scope}[xshift=7.5cm, yshift=-1.2cm]
+\node[cpusty] (P1) at(0,2.4) {$P_1$};
+\node[emptytask]   at(0,1.25) {$\vdots$};
+\node[cpusty] (Pm) at(0,0) {$P_m$};
+\end{scope}
+
+\begin{scope}[xshift=0cm, yshift=0cm]
+\draw[ressty] (0,-.25) rectangle +(1.5,.5) node[midway]{res};
+\smallqueue{1.3,0}{FIFO}
+\draw[|-|] (1.5, .35) -- ++(.8,0)node[midway,fill=white,font=\tiny]{$3$};
+\bigqueue{2.1,0}{PRIO}
+\end{scope}
+
+\draw[arrow] (T1.east) -- (6.5,0) -- (P1.south west);
+\draw[arrow] (Tn.east) -- (6.5,0) -- (Pm.north west);
+\draw[arrow] (T1.west)node[anchor=south east,font=\tiny]{suspend} to[out=180,in=0] (3.2,.1);
+\draw[arrow] (Tn.west)node[anchor=north east,font=\tiny]{suspend} to[out=180,in=0] (3.2,-.1);
+
+\draw[fill=gray] (6.5,0) circle (.1);
+\draw[dotted,thin] (6.5,0) -- ++(-.5,-1.5)node[below,font=\tiny]{\textcolor{black!75}{JLFP scheduler}};
+
+\end{tikzpicture}}
+
+
+\newcommand{\OMIP}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  cpusty/.style={fill=gray!40, draw, circle, text width=.4cm,font=\scriptsize},
+  srpsty/.style={fill=white, draw, circle, text width=.17cm, font=\tiny, very thick},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  arrow/.style={->,>=stealth},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  emptytask/.style={rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA/.style={fill=green!40, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB/.style={fill=orange!40!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize}]
+
+\begin{scope}
+\draw[ressty] (0,-.25) rectangle +(1.5,.5) node[midway]{res$_k$};
+\smallqueue{1.3,0}{FIFO}
+\draw[|-|] (1.5, .35) -- ++(.8,0)node[midway,fill=white,font=\tiny]{\textcolor{red}{$v$}};
+\end{scope}
+
+
+\begin{scope}
+\node[taskA] (T1)  at(6.3,2.0) {$\tau_1$};
+\node[emptytask]   at(6.3,1.5) {$\cdots$};
+\node[taskA] (Tx)  at(6.3,1.0) {$\tau_x$};
+\node[cpusty] (P1) at(8.0,2.2) {\!$P_{1,\textcolor{blue}{1}}$};
+\node[emptytask]   at(8.0,1.5) {$\cdots$};
+\node[cpusty] (Pc) at(8.0,0.8) {\!\!$P_{1,\textcolor{blue}{c}}$};
+\draw[arrow] (T1.west) to[out=180,in=0] (5.2,1.6);
+\draw[arrow] (Tx.west) to[out=180,in=0] (5.2,1.4);
+\draw[arrow] (T1.east) -- (7.25, 1.5) -- (P1.south west);
+\draw[arrow] (Tx.east) -- (7.25, 1.5) -- (Pc.north west);
+\draw[fill=gray] (7.25,1.5) circle (.1) node(G1){};
+\draw[dashed, thin] ([shift={(-2.6cm,+.1cm)}]P1.north-|T1.west)node[right,xshift=.3cm,littletext]{cluster\textcolor{red}{$_1$}} rectangle ([shift={(.2,-.2)}]Pc.south east);
+\draw[|-|] (3.5,1.85) -- ++(.8,0)node[midway,fill=white,font=\tiny]{\textcolor{blue}{$c$}};
+\smallqueue{3.3,1.5}{FIFO}
+\bigqueue{4.1,1.5}{PRIO}
+\node[rotate=90,anchor=north,littletext] at(5.6,1.5){suspend};
+\end{scope}
+
+\begin{scope}
+\node[taskB] (Ty)  at(6.3,-1.0) {$\tau_y$};
+\node[emptytask]   at(6.3,-1.5) {$\cdots$};
+\node[taskB] (Tn)  at(6.3,-2.0) {$\tau_n$};
+\node[cpusty] (Pcm) at(8.0,-0.8) {\!$P_{v,\textcolor{blue}{1}}$};
+\node[emptytask]   at(8.0,-1.5) {$\cdots$};
+\node[cpusty] (Pm) at(8.0,-2.2) {\!\!$P_{v,\textcolor{blue}{c}}$};
+\draw[arrow] (Ty.west) to[out=180,in=0] (5.2,-1.4);
+\draw[arrow] (Tn.west)  to[out=180,in=0] (5.2,-1.6);
+\draw[arrow] (Ty.east) -- (7.25, -1.5) -- (Pcm.south west);
+\draw[arrow] (Tn.east) -- (7.25, -1.5) -- (Pm.north west);
+\draw[fill=gray] (7.25,-1.5) circle (.1) node(G2){};
+\draw[dashed, thin] ([shift={(-2.6cm,+.1cm)}]Pcm.north-|Ty.west)node[right,xshift=.3cm,littletext]{cluster\textcolor{red}{$_v$}} rectangle ([shift={(.2,-.2)}]Pm.south east);
+\draw[|-|] (3.5,-1.15) -- ++(.8,0)node[midway,fill=white,font=\tiny]{\textcolor{blue}{$c$}};
+\smallqueue{3.3,-1.5}{FIFO}
+\bigqueue{4.1,-1.5}{PRIO}
+\node[rotate=90,anchor=north,littletext] at(5.6,-1.5){suspend};
+\end{scope}
+
+\draw[arrow] (3.3,1.5)node[anchor=south east,font=\tiny\sffamily]{copy head} to[out=180,in=0] (2.3,0.1);
+\draw[arrow] (3.3,-1.5)node[anchor=north east,font=\tiny\sffamily]{copy head} to[out=180,in=0] (2.3,-0.1);
+
+\node[xshift=-.1,font=\tiny\sffamily](JLFP) at(7.25,0){\textcolor{black!75}{JLFP scheduler}};
+\draw[dotted,thin] (G1.center) -- (JLFP.center);
+\draw[dotted,thin] (G2.center) -- (JLFP.center);
+
+\end{tikzpicture}}
+
+\newcommand{\OMLPpart}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  cpusty/.style={fill=gray!40, draw, circle, text width=.4cm},
+  srpsty/.style={fill=white, draw, circle, text width=.4cm, font=\tiny, very thick},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  arrow/.style={->,>=stealth},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  emptytask/.style={rectangle, minimum width=.7cm,font=\footnotesize},
+  taskA/.style={fill=green!40, draw, rectangle, minimum width=.7cm,font=\footnotesize},
+  taskB/.style={fill=orange!40!yellow, draw, rectangle, minimum width=.7cm,font=\footnotesize}]
+
+\begin{scope}[xshift=6cm, yshift=1cm]
+\node[cpusty] (P1) at(1.3,0) {$P_1$};
+\node[taskA] (T1)  at(0,.4) {$\tau_1$};
+\node[emptytask]   at(0,0) {$\cdots$};
+\node[taskA] (Tx)  at(0,-.4) {$\tau_x$};
+\draw[arrow] (T1.east) -- (P1.west);
+\draw[arrow] (Tx.east) -- (P1.west);
+\node[srpsty] (token1) at (-2.5,0) {}; \node[font=\sffamily\tiny] at(token1.center){token};
+\smallqueue{[xshift=-.1cm]token1.east}{PRIO}
+\draw[arrow] (T1.west) to[out=180,in=0] ([xshift=.9cm,yshift=+.1cm]token1.east);
+\draw[arrow] (Tx.west) to[out=180,in=0] ([xshift=.9cm,yshift=-.1cm]token1.east);
+\node[below,rotate=90,littletext] at([xshift=1.4cm]token1.east){suspend};
+\draw[dashed, thin] ([shift={(-.1,.1)}]T1.north-|token1.west) node[right,xshift=.3cm,littletext]{partition$_1$} rectangle ([shift={(.1,-.1)}]Tx.south-|P1.east);
+\end{scope}
+
+\node[emptytask] at (5,0) {$\cdots$};
+
+\begin{scope}[xshift=6cm, yshift=-1cm]
+\node[cpusty] (Pm) at (1.3,0) {\!$P_m$};
+\node[taskB] (Ty)  at (0,.4) {$\tau_1$};
+\node[emptytask]   at (0,0) {$\cdots$};
+\node[taskB] (Tn)  at (0,-.4) {$\tau_x$};
+\draw[arrow] (Ty.east) -- (Pm.west);
+\draw[arrow] (Tn.east) -- (Pm.west);
+\node[srpsty] (tokenm) at (-2.5,0) {}; \node[font=\sffamily\tiny] at(tokenm.center){token};
+\smallqueue{[xshift=-.1cm]tokenm.east}{PRIO}
+\draw[arrow] (Ty.west) to[out=180,in=0] ([xshift=.9cm,yshift=+.1cm]tokenm.east);
+\draw[arrow] (Tn.west) to[out=180,in=0] ([xshift=.9cm,yshift=-.1cm]tokenm.east);
+\node[below,rotate=90,littletext] at([xshift=1.4cm]tokenm.east){suspend};
+\draw[dashed, thin] ([shift={(-.1,.1)}]Ty.north-|tokenm.west) node[right,xshift=.3cm,littletext]{partition$_1$} rectangle ([shift={(.1,-.1)}]Tn.south-|Pm.east);
+\end{scope}
+
+
+\begin{scope}
+\draw[ressty] (0,-.25) rectangle +(1.5,.5) node[midway]{res$_k$};
+\smallqueue{1.3,0}{FIFO}
+\draw[|-|] (1.5, .35) -- ++(.8,0)node[midway,fill=white,font=\tiny]{$m$};
+\end{scope}
+
+\draw[arrow] (token1.west)node[anchor=south east,font=\tiny\sffamily]{suspend} to[out=180,in=0] (2.3,.1);
+\draw[arrow] (tokenm.west)node[anchor=north east,font=\tiny\sffamily]{suspend} to[out=180,in=0] (2.3,-.1);
+\draw[dotted] (token1.center) -- (1.8,-.7);
+\draw[dotted] (tokenm.center) -- (1.8,-.7)node[xshift=.2cm,left,font=\tiny\sffamily]{\begin{tabular}{r}binary semaphore\\and prio boosting\end{tabular}};
+
+\end{tikzpicture}}
+
+\newcommand{\MigrationMrsP}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  spinning/.style={fill=white, postaction={pattern=horizontal lines}},
+  blocked/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  invprio/.style={fill=black!10, postaction={pattern=crosshatch, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|}]
+%general params
+\def\th{.4}
+\def\tay{0}
+\def\tby{1}
+\def\tcy{3}
+\def\tdy{4}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (1,6);
+%tasklines
+\draw[very thin, gray] (-.7,\tay)node[above,left,black]{$\tau_1$} -- +(15.2,0);
+\draw[very thin, gray] (-.7,\tby)node[above,left,black]{$\tau_2$} -- +(15.2,0);
+\node[left,font=\footnotesize] at(-1.8, .5) {$P_1$};
+%\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-1.7,-0.5) -- (-1.7,1.5) node [black,midway,xshift=-0.6cm] {$P_1$};
+\draw[very thin, gray] (-.7,\tcy)node[above,left,black]{$\tau_3$} -- +(15.2,0);
+\draw[very thin, gray] (-.7,\tdy)node[above,left,black]{$\tau_4$} -- +(15.2,0);
+\node[left,font=\footnotesize] at(-1.8, 3.5) {$P_2$};
+%\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-1.7,2.5) -- (-1.7,4.5) node [black,midway,xshift=-0.6cm] {$P_2$};
+%axes
+\draw[thick, black, ->] (-.5,-1) -- (-.5, 5.3) node[rotate=90, left, above]{{\footnotesize prio}};
+\draw[thick, black, ->] (-1,-.5) -- (15, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,14}\draw[thin, black] (\x, -.6)node[below]{\tiny $\x$} -- (\x, -.4);
+
+%Task1
+\draw[normal] (0, \tay) rectangle +(1, \th);
+\draw[normal] (9, \tay) rectangle +(2, \th);
+%Task2
+\draw[normal] (1, \tby) rectangle +(2, \th);
+\fill[spinning] (3, \tby) rectangle +(1, \th);
+\draw[resource] (6, \tby) rectangle +(2, \th);
+\draw[normal] (8, \tby) rectangle +(1, \th);
+%Task3
+\draw[normal] (0, \tcy) rectangle +(2, \th);
+\draw[resource] (2, \tcy) rectangle +(4, \th);
+\draw[normal] (7, \tcy) rectangle +(2, \th);
+%Task4
+\draw[normal] (4, \tdy) rectangle +(3, \th);
+
+%Events
+\draw[release] (0,\tay) -- +(0, .8);
+\draw[release] (1,\tby) -- +(0, .8);
+\draw[release] (0,\tcy) -- +(0, .8);
+\draw[release] (4,\tdy) -- +(0, .8);
+\draw[request] (3,\tby) -- +(0, .8);
+\draw[request] (2,\tcy) -- +(0, .8);
+\draw[complet] (11,\tay) -- +(0, .7);
+\draw[complet] (9,\tby) -- +(0, .7);
+\draw[complet] (9,\tcy) -- +(0, .7);
+\draw[complet] (7,\tdy) -- +(0, .7);
+
+\draw[thick, red, dashed] (-3,2.3) -- (4,2.3) -- ++(0, 1.5) -- ++(2, 0) -- ++(0,-1.5) -- (16, 2.3);
+
+%Legend
+%\draw[normal]   ($( 0.0,0.0) + (legend)$) node[below]{\tiny executing}          rectangle +\blockdim;
+%\draw[resource] ($( 2.5,0.0) + (legend)$) node[below]{\tiny holding res.}       rectangle +\blockdim;
+%\fill[spinning] ($( 5.0,0.0) + (legend)$) node[below]{\tiny busy wait} rectangle +\blockdim;
+%\draw[release]  ($( 7.5,0.0) + (legend)$) node[below]{\tiny release}        -- +\arrowdim;
+%\draw[request]  ($(10.0,0.0) + (legend)$) node[below]{\tiny request res.}       -- +\arrowdim;
+%\draw[complet]  ($(12.5,0.0) + (legend)$) node[below]{\tiny completion}     -- +\arrowdimB;
+
+\end{tikzpicture}}
+
+\newcommand{\MigrationOMIP}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  spinning/.style={fill=white, postaction={pattern=horizontal lines}},
+  blocked/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  invprio/.style={fill=black!10, postaction={pattern=crosshatch, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|}]
+%general params
+\def\th{.4}
+\def\tay{0}
+\def\tby{1}
+\def\tcy{3}
+\def\tdy{4}
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (1,6);
+%tasklines
+\draw[very thin, gray] (-.7,\tay)node[above,left,black]{$\tau_1$} -- +(15.2,0);
+\draw[very thin, gray] (-.7,\tby)node[above,left,black]{$\tau_2$} -- +(15.2,0);
+\node[left,font=\footnotesize] at(-1.5, .5) {$\text{cluster}_1$};
+%\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-1.7,-0.5) -- (-1.7,1.5) node [black,midway,xshift=-0.6cm] {\footnotesize$\text{cluster}_1$};
+\draw[very thin, gray] (-.7,\tcy)node[above,left,black]{$\tau_3$} -- +(15.2,0);
+\draw[very thin, gray] (-.7,\tdy)node[above,left,black]{$\tau_4$} -- +(15.2,0);
+\node[left,font=\footnotesize] at(-1.5, 3.5) {$\text{cluster}_2$};
+%\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-1.7,2.5) -- (-1.7,4.5) node [black,midway,xshift=-0.6cm] {\footnotesize$\text{cluster}_2$};
+%axes
+\draw[thick, black, ->] (-.5,-1) -- (-.5, 5.3) node[rotate=90, left, above]{{\footnotesize prio}};
+\draw[thick, black, ->] (-1,-.5) -- (15, -.5) node[below] {{\footnotesize time}};
+\foreach \x in {0,...,14}\draw[thin, black] (\x, -.6)node[below]{\tiny $\x$} -- (\x, -.4);
+
+%Task1
+\draw[normal] (0, \tay) rectangle +(1, \th);
+\draw[normal] (3, \tay) rectangle +(1, \th);
+\draw[normal] (9, \tay) rectangle +(1, \th);
+%Task2
+\draw[normal] (1, \tby) rectangle +(2, \th);
+\draw[resource] (6, \tby) rectangle +(2, \th);
+\draw[normal] (8, \tby) rectangle +(1, \th);
+%Task3
+\draw[normal] (0, \tcy) rectangle +(2, \th);
+\draw[resource] (2, \tcy) rectangle +(4, \th);
+\draw[normal] (7, \tcy) rectangle +(2, \th);
+%Task4
+\draw[normal] (4, \tdy) rectangle +(3, \th);
+
+%Events
+\draw[release] (0,\tay) -- +(0, .8);
+\draw[release] (1,\tby) -- +(0, .8);
+\draw[release] (0,\tcy) -- +(0, .8);
+\draw[release] (4,\tdy) -- +(0, .8);
+\draw[request] (3,\tby) -- +(0, .8);
+\draw[request] (2,\tcy) -- +(0, .8);
+\draw[complet] (10,\tay) -- +(0, .7);
+\draw[complet] (9,\tby) -- +(0, .7);
+\draw[complet] (9,\tcy) -- +(0, .7);
+\draw[complet] (7,\tdy) -- +(0, .7);
+
+\draw[thick, red, dashed] (-3,2.3) -- (4,2.3) -- ++(0, 1.5) -- ++(2, 0) -- ++(0,-1.5) -- (16, 2.3);
+
+\end{tikzpicture}}
+
+\newcommand{\chartLegend}[2]{%
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  normal/.style={ fill=black!30},
+  resource/.style={ fill=black!80},
+  spinning/.style={fill=white, postaction={pattern=horizontal lines}},
+  blocked/.style={fill=black!10, postaction={pattern=north east lines, very thin}},
+  invprio/.style={fill=black!10, postaction={pattern=crosshatch, very thin}},
+  release/.style={-latex},
+  request/.style={-o},
+  complet/.style={-|}]
+\def\blockdim{(.4,.4)}
+\def\arrowdim{(0,.5)}
+\def\arrowdimB{(0,.4)}
+\coordinate (legend) at (0,0);
+%Legend
+\draw[normal]   ($( 0.0,0.0) + (legend)$) node[below]{\tiny executing}          rectangle +\blockdim;
+\draw[resource] ($( 2.5,0.0) + (legend)$) node[below]{\tiny holding res.}       rectangle +\blockdim;
+\fill[spinning] ($( 5.0,0.0) + (legend)$) node[below]{\tiny busy wait} rectangle +\blockdim;
+\draw[release]  ($( 7.5,0.0) + (legend)$) node[below]{\tiny release}        -- +\arrowdim;
+\draw[request]  ($(10.0,0.0) + (legend)$) node[below]{\tiny request res.}       -- +\arrowdim;
+\draw[complet]  ($(12.5,0.0) + (legend)$) node[below]{\tiny completion}     -- +\arrowdimB;
+
+\end{tikzpicture}}
+

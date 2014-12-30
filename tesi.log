@@ -1,0 +1,2586 @@
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2014.3.30)  8 OCT 2014 06:50
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**tesi.tex
+(./tesi.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
+aded.
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk11.clo
+File: bk11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+
+(/usr/share/texlive/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count88
+))
+(/usr/share/texlive/texmf-dist/tex/latex/tocloft/tocloft.sty
+Package: tocloft 2010/10/13 v2.3e parameterised ToC, etc., typesetting
+Package tocloft Info: The document has chapter divisions on input line 43.
+\cftparskip=\skip43
+\cftbeforetoctitleskip=\skip44
+\cftaftertoctitleskip=\skip45
+\cftbeforepartskip=\skip46
+\cftpartnumwidth=\skip47
+\cftpartindent=\skip48
+\cftbeforechapskip=\skip49
+\cftchapindent=\skip50
+\cftchapnumwidth=\skip51
+\cftbeforesecskip=\skip52
+\cftsecindent=\skip53
+\cftsecnumwidth=\skip54
+\cftbeforesubsecskip=\skip55
+\cftsubsecindent=\skip56
+\cftsubsecnumwidth=\skip57
+\cftbeforesubsubsecskip=\skip58
+\cftsubsubsecindent=\skip59
+\cftsubsubsecnumwidth=\skip60
+\cftbeforeparaskip=\skip61
+\cftparaindent=\skip62
+\cftparanumwidth=\skip63
+\cftbeforesubparaskip=\skip64
+\cftsubparaindent=\skip65
+\cftsubparanumwidth=\skip66
+\cftbeforeloftitleskip=\skip67
+\cftafterloftitleskip=\skip68
+\cftbeforefigskip=\skip69
+\cftfigindent=\skip70
+\cftfignumwidth=\skip71
+\c@lofdepth=\count89
+\c@lotdepth=\count90
+\cftbeforelottitleskip=\skip72
+\cftafterlottitleskip=\skip73
+\cftbeforetabskip=\skip74
+\cfttabindent=\skip75
+\cfttabnumwidth=\skip76
+)
+(/usr/share/texlive/texmf-dist/tex/latex/rotating/rotating.sty
+Package: rotating 2009/03/28 v2.16a rotated objects in LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+)
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count91
+\rotFPtop=\skip77
+\rotFPbot=\skip78
+\rot@float@box=\box26
+\rot@mess@toks=\toks15
+)
+(/usr/share/texmf/tex/latex/pgf/frontendlayer/tikz.sty
+(/usr/share/texmf/tex/latex/pgf/basiclayer/pgf.sty
+(/usr/share/texmf/tex/latex/pgf/utilities/pgfrcs.sty
+(/usr/share/texmf/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks16
+)
+(/usr/share/texmf/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box27
+
+(/usr/share/texlive/texmf-dist/tex/latex/ms/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(/usr/share/texmf/tex/generic/pgf/utilities/pgfrcs.code.tex
+Package: pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+))
+Package: pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+
+(/usr/share/texmf/tex/latex/pgf/basiclayer/pgfcore.sty
+(/usr/share/texmf/tex/latex/pgf/systemlayer/pgfsys.sty
+(/usr/share/texmf/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+
+(/usr/share/texmf/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks17
+\pgfkeys@temptoks=\toks18
+
+(/usr/share/texmf/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
+\pgfkeys@tmptoks=\toks19
+))
+\pgf@x=\dimen105
+\pgf@y=\dimen106
+\pgf@xa=\dimen107
+\pgf@ya=\dimen108
+\pgf@xb=\dimen109
+\pgf@yb=\dimen110
+\pgf@xc=\dimen111
+\pgf@yc=\dimen112
+\w@pgf@writea=\write3
+\r@pgf@reada=\read1
+\c@pgf@counta=\count92
+\c@pgf@countb=\count93
+\c@pgf@countc=\count94
+\c@pgf@countd=\count95
+
+(/usr/share/texmf/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 900.
+
+(/usr/share/texmf/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2009/05/22  (rcs-revision 1.26)
+
+(/usr/share/texmf/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2008/05/19  (rcs-revision 1.10)
+)))
+(/usr/share/texmf/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2008/07/18  (rcs-revision 1.7)
+\pgfsyssoftpath@smallbuffer@items=\count96
+\pgfsyssoftpath@bigbuffer@items=\count97
+)
+(/usr/share/texmf/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+(/usr/share/texmf/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+LaTeX Info: Redefining \color on input line 702.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+
+(/usr/share/texmf/tex/generic/pgf/math/pgfmath.code.tex
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathcalc.code.tex
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathutil.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen113
+\pgfmath@count=\count98
+\pgfmath@box=\box28
+\pgfmath@toks=\toks20
+\pgfmath@stack@operand=\toks21
+\pgfmath@stack@operation=\toks22
+)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.code.tex
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.random.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.base.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.round.code.tex)
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex)))
+(/usr/share/texmf/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count99
+))
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
+\pgf@picminx=\dimen114
+\pgf@picmaxx=\dimen115
+\pgf@picminy=\dimen116
+\pgf@picmaxy=\dimen117
+\pgf@pathminx=\dimen118
+\pgf@pathmaxx=\dimen119
+\pgf@pathminy=\dimen120
+\pgf@pathmaxy=\dimen121
+\pgf@xx=\dimen122
+\pgf@xy=\dimen123
+\pgf@yx=\dimen124
+\pgf@yy=\dimen125
+\pgf@zx=\dimen126
+\pgf@zy=\dimen127
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
+\pgf@path@lastx=\dimen128
+\pgf@path@lasty=\dimen129
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
+\pgf@shorten@end@additional=\dimen130
+\pgf@shorten@start@additional=\dimen131
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
+\pgfpic=\box29
+\pgf@hbox=\box30
+\pgf@layerbox@main=\box31
+\pgf@picture@serial@count=\count100
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
+\pgflinewidth=\dimen132
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
+\pgf@pt@x=\dimen133
+\pgf@pt@y=\dimen134
+\pgf@pt@temp=\dimen135
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/10/09  (rcs-revision 1.8)
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
+\pgf@max=\dimen136
+\pgf@sys@shading@range@num=\count101
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2010/03/25  (rcs-revision 1.16)
+
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2010/09/01  (rcs-revision 1.17)
+\pgfexternal@startupbox=\box32
+))
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2010/08/27  (rcs-revision 1.2)
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+(/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2009/07/02  (rcs-revision 1.3)
+)))
+(/usr/share/texmf/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2010/09/09  (rcs-revision 1.13)
+\pgfnodeparttextbox=\box33
+)
+(/usr/share/texmf/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
+)
+(/usr/share/texmf/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen137
+\pgf@nodesepend=\dimen138
+)
+(/usr/share/texmf/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+))
+(/usr/share/texmf/tex/latex/pgf/utilities/pgffor.sty
+(/usr/share/texmf/tex/latex/pgf/utilities/pgfkeys.sty
+(/usr/share/texmf/tex/generic/pgf/utilities/pgfkeys.code.tex))
+(/usr/share/texmf/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
+\pgffor@iter=\dimen139
+\pgffor@skip=\dimen140
+\pgffor@stack=\toks23
+\pgffor@toks=\toks24
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2010/10/13 v2.10 (rcs-revision 1.76)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2010/05/31 v2.10 (rcs-revision 1.15)
+\pgf@plot@mark@count=\count102
+\pgfplotmarksize=\dimen141
+)
+\tikz@lastx=\dimen142
+\tikz@lasty=\dimen143
+\tikz@lastxsaved=\dimen144
+\tikz@lastysaved=\dimen145
+\tikzleveldistance=\dimen146
+\tikzsiblingdistance=\dimen147
+\tikz@figbox=\box34
+\tikz@tempbox=\box35
+\tikztreelevel=\count103
+\tikznumberofchildren=\count104
+\tikznumberofcurrentchild=\count105
+\tikz@fig@count=\count106
+
+(/usr/share/texmf/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2010/08/24  (rcs-revision 1.4)
+\pgfmatrixcurrentrow=\count107
+\pgfmatrixcurrentcolumn=\count108
+\pgf@matrix@numberofcolumns=\count109
+)
+\tikz@expandcount=\count110
+
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopat
+hs.code.tex
+File: tikzlibrarytopaths.code.tex 2008/06/17 v2.10 (rcs-revision 1.2)
+))) (/usr/share/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip79
+\f@ncyO@elh=\skip80
+\f@ncyO@erh=\skip81
+\f@ncyO@olh=\skip82
+\f@ncyO@orh=\skip83
+\f@ncyO@elf=\skip84
+\f@ncyO@erf=\skip85
+\f@ncyO@olf=\skip86
+\f@ncyO@orf=\skip87
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count111
+\lst@gtempboxa=\box36
+\lst@token=\toks25
+\lst@length=\count112
+\lst@currlwidth=\dimen148
+\lst@column=\count113
+\lst@pos=\count114
+\lst@lostspace=\dimen149
+\lst@width=\dimen150
+\lst@newlines=\count115
+\lst@lineno=\count116
+\lst@maxwidth=\dimen151
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count117
+\lst@skipnumbers=\count118
+\lst@framebox=\box37
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2008/07/08 v3.8m The Babel package
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel/italian.ldf
+Language: italian 2008/03/14 v1.2t Italian support from the babel system
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2008/07/08 v3.8m Babel common definitions
+\babel@savecnt=\count119
+\U@D=\dimen152
+)
+
+Package babel Warning: No hyphenation patterns were loaded for
+(babel)                the language `Italian'
+(babel)                I will use the patterns loaded for \language=0 instead.
+
+\l@italian = a dialect from \language0
+Package babel Info: Making " an active character on input line 94.
+)) (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count120
+\Gm@cntv=\count121
+\c@Gm@tempcnt=\count122
+\Gm@bindingoffset=\dimen153
+\Gm@wd@mp=\dimen154
+\Gm@odd@mp=\dimen155
+\Gm@even@mp=\dimen156
+\Gm@layoutwidth=\dimen157
+\Gm@layoutheight=\dimen158
+\Gm@layouthoffset=\dimen159
+\Gm@layoutvoffset=\dimen160
+\Gm@dimlist=\toks26
+)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2012/05/13 v6.82q Hypertext links for LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
+
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package hobsub Info: Skipping package `ifvtex' (already loaded).
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package hobsub Info: Skipping package `ifpdf' (already loaded).
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen161
+\Hy@linkcounter=\count123
+\Hy@pagecounter=\count124
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2012/05/13 v6.82q Hyperref: PDFDocEncoding definition (HO)
+)
+\Hy@SavedSpaceFactor=\count125
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+
+Package hyperref Warning: Invalid value `0 0 0 0'
+(hyperref)                for option `pdfborder'.
+(hyperref)                Option setting is ignored on input line 3941.
+
+Package hyperref Info: Option `bookmarks' set `true' on input line 3941.
+Package hyperref Info: Hyper figures OFF on input line 4062.
+Package hyperref Info: Link nesting OFF on input line 4067.
+Package hyperref Info: Hyper index ON on input line 4070.
+Package hyperref Info: Plain pages OFF on input line 4077.
+Package hyperref Info: Backreferencing OFF on input line 4082.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4300.
+\c@Hy@tempcnt=\count126
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4653.
+\Fld@menulength=\count127
+\Field@Width=\dimen162
+\Fld@charsize=\dimen163
+Package hyperref Info: Hyper figures OFF on input line 5773.
+Package hyperref Info: Link nesting OFF on input line 5778.
+Package hyperref Info: Hyper index ON on input line 5781.
+Package hyperref Info: backreferencing OFF on input line 5788.
+Package hyperref Info: Link coloring OFF on input line 5793.
+Package hyperref Info: Link coloring with OCG OFF on input line 5798.
+Package hyperref Info: PDF/A mode OFF on input line 5803.
+LaTeX Info: Redefining \ref on input line 5843.
+LaTeX Info: Redefining \pageref on input line 5847.
+\Hy@abspage=\count128
+\c@Item=\count129
+\c@Hfootnote=\count130
+)
+
+Package hyperref Message: Driver: hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2012/05/13 v6.82q Hyperref driver for pdfTeX
+\Fld@listcount=\count131
+\c@bookmark@seq@number=\count132
+
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip88
+)
+(/usr/share/texlive/texmf-dist/tex/latex/eurosym/eurosym.sty
+Package: eurosym 1998/08/06 v1.1 European currency symbol ``Euro''
+\@eurobox=\box38
+)
+(/usr/share/texlive/texmf-dist/tex/latex/was/gensymb.sty
+Package: gensymb 2003/07/02 v1.0 (WaS)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/appendix/appendix.sty
+Package: appendix 2009/09/02 v1.2b extra appendix facilities
+\c@@pps=\count133
+\c@@ppsavesec=\count134
+\c@@ppsaveapp=\count135
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\@emptytoks=\toks27
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/mh/mathtools.sty
+Package: mathtools 2012/04/24 v1.12 mathematical typesetting tools
+
+(/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count136
+\calc@Bcount=\count137
+\calc@Adimen=\dimen164
+\calc@Bdimen=\dimen165
+\calc@Askip=\skip89
+\calc@Bskip=\skip90
+LaTeX Info: Redefining \setlength on input line 76.
+LaTeX Info: Redefining \addtolength on input line 77.
+\calc@Ccount=\count138
+\calc@Cskip=\skip91
+)
+(/usr/share/texlive/texmf-dist/tex/latex/mh/mhsetup.sty
+Package: mhsetup 2010/01/21 v1.2a programming setup (MH)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip92
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks28
+\ex@=\dimen166
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen167
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count139
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count140
+\leftroot@=\count141
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count142
+\DOTSCASE@=\count143
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box39
+\strutbox@=\box40
+\big@size=\dimen168
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count144
+\c@MaxMatrixCols=\count145
+\dotsspace@=\muskip11
+\c@parentequation=\count146
+\dspbrk@lvl=\count147
+\tag@help=\toks29
+\row@=\count148
+\column@=\count149
+\maxfields@=\count150
+\andhelp@=\toks30
+\eqnshift@=\dimen169
+\alignsep@=\dimen170
+\tagshift@=\dimen171
+\tagwidth@=\dimen172
+\totwidth@=\dimen173
+\lineht@=\dimen174
+\@envbody=\toks31
+\multlinegap=\skip93
+\multlinetaggap=\skip94
+\mathdisplay@stack=\toks32
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+\g_MT_multlinerow_int=\count151
+\l_MT_multwidth_dim=\dimen175
+\origjot=\skip95
+\l_MT_shortvdotswithinadjustabove_dim=\dimen176
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen177
+\l_MT_above_intertext_dim=\dimen178
+\l_MT_below_intertext_dim=\dimen179
+\l_MT_above_shortintertext_dim=\dimen180
+\l_MT_below_shortintertext_dim=\dimen181
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2008/03/30 v1.1d Input encoding file
+\inpenc@prehook=\toks33
+\inpenc@posthook=\toks34
+
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/utf8x.def
+File: utf8x.def 2004/10/17 UCS: Input encoding UTF-8
+))
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/ucs.sty
+Package: ucs 2004/10/17 UCS: Unicode input support
+
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-global.def
+File: uni-global.def 2012/04/20 UCS: Unicode global data
+)
+\uc@secondtry=\count152
+\uc@combtoks=\toks35
+\uc@combtoksb=\toks36
+\uc@temptokena=\toks37
+)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/enumerate.sty
+Package: enumerate 1999/03/05 v3.00 enumerate extensions (DPC)
+\@enLab=\toks38
+)
+(/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2012/02/19 v3.2f Customizing captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2012/01/12 v1.4b caption3 kernel (AR)
+\captionmargin=\dimen182
+\captionmargin@=\dimen183
+\captionwidth=\dimen184
+\caption@indent=\dimen185
+\caption@parindent=\dimen186
+\caption@hangindent=\dimen187
+)
+\c@ContinuedFloat=\count153
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: rotating package is loaded.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2012/01/12 v1.1d Sub-captions (AR)
+\c@subfigure=\count154
+\c@subtable=\count155
+)
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryarrow
+s.code.tex
+File: tikzlibraryarrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/pgflibraryarrows.code.tex
+File: pgflibraryarrows.code.tex 2008/10/27 v2.10 (rcs-revision 1.9)
+\arrowsize=\dimen188
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypatte
+rns.code.tex
+File: tikzlibrarypatterns.code.tex 2008/01/15 v2.10 (rcs-revision 1.2)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/pgflibrarypatterns.code.tex
+File: pgflibrarypatterns.code.tex 2008/03/03 v2.10 (rcs-revision 1.13)
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.
+code.tex
+File: tikzlibrarycalc.code.tex 2009/09/04 v2.10 (rcs-revision 1.6)
+)
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecor
+ations.pathreplacing.code.tex
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecor
+ations.code.tex
+(/usr/share/texmf/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
+\pgfdecoratedcompleteddistance=\dimen189
+\pgfdecoratedremainingdistance=\dimen190
+\pgfdecoratedinputsegmentcompleteddistance=\dimen191
+\pgfdecoratedinputsegmentremainingdistance=\dimen192
+\pgf@decorate@distancetomove=\dimen193
+\pgf@decorate@repeatstate=\count156
+\pgfdecorationsegmentamplitude=\dimen194
+\pgfdecorationsegmentlength=\dimen195
+)
+\tikz@lib@dec@box=\box41
+)
+(/usr/share/texmf/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.p
+athreplacing.code.tex))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.code.tex
+File: tikzlibraryshapes.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.c
+ode.tex
+File: pgflibraryshapes.geometric.code.tex 2008/06/26 v2.10 (rcs-revision 1.1)
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.misc.code.tex
+File: tikzlibraryshapes.misc.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.t
+ex
+File: pgflibraryshapes.misc.code.tex 2008/10/07 v2.10 (rcs-revision 1.3)
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.symbols.code.tex
+File: tikzlibraryshapes.symbols.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/shapes/pgflibraryshapes.symbols.cod
+e.tex
+File: pgflibraryshapes.symbols.code.tex 2009/10/27 v2.10 (rcs-revision 1.3)
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.arrows.code.tex
+File: tikzlibraryshapes.arrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/shapes/pgflibraryshapes.arrows.code
+.tex
+File: pgflibraryshapes.arrows.code.tex 2008/06/26 v2.10 (rcs-revision 1.1)
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.callouts.code.tex
+(/usr/share/texmf/tex/generic/pgf/libraries/shapes/pgflibraryshapes.callouts.co
+de.tex))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshape
+s.multipart.code.tex
+File: tikzlibraryshapes.multipart.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.c
+ode.tex
+File: pgflibraryshapes.multipart.code.tex 2010/01/07 v2.10 (rcs-revision 1.2)
+\pgfnodepartlowerbox=\box42
+\pgfnodeparttwobox=\box43
+\pgfnodepartthreebox=\box44
+\pgfnodepartfourbox=\box45
+\pgfnodeparttwentybox=\box46
+\pgfnodepartnineteenbox=\box47
+\pgfnodeparteighteenbox=\box48
+\pgfnodepartseventeenbox=\box49
+\pgfnodepartsixteenbox=\box50
+\pgfnodepartfifteenbox=\box51
+\pgfnodepartfourteenbox=\box52
+\pgfnodepartthirteenbox=\box53
+\pgfnodeparttwelvebox=\box54
+\pgfnodepartelevenbox=\box55
+\pgfnodeparttenbox=\box56
+\pgfnodepartninebox=\box57
+\pgfnodeparteightbox=\box58
+\pgfnodepartsevenbox=\box59
+\pgfnodepartsixbox=\box60
+\pgfnodepartfivebox=\box61
+)))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotm
+arks.code.tex
+File: tikzlibraryplotmarks.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/usr/share/texmf/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
+File: pgflibraryplotmarks.code.tex 2010/10/15 v2.10 (rcs-revision 1.12)
+))
+(/usr/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatri
+x.code.tex
+File: tikzlibrarymatrix.code.tex 2008/06/18 v2.10 (rcs-revision 1.2)
+) (/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.sty
+Package: microtype 2010/01/10 v2.4 Micro-typography with pdfTeX (RS)
+\MT@toks=\toks39
+\MT@count=\count157
+LaTeX Info: Redefining \lsstyle on input line 1597.
+LaTeX Info: Redefining \lslig on input line 1597.
+\MT@outer@space=\skip96
+LaTeX Info: Redefining \textls on input line 1605.
+\MT@outer@kern=\dimen196
+LaTeX Info: Redefining \textmicrotypecontext on input line 2156.
+Package microtype Info: Loading configuration file microtype.cfg.
+
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2010/01/10 v2.4 microtype main configuration file (RS)
+))
+(/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen197
+\WF@size=\dimen198
+\c@WF@wrappedlines=\count158
+\WF@box=\box62
+\WF@everypar=\toks40
+Package: wrapfig 2003/01/31  v 3.6
+)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/mathpazo.sty
+Package: mathpazo 2005/04/12 PSNFSS-v9.2a Palatino w/ Pazo Math (D.Puga, WaS) 
+\symupright=\mathgroup6
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pdfpages/pdfpages.sty
+Package: pdfpages 2012/04/03 v0.4s Insert pages of external PDF documents (AM)
+
+(/usr/share/texlive/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2010/10/06 v2.0c eso-pic (RN)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pdfpages/pppdftex.def
+File: pppdftex.def 2012/04/03 v0.4s Pdfpages driver for pdfTeX (AM)
+)
+\AM@pagebox=\box63
+\AM@toc@title=\toks41
+\c@AM@survey=\count159
+\AM@templatesizebox=\box64
+)
+(/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip97
+\enit@outerparindent=\dimen199
+\enit@toks=\toks42
+\enit@inbox=\box65
+\enitdp@description=\count160
+)
+\@input{file/filecontents.aux}
+\openout2 = `file/filecontents.aux'.
+
+(./file/filecontents.tex
+
+LaTeX Warning: File `PFPschedMIN.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPschedMIN.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPschedMAX.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPschedMAX.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPschedAVG.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPschedAVG.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPreleaseMIN.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPreleaseMIN.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPreleaseMAX.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPreleaseMAX.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPreleaseAVG.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPreleaseAVG.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPcxsMIN.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPcxsMIN.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPcxsMAX.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPcxsMAX.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `PFPcxsAVG.data' already exists on the system.
+               Not generating it from this source.
+
+
+LaTeX Warning: File `MRSPcxsAVG.data' already exists on the system.
+               Not generating it from this source.
+
+) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+) (./tesi.aux
+(./abstract.aux) (./ringraziamenti.aux) (./1_introduzione.aux)
+(./2_implementazione.aux
+
+LaTeX Warning: Label `fig:solutions' multiply defined.
+
+
+LaTeX Warning: Label `lst:sched.3' multiply defined.
+
+
+LaTeX Warning: Label `lst:sched.4' multiply defined.
+
+) (./3_esperimenti.aux
+
+LaTeX Warning: Label `fig:mrsplock' multiply defined.
+
+) (./4_conclusioni.aux) (./appendixA.aux))
+\openout1 = `tesi.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 106.
+LaTeX Font Info:    Try loading font information for LGR+cmr on input line 106.
+
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel/lgrcmr.fd
+File: lgrcmr.fd 2008/06/17 v2.3 Greek Computer Modern
+)
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 106.
+
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ppl.fd
+File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
+)
+(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count161
+\scratchdimen=\dimen200
+\scratchbox=\box66
+\nofMPsegments=\count162
+\nofMParguments=\count163
+\everyMPshowfont=\toks43
+\MPscratchCnt=\count164
+\MPscratchDim=\dimen201
+\MPnumerator=\count165
+\makeMPintoPDFobject=\count166
+\everyMPtoPDFconversion=\toks44
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+)
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+ABD: EveryShipout initializing macros
+\c@lstlisting=\count167
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+
+Package geometry Warning: The marginal notes overrun the paper.
+     Add 16.26082pt and more to the right margin.
+
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: twoside 
+* h-part:(L,W,R)=(85.35826pt, 415.41043pt, 96.73918pt)
+* v-part:(T,H,B)=(128.0374pt, 574.74567pt, 142.26378pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=415.41043pt
+* \textheight=574.74567pt
+* \oddsidemargin=13.08827pt
+* \evensidemargin=24.4692pt
+* \topmargin=23.89362pt
+* \headheight=15.0pt
+* \headsep=19.8738pt
+* \topskip=11.0pt
+* \footskip=27.46295pt
+* \marginparwidth=106.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=20.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+\AtBeginShipoutBox=\box67
+Package hyperref Info: Link coloring OFF on input line 106.
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count168
+)
+LaTeX Info: Redefining \ref on input line 106.
+LaTeX Info: Redefining \pageref on input line 106.
+LaTeX Info: Redefining \nameref on input line 106.
+
+(./tesi.out) (./tesi.out)
+\@outlinefile=\write4
+\openout4 = `tesi.out'.
+
+LaTeX Info: Redefining \celsius on input line 106.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 106
+.
+
+
+Package gensymb Warning: Not defining \perthousand.
+
+LaTeX Info: Redefining \ohm on input line 106.
+Package gensymb Info: Using \upOmega for \ohm on input line 106.
+
+Package gensymb Warning: Not defining \micro.
+
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/ucsencs.def
+File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
+
+fontencoding LGR patched
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: wrapfig package is loaded.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Info: Redefining \microtypecontext on input line 106.
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
+Package microtype Info: Using default expansion set `basictext'.
+Package microtype Info: No tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+ (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-ppl.cfg
+File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
+)
+<images/unipd-logo.png, id=260, 80.7486pt x 80.7486pt>
+File: images/unipd-logo.png Graphic file (type png)
+
+<use images/unipd-logo.png>
+Package pdftex.def Info: images/unipd-logo.png used on input line 115.
+(pdftex.def)             Requested size: 80.74838pt x 80.74838pt.
+
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-0.def
+File: uni-0.def 2012/04/20 UCS: Unicode data U+0000..U+00FF
+)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1
+
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./images/unipd-logo.png>] 
+[2
+
+]
+\openout2 = `abstract.aux'.
+
+
+(./abstract.tex) [3
+
+] [4
+
+
+]
+\openout2 = `ringraziamenti.aux'.
+
+ (./ringraziamenti.tex) [5
+
+] [6
+
+
+]
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 183.
+ (./tesi.toc
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 2.
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 2.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omlzplm.fd
+File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 2.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omszplm.fd
+File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 2.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omxzplm.fd
+File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
+)
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 11.40997pt on input line 2.
+
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 8.33606pt on input line 2.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 6.25204pt on input line 2.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 11.40997pt on input line 2.
+
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+)
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 8.33606pt on input line 2.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 6.25204pt on input line 2.
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 2.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1zplm.fd
+File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
+) [7] [8]
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 90.
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 92.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <10.95> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 92.
+)
+\tf@toc=\write5
+\openout5 = `tesi.toc'.
+
+ [9]
+(./tesi.lof [10])
+\tf@lof=\write6
+\openout6 = `tesi.lof'.
+
+ (./tesi.lot
+Underfull \vbox (badness 4403) has occurred while \output is active []
+
+ [11])
+\tf@lot=\write7
+\openout7 = `tesi.lot'.
+
+
+[12]
+\openout2 = `1_introduzione.aux'.
+
+ (./1_introduzione.tex (./figure/model_job.tex)
+(./figure/mrsp_omip_intro.tex)
+(./figure/timelines/introduction_chapter/single_processor/protocols.tex)
+(./figure/timelines/introduction_chapter/multiprocessor/protocols.tex)
+Capitolo 1.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 6.
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--10
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--12
+  
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-32.def
+File: uni-32.def 2012/04/20 UCS: Unicode data U+2000..U+20FF
+)
+Underfull \hbox (badness 10000) in paragraph at lines 13--14
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--16
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
+  
+ []
+
+[13
+
+
+]
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 21.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 36.
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+  
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 41--43
+  
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 43.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsppl.fd
+File: omsppl.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--46
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-34.def
+File: uni-34.def 2012/04/20 UCS: Unicode data U+2200..U+22FF
+) [15]
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+  
+ []
+
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 94--95
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--106
+  
+ []
+
+[17] <images/memory_arch.jpeg, id=551, 693.59125pt x 292.09125pt>
+File: images/memory_arch.jpeg Graphic file (type jpg)
+
+<use images/memory_arch.jpeg>
+Package pdftex.def Info: images/memory_arch.jpeg used on input line 110.
+(pdftex.def)             Requested size: 415.41043pt x 174.94409pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--119
+  
+ []
+
+[18 <./images/memory_arch.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 128--129
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 135--136
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 137--138
+  
+ []
+
+[19]
+Underfull \hbox (badness 10000) in paragraph at lines 147--148
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
+  
+ []
+
+[20]
+Underfull \hbox (badness 10000) in paragraph at lines 156--157
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+  
+ []
+
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 5.21004pt on input line 164.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 5.21004pt on input line 164.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 9.37807pt on input line 164.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 7.29405pt on input line 164.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 9.37807pt on input line 164.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 7.29405pt on input line 164.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 10.42007pt on input line 165.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 7.91925pt on input line 165.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 10.42007pt on input line 165.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 7.91925pt on input line 165.
+
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
+  
+ []
+
+
+Underfull \vbox (badness 1173) has occurred while \output is active []
+
+ [21]
+[22] [23]
+Overfull \hbox (19.57596pt too wide) in paragraph at lines 217--218
+ [][] 
+ []
+
+[24]
+Overfull \hbox (19.57596pt too wide) in paragraph at lines 233--234
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 241--243
+  
+ []
+
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 251--252
+  
+ []
+
+[26]
+Overfull \hbox (0.46141pt too wide) in paragraph at lines 255--257
+  []\OT1/ppl/b/n/10.95 Multiprocessor priority-ceiling pro-to-col (MPCP).[] []\
+OT1/ppl/m/n/10.95 (-20) E un'evoluzione del prece- 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 255--257
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--259
+  
+ []
+
+[27]
+Underfull \hbox (badness 10000) in paragraph at lines 276--277
+  
+ []
+
+[28]
+Underfull \hbox (badness 10000) in paragraph at lines 281--282
+  
+ []
+
+
+Overfull \hbox (1.3226pt too wide) in paragraph at lines 283--284
+  []\OT1/ppl/b/n/10.95 SPEEP.[] \OT1/ppl/m/n/10.95 (-20) (\OT1/ppl/m/it/10.95 (
+-20) Spin-ning Pro-ces-sor Ex-e-cutes for Pre-empted Pro-ces-sor \OT1/ppl/m/n/1
+0.95 (-20) di Taka-da et al. [[]]) 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 283--284
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 285--286
+  
+ []
+
+[29]
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 15.0049pt on input line 287.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 15.0049pt on input line 287.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 287.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 287.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--294
+  
+ []
+
+[30]
+Underfull \hbox (badness 10000) in paragraph at lines 315--316
+  
+ []
+
+[31]
+Underfull \hbox (badness 10000) in paragraph at lines 317--320
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--326
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 337--338
+  
+ []
+
+[32]
+Underfull \hbox (badness 10000) in paragraph at lines 345--346
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 353--354
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--356
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--368
+  
+ []
+
+[33]
+Underfull \hbox (badness 10000) in paragraph at lines 369--370
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 371--372
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 380--381
+  
+ []
+
+[34]
+Underfull \hbox (badness 10000) in paragraph at lines 398--399
+  
+ []
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 400.
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\mathsurround' on input line 400.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\z@' on input line 400.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 400.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 400.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 400.
+
+[35]
+Underfull \hbox (badness 10000) in paragraph at lines 408--409
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 410--411
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 412--413
+  
+ []
+
+
+Underfull \vbox (badness 1102) has occurred while \output is active []
+
+ [36]
+<images/litmus_arch.jpeg, id=701, 1038.88126pt x 811.03pt>
+File: images/litmus_arch.jpeg Graphic file (type jpg)
+
+<use images/litmus_arch.jpeg>
+Package pdftex.def Info: images/litmus_arch.jpeg used on input line 429.
+(pdftex.def)             Requested size: 415.41043pt x 324.29488pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 434--435
+  
+ []
+
+[37 <./images/litmus_arch.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 445--446
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 447--448
+  
+ []
+
+[38])
+Underfull \hbox (badness 10000) in paragraph at lines 458--193
+  
+ []
+
+[39]
+\openout2 = `2_implementazione.aux'.
+
+ (./2_implementazione.tex (./figure/struct_system.tex)
+(./figure/timelines/implementation_chapter/ceiling_or_migration.tex)
+(./figure/timelines/implementation_chapter/mrsp_exe.tex) [40
+
+
+
+]
+Capitolo 2.
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+  
+ []
+
+[41] [42] [43]
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+  
+ []
+
+LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 54.
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
+  
+ []
+
+[44] [45]
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
+  
+ []
+
+Missing character: There is no a in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no ; in font nullfont!
+Missing character: There is no ; in font nullfont!
+Missing character: There is no ; in font nullfont!
+Missing character: There is no ; in font nullfont!
+
+Underfull \hbox (badness 10000) in paragraph at lines 122--123
+  
+ []
+
+[46] [47]
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 136--137
+  
+ []
+
+[48]
+Underfull \hbox (badness 10000) in paragraph at lines 145--146
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
+  
+ []
+
+[49]
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 177--178
+  
+ []
+
+[50]
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 189--190
+  
+ []
+
+LaTeX Font Info:    Try loading font information for OML+ppl on input line 196.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omlppl.fd
+File: omlppl.fd 
+)
+LaTeX Font Info:    Font shape `OML/ppl/m/n' in size <9> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 196.
+ [51]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [52]
+Underfull \hbox (badness 10000) in paragraph at lines 276--279
+  
+ []
+
+[53]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [54]
+Underfull \hbox (badness 10000) in paragraph at lines 363--364
+  
+ []
+
+[55]
+Underfull \hbox (badness 10000) in paragraph at lines 365--366
+  
+ []
+
+
+Overfull \hbox (37.73349pt too wide) in paragraph at lines 367--369
+ \OT1/ppl/m/n/10.95 (-20) Il flag uti-liz-za-to per-me-tte di pos-tic-i-pare la
+ mi-grazione al-la prim-i-ti-va \OT1/cmtt/m/n/10.95 pfp[]finish[]switch 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--369
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--373
+  
+ []
+
+[56]
+Underfull \hbox (badness 10000) in paragraph at lines 407--408
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 409--410
+  
+ []
+
+[57] [58]
+Underfull \hbox (badness 10000) in paragraph at lines 421--422
+  
+ []
+
+
+Overfull \hbox (0.66081pt too wide) in paragraph at lines 423--424
+ []\OT1/ppl/m/n/10.95 (-20) L'implementazione del pro-to-col-lo (righe []25[] -
+  []45[]) uti-liz-za la strut-tura \OT1/cmtt/m/n/10.95 mrsp[]state 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 423--424
+  
+ []
+
+[59]
+Underfull \hbox (badness 10000) in paragraph at lines 480--481
+  
+ []
+
+[60]
+Overfull \hbox (42.9358pt too wide) in paragraph at lines 496--497
+ []\OT1/ppl/m/n/10.95 (-20) Il con-trol-lo al ter-zo pun-to []e sim-i-le a quan
+-to de-scrit-to per la fun-zione \OT1/cmtt/m/n/10.95 find[]cpu[]available\OT1/p
+pl/m/n/10.95 (-20) . 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 496--497
+  
+ []
+
+[61]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [62]
+[63]
+Underfull \hbox (badness 10000) in paragraph at lines 606--607
+  
+ []
+
+[64] [65]) [66]
+\openout2 = `3_esperimenti.aux'.
+
+ (./3_esperimenti.tex (./figure/test_protocolli.tex)
+(./figure/grafico1.tex) (./figure/grafico_sched.tex)
+(./figure/grafico_release.tex) (./figure/grafico_cxs.tex)
+(./figure/timeline.tex) (./figure/overheads_suffered.tex)
+(./figure/data_structure.tex) (./figure/overheads.tex)
+Capitolo 3.
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--31
+  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [67
+
+
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 32--34
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
+  
+ []
+
+
+Underfull \vbox (badness 1226) has occurred while \output is active []
+
+ [68]
+Underfull \hbox (badness 10000) in paragraph at lines 42--43
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--46
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--56
+  
+ []
+
+[69]
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
+  
+ []
+
+[70]
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--93
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
+  
+ []
+
+[71]
+Underfull \hbox (badness 10000) in paragraph at lines 119--120
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--122
+  
+ []
+
+[72]
+Underfull \hbox (badness 10000) in paragraph at lines 123--124
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 146--147
+  
+ []
+
+Missing character: There is no ; in font nullfont!
+Missing character: There is no ; in font nullfont!
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <6> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 164.
+Missing character: There is no ; in font nullfont!
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (19.26073pt too wide) in paragraph at lines 171--172
+ [][] 
+ []
+
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (163.39587pt too wide) in paragraph at lines 178--179
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--186
+  
+ []
+
+[73] [74]
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--218
+  
+ []
+
+[75]
+Underfull \hbox (badness 10000) in paragraph at lines 233--234
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 249--250
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
+  
+ []
+
+[76]
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--293
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 301--302
+  
+ []
+
+[77]
+Underfull \hbox (badness 10000) in paragraph at lines 310--311
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 319--320
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--322
+  
+ []
+
+[78] [79]
+Underfull \hbox (badness 10000) in paragraph at lines 331--332
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 347--349
+  
+ []
+
+[80]
+Underfull \hbox (badness 10000) in paragraph at lines 353--354
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--356
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 357--358
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 359--360
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 361--362
+  
+ []
+
+[81]
+Underfull \hbox (badness 10000) in paragraph at lines 379--380
+  
+ []
+
+[82] <images/mrsp_lock.jpeg, id=1357, 2103.86pt x 1365.1pt>
+File: images/mrsp_lock.jpeg Graphic file (type jpg)
+
+<use images/mrsp_lock.jpeg>
+Package pdftex.def Info: images/mrsp_lock.jpeg used on input line 399.
+(pdftex.def)             Requested size: 415.41043pt x 269.5366pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 404--405
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 406--407
+  
+ []
+
+[83] [84 <./images/mrsp_lock.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 408--409
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 410--411
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 412--413
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 414--415
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 416--417
+  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [85]
+<images/mrsp_unlock.jpeg, id=1375, 2003.485pt x 1529.715pt>
+File: images/mrsp_unlock.jpeg Graphic file (type jpg)
+
+<use images/mrsp_unlock.jpeg>
+Package pdftex.def Info: images/mrsp_unlock.jpeg used on input line 427.
+(pdftex.def)             Requested size: 415.41043pt x 317.16486pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 432--433
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 434--435
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 436--437
+  
+ []
+
+[86] [87 <./images/mrsp_unlock.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 447--448
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 457--458
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 459--460
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 461--462
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 468--469
+  
+ []
+
+[88]
+Underfull \hbox (badness 10000) in paragraph at lines 470--471
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--498
+  
+ []
+
+
+LaTeX Warning: Float too large for page by 87.66118pt on input line 521.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 523--524
+  
+ []
+
+[89] [90]
+Underfull \hbox (badness 10000) in paragraph at lines 561--562
+  
+ []
+
+[91]
+Underfull \hbox (badness 10000) in paragraph at lines 568--569
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 577--578
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 585--586
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 587--588
+  
+ []
+
+[92]
+Underfull \hbox (badness 10000) in paragraph at lines 614--615
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 641--642
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 671--672
+  
+ []
+
+[93])
+Underfull \hbox (badness 10000) in paragraph at lines 673--197
+  
+ []
+
+[94] [95] [96]
+\openout2 = `4_conclusioni.aux'.
+
+ (./4_conclusioni.tex
+Capitolo 4.
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--5
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 6--12
+  
+ []
+
+
+Underfull \vbox (badness 1769) has occurred while \output is active []
+
+ [97
+
+
+
+]
+[98]) [99]
+\openout2 = `appendixA.aux'.
+
+ (./appendixA.tex [100
+
+
+
+] [101
+
+] [102]
+Appendice A.
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\mathsurround' on input line 3.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\z@' on input line 3.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 3.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 3.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 3.
+
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 25.92514pt on input line 3.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 21.61124pt on input line 3.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 25.92514pt on input line 3.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 21.61124pt on input line 3.
+
+Underfull \hbox (badness 10000) in paragraph at lines 6--7
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
+  
+ []
+
+
+Overfull \hbox (2.50037pt too wide) in paragraph at lines 14--15
+ []\OT1/ppl/m/n/10.95 (-20) Le fun-zioni prin-ci-pali sono \OT1/cmtt/m/n/10.95 
+schedule()\OT1/ppl/m/n/10.95 (-20) , \OT1/cmtt/m/n/10.95 tick() \OT1/ppl/m/n/10
+.95 (-20) e \OT1/cmtt/m/n/10.95 finish[]switch()\OT1/ppl/m/n/10.95 (-20) , esse
+ rispon- 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--15
+  
+ []
+
+[103
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--23
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--32
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--64
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--84
+  
+ []
+
+[104] [105]
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
+  
+ []
+
+[106]
+Appendice B.
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--93
+  
+ []
+
+
+Overfull \hbox (10.51936pt too wide) in paragraph at lines 95--96
+[]\OT1/ppl/m/n/10.95 (-20) definizione di task: per-me-tte di creare pro-ces-si
+ come task real-time di LITMUS$[]$,
+ []
+
+[107
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--103
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--107
+  
+ []
+
+
+Underfull \hbox (badness 1629) in paragraph at lines 117--118
+[]\OT1/ppl/m/n/10.95 (+20) Lancia un sem-plice pro-ces-so come un task real-tim
+e
+ []
+
+[108] [109] [110
+
+]
+Appendice C.
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 131.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <24.88> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 131.
+
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+  
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 136.
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--139
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 140--141
+  
+ []
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <14.4> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 142.
+
+Underfull \hbox (badness 10000) in paragraph at lines 144--145
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 146--147
+  
+ []
+
+[111]
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 155--156
+  
+ []
+
+[112]
+Appendice D.
+
+Underfull \hbox (badness 10000) in paragraph at lines 160--161
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--170
+  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 174--175
+
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+)
+
+Package Listings Warning: Text dropped after begin of listing on input line 177
+.
+
+[113
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 185--186
+
+ []
+
+
+Package Listings Warning: Text dropped after begin of listing on input line 188
+.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--202
+  
+ []
+
+
+Package Listings Warning: Text dropped after begin of listing on input line 204
+.
+
+
+Overfull \hbox (7.51884pt too wide) in paragraph at lines 215--216
+ []\OT1/cmtt/m/n/10.95 run[]exps.py \OT1/ppl/m/n/10.95 (-20) richiede in in-put
+ una cartel-la con-te-nente i file \OT1/cmtt/m/n/10.95 sched.py \OT1/ppl/m/n/10
+.95 (-20) e \OT1/cmtt/m/n/10.95 params.py 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 215--216
+  
+ []
+
+[114]) [115] (./tesi.bbl [116
+
+
+] [117])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 222.
+ [118]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 222.
+ (./tesi.aux (./abstract.aux)
+(./ringraziamenti.aux) (./1_introduzione.aux) (./2_implementazione.aux)
+(./3_esperimenti.aux) (./4_conclusioni.aux) (./appendixA.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 222.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 222.
+Package rerunfilecheck Info: File `tesi.out' has not changed.
+(rerunfilecheck)             Checksum: 10BA01761AC9F3D08863CF8C713C4D85;4321.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 222.
+ ) 
+Here is how much of TeX's memory you used:
+ 28531 strings out of 495059
+ 507784 string characters out of 3182030
+ 943085 words of memory out of 3000000
+ 30050 multiletter control sequences out of 15000+200000
+ 87749 words of font info for 386 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 56i,16n,65p,1777b,1909s stack positions out of 5000i,500n,10000p,200000b,50000s
+pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exi
+st, replaced by a fixed one
+
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmsltt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+tt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/urw/palatino/uplbi8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/pala
+tino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8a
+.pfb>
+Output written on tesi.pdf (118 pages, 1053131 bytes).
+PDF statistics:
+ 1772 PDF objects out of 2073 (max. 8388607)
+ 1612 compressed objects within 17 object streams
+ 648 named destinations out of 1000 (max. 500000)
+ 61474 words of extra memory for PDF output out of 61914 (max. 10000000)
+

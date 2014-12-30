@@ -1,0 +1,64 @@
+\section{Conclusion}
+
+\begin{frame}
+
+	\frametitle{Conclusion}
+	\framesubtitle{Future work - 1}
+
+	The experiments underline how the system suffers in case of \alert{migration}
+
+	\vspace{0.2cm}
+
+	\begin{block}{A possible solution}
+		\begin{enumerate}
+			\item Divide the resources into "long" and "short" (FMLP, \cite{Block:2007:FRL:1306877.1307316})
+			\item Migration should only be caused when its benefits exceeds its cost
+		\end{enumerate}	
+	\end{block}
+
+	\vspace{0.4cm}
+
+	Supporting \alert{nested resources}
+
+	\begin{itemize}
+		\item Allow a nested request from $r_i$ to $r_j$ only if $i < j$
+		\item Groups lock (FMLP)
+		\item A k-lock system (RNLP, \cite{DBLP:dblp_conf/ecrts/WardA12})
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+	\frametitle{Conclusion}
+	\framesubtitle{Future work - 2}
+
+	Compare MrsP and the \textit{O(m) Independence-preserving Protocol}(\alert{OMIP}, \cite{6602109})
+	
+	\vspace{0.2cm}
+
+	\begin{itemize}
+		\item Independence preserving and limited waiting time
+		\item Allows migrations
+		\item Design for cluster scheduler
+		\item Suspension-based
+	\end{itemize}
+
+	\begin{figure}
+		\centering
+		\OMIPSmall{1}{1}
+	\end{figure}
+	
+	% With cluster size equal to one, the system is reduced to a partitioned platform.
+	% MrsP and OMIP guarantee independence preserving and limited waiting time allowing migrations, but with different approaches: respectively, spin-based and suspension-based.
+
+\end{frame}
+
+\begin{frame}
+        \frametitle{References}
+
+        \fontsize{7pt}{7.2}\selectfont
+
+        \bibliographystyle{plain}
+		\bibliography{../reference} 
+\end{frame}

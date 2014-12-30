@@ -1,0 +1,298 @@
+\documentclass{beamer}
+%\documentclass[tikz,border=10pt]{standalone}
+\usepackage{lmodern}
+\usepackage{tikz}
+
+\usepackage{mathtools}
+
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\usetikzlibrary{arrows, patterns, calc, decorations.pathreplacing, shapes}
+\usefonttheme[onlymath]{serif}
+
+\usetheme[secheader]{Boadilla}
+\usecolortheme{beaver}
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\input{figures.tex}
+
+\begin{document}
+
+\title{Multiprocessor Resource Sharing Protocol \\
+Implementazione e valutazione}
+
+\begin{frame}
+\centering
+\includegraphics{images/unipd-logo.png}\\%[0.1cm]
+{Università degli Studi di Padova}\\
+{Dipartimento di Matematica}\\[0.1cm]
+{Corso di Laurea Magistrale in Informatica}\\[0.1cm]
+
+\titlepage
+% \vspace{13 mm}
+%\textsc{\small Anno Accademico 2013 - 2014}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multiprocessor resource sharing Protocol}
+\begin{itemize}
+\item Model
+\item MrsP
+\item Proposed solution
+\item LITMUS\textsuperscript{RT}
+\item Implementation
+\item Experiments
+\item Conclusion and future works
+\end{itemize}
+\end{frame}
+
+% \item generalizes uniprocessor RTA: $R_i = C_i + B_i + I_i$
+%   \begin{itemize}
+%     \item $I_i = \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j$
+%     \item $B_i = max$\{\textcolor{red}{$\hat{c}$}$,\hat{b}\}$
+%     \item $C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \textcolor{red}{c^j}$
+%   \end{itemize} 
+
+
+
+\begin{frame}
+\frametitle{MrsP}
+\emph{Multiprocessor resource sharing Protocol}
+\begin{itemize}
+\item for partitioned algorithms
+\item spinning-based protocol
+\item generalizes uniprocessor RTA: $R_i = C_i + B_i + I_i$
+  \begin{itemize}
+    \item $I_i = \sum\limits_{\tau_j \in hp(i)} \ceil{\frac{R_i}{T_j}} C_j$
+    \item $B_i = max$\{\textcolor{red}{$\hat{c}$}$,\hat{b}\}$
+    \item $C_i = WCET_i + \sum\limits_{r^j \in F(\tau_i)} n_i \textcolor{red}{c^j}$
+  \end{itemize} 
+\item helping mechanism
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overheads}
+
+  Resource lock:\\
+  \begin{itemize}
+    \item change priority, add job to the queue, set ceiling - 800k ns (O(m))
+    \item wake up the queued lock holder - 6k ns (migration)
+    \item busy wait - 400 ns
+  \end{itemize}
+
+  Resource release:
+  \begin{itemize}
+    \item restore priority, pop job from the queue, restore ceiling - 500 ns
+    \item wake up the queued lock holder - 6k ns (migration)
+    \item Running job migration - 800k ns
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overheads}
+
+  Post context switch 1:
+  \begin{itemize}
+    \item find a new cpu for the preempted lock holder and set up the - migration 24k ns (lock cpu + lock resource)
+    \item perform the migration of the preempted job - 37k ns
+  \end{itemize}
+
+  Post context switch 2:
+  \begin{itemize}
+    \item a cpu is again available for a migration - 3k ns
+    \item performs the migration of the queued job - 6k ns
+  \end{itemize}  
+
+\end{frame}
+
+\begin{frame}
+\frametitle{MrsP}
+%\MrsP{1.5}{1.1}{1.1}
+\centerline{\MrsP{1}{1}}
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Response time - 1}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{ccccc}
+  \hline\hline
+    Task & Partition     & Priority & Critical section & WCET  \\ \hline
+    $\tau_1$ & $P_1$  & 20 & 1 & 1 \\
+    $\tau_2$ & $P_2$  & 20 & 1 & 1 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{cccc}
+  \hline\hline
+    Task & MrsP & Ceiling & Non preemption \\ \hline
+    $\tau_1$ & 1.123.127 & 1.045.957 & 1.181.310 \\
+    $\tau_2$ & 2.231.823 & 2.029.249 & 2.446.051 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Response time - 2}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{ccccc}
+  \hline\hline
+    Task & Partition     & Priority & Critical section & WCET  \\ \hline
+    $\tau_1$ & $P_1$  & 20 & 3 & 3 \\
+    $\tau_2$ & $P_2$  & 20 & 3 & 3 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{cccc}
+  \hline\hline
+    Task & MrsP & Ceiling & Non preemption \\ \hline
+    $\tau_1$ & 3.050.809 & 3.145.418 & 3.057.504 \\
+    $\tau_2$ & 5.994.789 & 6.211.880 & 6.067.983 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Response time - 3}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{ccccc}
+  \hline\hline
+    Task & Partition     & Priority & Critical section & WCET  \\ \hline
+    $\tau_1$ & $P_1$  & 20 & 1 & 1 \\
+    $\tau_2$ & $P_1$  & 10 & 0 & 1 \\
+    $\tau_3$ & $P_2$  & 20 & 1 & 1 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{cccc}
+  \hline\hline
+    Task & MrsP & Ceiling & Non preemption \\ \hline
+    $\tau_1$ & \underline{1.206.362} & 2.194.042 & \underline{1.111.517} \\
+    $\tau_2$ & 1.098.587 & 1.068.602 & 1.977.039 \\
+    $\tau_3$ & 2.351.562 & 3.168.240 & 1.911.890 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Response time - 4}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{ccccc}
+  \hline\hline
+    Task & Partition     & Priority & Critical section & WCET  \\ \hline
+    $\tau_1$ & $P_1$  & 20 & 3 & 3 \\
+    $\tau_2$ & $P_1$  & 10 & 0 & 1 \\
+    $\tau_3$ & $P_2$  & 20 & 3 & 3 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{cccc}
+  \hline\hline
+    Task & MrsP & Ceiling & Non preemption \\ \hline
+    $\tau_1$ & \underline{3.066.828} & 4.242.092 & \underline{3.177.307} \\
+    $\tau_2$ & 1.035.721 & 1.141.324 & 3.956.506 \\
+    $\tau_3$ & 6.099.752 & 7.209.873 & 6.024.691 \\
+    \hline
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Response time - 5}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{ccccc}
+  \hline\hline
+    Task & Partition     & Priority & Critical section & WCET  \\ \hline
+    $\tau_1$ & $P_1$  & 20 & 1 & 1 \\
+    $\tau_2$ & $P_1$  & 10 & 0 & 3 \\
+    $\tau_3$ & $P_2$  & 20 & 1 & 1 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{cccc}
+  \hline\hline
+    Task & MrsP & Ceiling & Non preemption \\ \hline
+    $\tau_1$ & \underline{1.053.232} & 4.215.599 & \underline{1.113.397} \\
+    $\tau_2$ & 3.018.344 & 3.071.190 & 4.006.309 \\
+    $\tau_3$ & 2.042.122 & 5.169.139 & 2.068.905 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Response time - 6}
+  \begin{table}
+  \centering
+  \begin{tabular}{ccccc}
+  \hline\hline
+    Task & Partition     & Priority & Critical section & WCET  \\ \hline
+    $\tau_1$ & $P_1$  & 20 & 1 & 1 \\
+    $\tau_2$ & $P_1$  & 10 & 0 & 3 \\
+    $\tau_3$ & $P_2$  & 20 & 1 & 1 \\
+    $\tau_4$ & $P_2$  & 10 & 0 & 3 \\
+    $\tau_5$ & $P_3$  & 20 & 1 & 1 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{cccc}
+  \hline\hline
+    Task & MrsP & Ceiling & Non preemption \\ \hline
+    $\tau_1$ & \underline{1.111.410} & 4.312.490 & \underline{1.173.600} \\
+    $\tau_2$ & 3.029.214 & 3.131.630 & 4.205.578 \\
+    $\tau_3$ & \underline{2.062.770} & 5.301.240 & \underline{2.211.347} \\
+    $\tau_4$ & 3.022.036 & 3.099.090 & 5.078.436 \\
+    $\tau_5$ & 3.030.634 & 6.309.370 & 3.184.333 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+\end{document}

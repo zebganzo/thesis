@@ -1,0 +1,46 @@
+\newcommand{\dataCPU}[1]{
+  \node[below] (F1)  at (-0.8,-0.50)  {\tiny (task*) scheduled};
+  \node[below, xshift=-0.2cm] (F2)  at (-0.8,-1.00)  {\tiny (int) cpu};
+  \node[below, xshift=0.05cm] (F3)  at (-0.8,-1.50)  {\tiny (queue*) ready\_queue};
+  \node[below, xshift=-0.08cm] (F4)  at (-0.8,-2.00)  {\tiny (int) ceiling};
+  \node[below, xshift=-0.45cm] (F5)  at (-0.8,-2.50)  {\tiny (spinlock) {\color{red} lock}};
+  \node[below, xshift=-0.3cm] (F6)  at (-0.8,-3)  {\tiny (sem*) mrsp};
+
+  \draw[dashed, thin] ([shift={(-0.1,+0.1)}]F1.north-|F5.west) node[right,xshift=.3cm,littletext]{Partition$_#1$} rectangle ([shift={(0.1,-0.1)}]F6.south-|F3.east);
+  }
+
+\newcommand{\dataMRSP}{
+  \node[below] (F1)  at (-0.8,-0.50)  {\tiny (task*) lock holder};
+  \node[below, xshift=-0.1cm] (F2)  at (-0.8,-1.00)  {\tiny (int*) ceilings};
+  \node[below, xshift=-0.4cm] (F3)  at (-0.8,-1.50)  {\tiny (queue*) tasks};
+  \node[below, xshift=-0.5cm] (F4)  at (-0.8,-2.00)  {\tiny (spinlock) {\color{red} lock}};
+
+  \draw[dashed, thin] ([shift={(-0.1,+0.1)}]F1.north-|F4.west) node[right,xshift=.3cm,littletext]{MrsP} rectangle ([shift={(0.1,-0.1)}]F4.south-|F1.east);
+}
+
+\newcommand{\data}[2]{
+\begin{tikzpicture}[
+  xscale=#1,
+  yscale=#2,
+  every node/.append style={transform shape},
+  queuesty/.style={fill=white, very thick, font=\tiny},
+  srpsty/.style={fill=white, draw, circle, text width=.17cm, font=\tiny, very thick},
+  numsty/.style={text width=.1cm, font=\tiny},
+  arrow/.style={->},
+  littletext/.style={font=\sffamily\tiny,inner sep=0pt,outer sep=-2pt,fill=white},
+  ressty/.style={fill=red!30, draw, very thick, rounded corners=5pt},
+  empty/.style={rectangle, minimum width=.7cm,font=\footnotesize}]
+
+\begin{scope}
+  \node[empty]      (C1) at (-0.8,-3.9) {$\cdots$};
+  \dataCPU{i}
+  \node[empty]      (C2) at (-0.8,0) {$\cdots$};
+\end{scope}
+
+\begin{scope} [xshift=5cm, yshift=-0.2cm]
+  \dataMRSP
+\end{scope}
+
+\draw[arrow] (0,-3.25) to[out=0,in=180] (2.5,-2.5);
+
+\end{tikzpicture}}
